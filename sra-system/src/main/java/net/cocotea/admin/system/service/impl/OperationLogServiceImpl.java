@@ -71,12 +71,12 @@ public class OperationLogServiceImpl implements IOperationLogService {
     }
 
     @Override
-    public void saveErrorLog() {
+    public void saveErrorLog(Context ctx) {
         if (StpUtil.isLogin()) {
             OperationLogAddParam logAddParam = new OperationLogAddParam();
-            logAddParam.setIpAddress(Context.current().realIp());
+            logAddParam.setIpAddress(ctx.realIp());
             logAddParam.setLogType(LogTypeEnum.OPERATION.getCode());
-            logAddParam.setRequestWay(Context.current().method());
+            logAddParam.setRequestWay(ctx.method());
             logAddParam.setLogNumber(System.currentTimeMillis());
             logAddParam.setOperator(String.valueOf(StpUtil.getLoginId()));
             logAddParam.setOperationStatus(OperationStatusEnum.ERROR.getCode());

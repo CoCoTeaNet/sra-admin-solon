@@ -1,6 +1,7 @@
 package net.cocotea.admin.bootstrap.config;
 
 import com.zaxxer.hikari.HikariDataSource;
+import org.noear.redisx.RedisClient;
 import org.noear.solon.annotation.Bean;
 import org.noear.solon.annotation.Configuration;
 import org.noear.solon.annotation.Inject;
@@ -16,4 +17,13 @@ public class DbConfig {
         return ds;
     }
 
+    // /
+    // 上方是数据库配置
+    // 下方是redis配置
+    // /
+
+    @Bean
+    public RedisClient redisClient(@Inject("${sra.rd1}") RedisClient client) {
+        return client;
+    }
 }

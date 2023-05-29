@@ -1,62 +1,64 @@
 package net.cocotea.admin.framework.service.impl;
 
 import net.cocotea.admin.framework.service.IRedisService;
+import org.noear.redisx.RedisClient;
 import org.noear.solon.annotation.Inject;
 import org.noear.solon.aspect.annotation.Service;
 
+import java.util.Collections;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 /**
- * @author jwss
+ * @author CoCoTea
  */
 @Service
 public class RedisServiceImpl implements IRedisService {
 
+    @Inject
+    private RedisClient redisClient;
+
     @Override
     public void save(String key, String value, Long seconds){
-        // stringRedisTemplate.opsForValue().set(key, value, seconds, TimeUnit.SECONDS);
+        redisClient.open(session -> session.key(key).expire(Math.toIntExact(seconds)).set(value));
     }
 
     @Override
     public void saveByHours(String key, String value, int hours){
-        // stringRedisTemplate.opsForValue().set(key, value, hours, TimeUnit.HOURS);
+        save(key, value, hours * 3600L);
     }
 
     @Override
     public void saveByMinutes(String key, String value, int minutes){
-        // stringRedisTemplate.opsForValue().set(key, value, minutes, TimeUnit.MINUTES);
+        save(key, value, minutes * 60L);
     }
 
     @Override
     public void save(String key, String value) {
-        // stringRedisTemplate.opsForValue().set(key, value);
+        redisClient.open(session -> session.key(key).set(value));
     }
 
     @Override
     public void delete(String key) {
-        // stringRedisTemplate.delete(key);
+        redisClient.open(session -> session.deleteKeys(Collections.singleton(key)));
     }
 
     @Override
     public void set(String key, String value) {
-        // stringRedisTemplate.opsForValue().set(key, value, 0);
+        redisClient.open(session -> session.key(key).expire(0).set(value));
     }
 
     @Override
     public String get(String key) {
-        // return stringRedisTemplate.opsForValue().get(key);
-        return "";
+        return redisClient.openAndGet(session -> session.key(key).get());
     }
 
     @Override
     public void hashPut(String key, String hashKey, String value) {
-        // stringRedisTemplate.opsForHash().put(key, hashKey, value);
+        redisClient.open(session -> session.key(key).hashSet(hashKey, value));
     }
 
     @Override
     public Set<String> keys(String pattern) {
-        // return stringRedisTemplate.keys(pattern);
-        return null;
+        return redisClient.openAndGet(session -> session.keys(pattern));
     }
 }

@@ -7,6 +7,7 @@ import net.cocotea.admin.common.enums.LogTypeEnum;
 import net.cocotea.admin.common.model.BusinessException;
 import net.cocotea.admin.common.service.IBaseService;
 import net.cocotea.admin.system.vo.OperationLogVO;
+import org.noear.solon.core.handle.Context;
 import org.sagacity.sqltoy.model.Page;
 
 /**
@@ -22,5 +23,5 @@ public interface IOperationLogService extends IBaseService<Page<OperationLogVO>,
      */
     void saveByLogType(Integer logType) throws BusinessException;
 
-    void saveErrorLog();
+    void saveErrorLog(Context ctx);
 }

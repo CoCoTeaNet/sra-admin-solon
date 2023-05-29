@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
  * @since v1.2.7
  */
 @SolonMain
-@Import(scanPackages = {"net.cocotea.admin", ""})
+@Import(scanPackages = {"net.cocotea.admin"})
 public class App {
     private static final Logger logger = LoggerFactory.getLogger(App.class);
 
