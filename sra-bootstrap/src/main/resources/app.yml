@@ -51,7 +51,7 @@ sra:
     browser-url: /download/
   db1:
     schema: DB_SRA_V1
-    jdbcUrl: jdbc:mysql://localhost:3306/DB_SRA_V1?useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=true
+    jdbcUrl: jdbc:mysql://localhost:3306/DB_SRA_V1?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai&tinyInt1isBit=false
     driverClassName: com.mysql.cj.jdbc.Driver
     username: root
     password: root

@@ -9,7 +9,7 @@ import org.noear.solon.annotation.Inject;
  * @author jwss
  * @date 2022-3-30 14:12:38
  */
-@Component
+@Component(name = "devEnableProps")
 public class DevEnableProperties {
     /**
      * 是否开启权限缓存: true开启，false关闭

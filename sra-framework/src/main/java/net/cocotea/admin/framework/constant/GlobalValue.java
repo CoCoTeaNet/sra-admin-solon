@@ -24,7 +24,7 @@ public class GlobalValue {
     /**
      * 访问协议
      */
-    public static String AGREEMENT;
+    public static String AGREEMENT = "http";
 
     /**
      * 获取服务器地址
