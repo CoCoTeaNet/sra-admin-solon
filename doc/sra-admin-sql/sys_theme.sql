@@ -12,4 +12,3 @@ create table sys_theme
 )
     comment '系统主题表';
 
-INSERT INTO acg.sys_theme (ID, USER_ID, LAYOUT_MODE, PRIMARY_COLOR, COLOR_2, COLOR_3, COLOR_4, IS_DARK) VALUES ('578b3d8484d24612943c871bd1f4dc55', '7d7f2f72dd0e4b6080373a3cc1469a15', 0, '#FF009D', '#E053F2', '#A60E52', '#D3B4F2', 0);

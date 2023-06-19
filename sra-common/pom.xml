@@ -12,8 +12,9 @@
     <artifactId>sra-common</artifactId>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <utf-8>UTF-8</utf-8>
     </properties>
 
 </project>

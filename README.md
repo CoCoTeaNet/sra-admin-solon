@@ -6,9 +6,6 @@ sra-admin-solon 是一个前后端分离的后台管理系统，国产化核心�
 后端技术栈：solon+sqltoy+satoken+hutool  
 前端技术栈：vue3+vue-router+typescript+elementui
 
-#### 与springboot版本的不同之处
-1、solon版本移除了调度模块，建议使用[分布式调度服务](https://solon.noear.org/article/family-solon-cloud-job)  
-
 #### 应用场景
 - XXX网站 | 博客网站
 - 编程学习 | 毕业设计
@@ -92,7 +89,7 @@ $ npm run build || yarn build       #生产环境
 
 #### 软件版本要求
 
-- JDK：1.8+
+- JDK：17+
 - Nodejs：14.0+
 - MySQL：8.0+
 

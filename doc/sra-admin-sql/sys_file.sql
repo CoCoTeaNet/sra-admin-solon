@@ -15,3 +15,4 @@ create table sys_file
     DELETE_STATUS tinyint          not null comment '删除状态：0删除 1未删除'
 )
     comment '系统文件表';
+

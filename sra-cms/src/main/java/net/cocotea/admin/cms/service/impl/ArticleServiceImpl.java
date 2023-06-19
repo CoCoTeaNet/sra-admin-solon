@@ -106,7 +106,12 @@ public class ArticleServiceImpl implements IArticleService {
 
     @Override
     public List<ArticleVO> findByTimeDesc() {
-        String sql = "select ID, TITLE, TAGS, COVER, SUMMARY, CREATE_TIME from cms_article where DELETE_STATUS = 1 order by CREATE_TIME desc, UPDATE_TIME desc limit 15";
+        String sql = """
+                select ID, TITLE, TAGS, COVER, SUMMARY, CREATE_TIME
+                from cms_article
+                 where DELETE_STATUS = 1
+                order by CREATE_TIME desc, UPDATE_TIME desc limit 15
+                """;
         List<ArticleVO> list = sqlToyLazyDao.findBySql(sql, new ArticleVO());
         list.forEach(articleVo -> {
             if (StrUtil.isBlank(articleVo.getCover())) {
