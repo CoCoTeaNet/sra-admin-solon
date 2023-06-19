@@ -9,11 +9,9 @@
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>a-api</artifactId>
+    <artifactId>c-model</artifactId>
 
     <modelVersion>4.0.0</modelVersion>
-
-    <packaging>jar</packaging>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -24,17 +22,8 @@
     <dependencies>
         <dependency>
             <groupId>net.cocotea</groupId>
-            <artifactId>b-service</artifactId>
+            <artifactId>e-common</artifactId>
         </dependency>
     </dependencies>
 
-    <build>
-        <finalName>web-api</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.noear</groupId>
-                <artifactId>solon-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 </project>

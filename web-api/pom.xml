@@ -2,26 +2,26 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-
-    <groupId>net.cocotea</groupId>
-    <artifactId>admin-solon</artifactId>
-    <packaging>pom</packaging>
-    <version>1.2.6</version>
 
     <parent>
         <groupId>org.noear</groupId>
         <artifactId>solon-parent</artifactId>
         <version>2.2.20</version>
-        <relativePath />
     </parent>
 
+    <groupId>net.cocotea</groupId>
+    <artifactId>admin-solon-parent</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+
+    <modelVersion>4.0.0</modelVersion>
+
     <modules>
-        <module>sra-bootstrap</module>
-        <module>sra-common</module>
-        <module>sra-framework</module>
-        <module>sra-system</module>
-        <module>sra-cms</module>
+        <module>a-api</module>
+        <module>b-service</module>
+        <module>c-data</module>
+        <module>c-model</module>
+        <module>e-common</module>
     </modules>
 
     <properties>
@@ -29,7 +29,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <utf-8>UTF-8</utf-8>
         <!-- 内部模块版本 -->
-        <sra.version>1.2.6</sra.version>
+        <admin-solon.version>1.0.0</admin-solon.version>
         <!-- 外部框架版本 -->
         <solon.version>2.2.20</solon.version>
         <mysql-connector.version>8.0.30</mysql-connector.version>
@@ -41,39 +41,34 @@
         <redisx.version>1.4.7</redisx.version>
     </properties>
 
-    <!-- 依赖声明 -->
     <dependencyManagement>
         <dependencies>
             <!-- 内部模块 -->
-            <!-- 系统模块 -->
+            <!-- 通用模块 -->
             <dependency>
                 <groupId>net.cocotea</groupId>
-                <artifactId>sra-system</artifactId>
-                <version>${sra.version}</version>
+                <artifactId>a-api</artifactId>
+                <version>${admin-solon.version}</version>
             </dependency>
-            <!-- 内容管理模块 -->
             <dependency>
                 <groupId>net.cocotea</groupId>
-                <artifactId>sra-cms</artifactId>
-                <version>${sra.version}</version>
+                <artifactId>b-service</artifactId>
+                <version>${admin-solon.version}</version>
             </dependency>
-            <!-- 引入框架模块 -->
             <dependency>
                 <groupId>net.cocotea</groupId>
-                <artifactId>sra-framework</artifactId>
-                <version>${sra.version}</version>
+                <artifactId>c-data</artifactId>
+                <version>${admin-solon.version}</version>
             </dependency>
-            <!-- 常用工具模块 -->
             <dependency>
                 <groupId>net.cocotea</groupId>
-                <artifactId>sra-common</artifactId>
-                <version>${sra.version}</version>
+                <artifactId>c-model</artifactId>
+                <version>${admin-solon.version}</version>
             </dependency>
-            <!-- 项目启动模块 -->
             <dependency>
                 <groupId>net.cocotea</groupId>
-                <artifactId>sra-bootstrap</artifactId>
-                <version>${sra.version}</version>
+                <artifactId>e-common</artifactId>
+                <version>${admin-solon.version}</version>
             </dependency>
             <!-- 外部框架 -->
             <!-- solon -->
