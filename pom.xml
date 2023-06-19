@@ -22,7 +22,6 @@
         <module>sra-framework</module>
         <module>sra-system</module>
         <module>sra-cms</module>
-        <module>sra-schedule</module>
     </modules>
 
     <properties>

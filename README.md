@@ -6,6 +6,9 @@ sra-admin-solon 是一个前后端分离的后台管理系统，国产化核心�
 后端技术栈：solon+sqltoy+satoken+hutool  
 前端技术栈：vue3+vue-router+typescript+elementui
 
+#### 与springboot版本的不同之处
+1、solon版本移除了调度模块，建议使用[分布式调度服务](https://solon.noear.org/article/family-solon-cloud-job)  
+
 #### 应用场景
 - XXX网站 | 博客网站
 - 编程学习 | 毕业设计
@@ -76,7 +79,7 @@ $ npm run build || yarn build       #生产环境
 
 ##### 后端
 
-- [Soon](https://solon.noear.org/) ：Java 新的生态型应用开发框架：更快、更小、更简单。
+- [Solon](https://solon.noear.org/) ：Java 新的生态型应用开发框架：更快、更小、更简单。
 - [Sqltoy](https://gitee.com/sagacity/sagacity-sqltoy) ：java真正最强大的ORM框架，支持市场上流行数据库。
 - [Satoken](https://sa-token.dev33.cn/doc/index.html#/) ：一个轻量级 Java 权限认证框架，让鉴权变得简单、优雅！
 - [Hutool](https://www.hutool.cn/) ：小而全的Java工具类库，使Java拥有函数式语言般的优雅，让Java语言也可以“甜甜的”。

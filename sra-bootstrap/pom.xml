@@ -30,11 +30,6 @@
             <groupId>net.cocotea</groupId>
             <artifactId>sra-cms</artifactId>
         </dependency>
-        <!-- 引入任务调度模块 -->
-        <dependency>
-            <groupId>net.cocotea</groupId>
-            <artifactId>sra-schedule</artifactId>
-        </dependency>
     </dependencies>
 
     <build>
