@@ -23,13 +23,6 @@ sra:
       - /system/captcha
       # 文件访问路径
       - /download/**
-      - /schedule/**
-      # 内容管理
-      - /cmsPage/**
-      - /bootstrap-5.1.3/**
-      - /default/**
-      - /css/**
-      - /js/**
   default:
     password: sra123456
     salt: sra-salt
