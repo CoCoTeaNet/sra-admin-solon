@@ -38,7 +38,6 @@
         <hutool.version>5.8.12</hutool.version>
         <hutool-oshi.version>5.6.1</hutool-oshi.version>
         <commons-pool2.version>2.11.1</commons-pool2.version>
-        <freemaker.version>2.3.31</freemaker.version>
         <redisx.version>1.4.7</redisx.version>
     </properties>
 
@@ -142,11 +141,6 @@
                 <groupId>org.noear</groupId>
                 <artifactId>redisx</artifactId>
                 <version>${redisx.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.freemarker</groupId>
-                <artifactId>freemarker</artifactId>
-                <version>${freemaker.version}</version>
             </dependency>
             <!-- logback日志插件 -->
             <dependency>
