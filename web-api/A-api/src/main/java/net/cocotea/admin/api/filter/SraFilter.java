@@ -11,6 +11,7 @@ import net.cocotea.admin.common.enums.ApiResultEnum;
 import net.cocotea.admin.common.enums.LogTypeEnum;
 import net.cocotea.admin.common.model.ApiResult;
 import net.cocotea.admin.common.model.BusinessException;
+import net.cocotea.admin.common.model.LimitsException;
 import net.cocotea.admin.common.model.NotLogException;
 import net.cocotea.admin.common.service.IRedisService;
 import net.cocotea.admin.service.system.IOperationLogService;
@@ -38,6 +39,8 @@ public class SraFilter implements Filter {
         //1.开始计时（用于计算响应时长）
         long start = System.currentTimeMillis();
         try {
+            apiLimitAccessTimes(ctx.realIp());
+
             chain.doFilter(ctx);
 
             //2.未处理设为404状态
@@ -51,10 +54,6 @@ public class SraFilter implements Filter {
             }
 
             onlineUsersRenewal();
-            boolean b = apiLimitAccessTimes(ctx.realIp());
-            if (!b) {
-                ctx.output(JSONObject.toJSONString(ApiResult.error("操作过于频繁.")));
-            }
         } catch (Exception e) {
             //4.异常捕促与控制
             logger.error(e.getMessage());
@@ -79,6 +78,10 @@ public class SraFilter implements Filter {
                 logger.error("角色未知异常: " + e.getMessage());
                 ctx.status(ApiResultEnum.NOT_PERMISSION.getCode());
                 ctx.output(ApiResultEnum.NOT_PERMISSION.getDesc());
+            } else if (e instanceof LimitsException) {
+                logger.error("访问过快限制异常: " + e.getMessage());
+                ctx.status(ApiResultEnum.ERROR.getCode());
+                ctx.output(((LimitsException) e).getErrorMsg());
             } else {
                 ctx.status(ApiResultEnum.ERROR.getCode());
                 ctx.output(ApiResultEnum.ERROR.getDesc());
@@ -122,23 +125,20 @@ public class SraFilter implements Filter {
     /**
      * 接口访问限制：1秒内运行访问N次
      */
-    private boolean apiLimitAccessTimes(String ip) {
+    private void apiLimitAccessTimes(String ip) throws LimitsException {
         if (StpUtil.isLogin()) {
             String redisKey = ip + ":" + StpUtil.getLoginId();
             String value = redisService.get(redisKey);
             if (StrUtil.isBlank(value)) {
                 redisService.save(redisKey, String.valueOf(1), 1L);
-                return true;
+                return;
             } if (Integer.parseInt(value) <= visits) {
                 int count = Integer.parseInt(value);
                 count++;
                 redisService.set(redisKey, String.valueOf(count));
-                return true;
             } else {
-                return false;
+                throw new LimitsException("操作过于频繁");
             }
-        } else {
-            return true;
         }
     }
 

@@ -22,7 +22,7 @@ public class SysThemeController {
     }
 
     @SaCheckLogin
-    @Post
+    @Get
     @Mapping("/loadByUser")
     public ApiResult<?> loadByUser() {
         SysThemeVO b = sysThemeService.loadByUser();
