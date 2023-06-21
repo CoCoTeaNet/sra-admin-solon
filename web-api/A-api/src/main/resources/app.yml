@@ -21,6 +21,7 @@ sra:
       # 登录
       - /system/login
       - /system/captcha
+      - /system/logout
       # 文件访问路径
       - /download/**
   default:
