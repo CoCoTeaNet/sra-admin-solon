@@ -4,12 +4,12 @@ import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.dev33.satoken.annotation.SaMode;
 import net.cocotea.admin.common.model.ApiResult;
 import net.cocotea.admin.common.model.BusinessException;
-import net.cocotea.admin.model.system.dto.role.RoleAddParam;
-import net.cocotea.admin.model.system.dto.role.RolePageParam;
-import net.cocotea.admin.model.system.dto.role.RoleUpdateParam;
-import net.cocotea.admin.model.system.vo.RoleMenuVO;
-import net.cocotea.admin.model.system.vo.RoleVO;
-import net.cocotea.admin.service.system.IRoleService;
+import net.cocotea.admin.service.dto.system.role.RoleAddParam;
+import net.cocotea.admin.service.dto.system.role.RolePageParam;
+import net.cocotea.admin.service.dto.system.role.RoleUpdateParam;
+import net.cocotea.admin.service.vo.system.RoleMenuVO;
+import net.cocotea.admin.service.vo.system.RoleVO;
+import net.cocotea.admin.service.core.system.IRoleService;
 import org.noear.solon.annotation.*;
 import org.sagacity.sqltoy.model.Page;
 

@@ -4,11 +4,11 @@ import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import net.cocotea.admin.common.model.ApiResult;
 import net.cocotea.admin.common.model.BusinessException;
-import net.cocotea.admin.model.system.dto.user.UserAddParam;
-import net.cocotea.admin.model.system.dto.user.UserPageParam;
-import net.cocotea.admin.model.system.dto.user.UserUpdateParam;
-import net.cocotea.admin.model.system.vo.UserVO;
-import net.cocotea.admin.service.system.IUserService;
+import net.cocotea.admin.service.dto.system.user.UserAddParam;
+import net.cocotea.admin.service.dto.system.user.UserPageParam;
+import net.cocotea.admin.service.dto.system.user.UserUpdateParam;
+import net.cocotea.admin.service.vo.system.UserVO;
+import net.cocotea.admin.service.core.system.IUserService;
 import org.noear.solon.annotation.*;
 import org.sagacity.sqltoy.model.Page;
 

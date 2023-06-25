@@ -2,10 +2,10 @@ package net.cocotea.admin.api.controller.cms;
 
 import net.cocotea.admin.common.model.ApiResult;
 import net.cocotea.admin.common.model.BusinessException;
-import net.cocotea.admin.model.cms.dto.comment.CommentAddParam;
-import net.cocotea.admin.model.cms.dto.comment.CommentPageParam;
-import net.cocotea.admin.model.cms.vo.CommentVO;
-import net.cocotea.admin.service.cms.ICommentService;
+import net.cocotea.admin.service.dto.cms.comment.CommentAddParam;
+import net.cocotea.admin.service.dto.cms.comment.CommentPageParam;
+import net.cocotea.admin.service.vo.cms.CommentVO;
+import net.cocotea.admin.service.core.cms.ICommentService;
 import org.noear.solon.annotation.*;
 import org.sagacity.sqltoy.model.Page;
 

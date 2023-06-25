@@ -4,9 +4,9 @@ import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.dev33.satoken.annotation.SaMode;
 import net.cocotea.admin.common.model.ApiResult;
 import net.cocotea.admin.common.model.BusinessException;
-import net.cocotea.admin.model.system.dto.log.OperationLogPageParam;
-import net.cocotea.admin.model.system.vo.OperationLogVO;
-import net.cocotea.admin.service.system.IOperationLogService;
+import net.cocotea.admin.service.dto.system.log.OperationLogPageParam;
+import net.cocotea.admin.service.vo.system.OperationLogVO;
+import net.cocotea.admin.service.core.system.IOperationLogService;
 import org.noear.solon.annotation.*;
 import org.sagacity.sqltoy.model.Page;
 

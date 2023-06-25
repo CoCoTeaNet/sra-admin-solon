@@ -5,11 +5,11 @@ import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.dev33.satoken.annotation.SaMode;
 import net.cocotea.admin.common.model.ApiResult;
 import net.cocotea.admin.common.model.BusinessException;
-import net.cocotea.admin.model.system.dto.version.VersionAddParam;
-import net.cocotea.admin.model.system.dto.version.VersionPageParam;
-import net.cocotea.admin.model.system.dto.version.VersionUpdateParam;
-import net.cocotea.admin.model.system.vo.VersionVO;
-import net.cocotea.admin.service.system.IVersionService;
+import net.cocotea.admin.service.dto.system.version.VersionAddParam;
+import net.cocotea.admin.service.dto.system.version.VersionPageParam;
+import net.cocotea.admin.service.dto.system.version.VersionUpdateParam;
+import net.cocotea.admin.service.vo.system.VersionVO;
+import net.cocotea.admin.service.core.system.IVersionService;
 import org.noear.solon.annotation.*;
 import org.sagacity.sqltoy.model.Page;
 

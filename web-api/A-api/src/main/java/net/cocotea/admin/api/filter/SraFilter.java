@@ -14,7 +14,7 @@ import net.cocotea.admin.common.model.BusinessException;
 import net.cocotea.admin.common.model.LimitsException;
 import net.cocotea.admin.common.model.NotLogException;
 import net.cocotea.admin.common.service.IRedisService;
-import net.cocotea.admin.service.system.IOperationLogService;
+import net.cocotea.admin.service.core.system.IOperationLogService;
 import org.noear.solon.annotation.Component;
 import org.noear.solon.annotation.Inject;
 import org.noear.solon.core.handle.Context;

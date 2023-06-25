@@ -20,7 +20,6 @@
         <module>a-api</module>
         <module>b-service</module>
         <module>c-data</module>
-        <module>c-model</module>
         <module>e-common</module>
     </modules>
 
@@ -44,7 +43,6 @@
     <dependencyManagement>
         <dependencies>
             <!-- 内部模块 -->
-            <!-- 通用模块 -->
             <dependency>
                 <groupId>net.cocotea</groupId>
                 <artifactId>a-api</artifactId>
@@ -58,11 +56,6 @@
             <dependency>
                 <groupId>net.cocotea</groupId>
                 <artifactId>c-data</artifactId>
-                <version>${admin-solon.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.cocotea</groupId>
-                <artifactId>c-model</artifactId>
                 <version>${admin-solon.version}</version>
             </dependency>
             <dependency>

@@ -3,11 +3,11 @@ package net.cocotea.admin.api.controller.system;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import net.cocotea.admin.common.model.ApiResult;
 import net.cocotea.admin.common.model.BusinessException;
-import net.cocotea.admin.model.system.dto.dictionary.DictionaryAddParam;
-import net.cocotea.admin.model.system.dto.dictionary.DictionaryPageParam;
-import net.cocotea.admin.model.system.dto.dictionary.DictionaryUpdateParam;
-import net.cocotea.admin.model.system.vo.DictionaryVO;
-import net.cocotea.admin.service.system.IDictionaryService;
+import net.cocotea.admin.service.dto.system.dictionary.DictionaryAddParam;
+import net.cocotea.admin.service.dto.system.dictionary.DictionaryPageParam;
+import net.cocotea.admin.service.dto.system.dictionary.DictionaryUpdateParam;
+import net.cocotea.admin.service.vo.system.DictionaryVO;
+import net.cocotea.admin.service.core.system.IDictionaryService;
 import org.noear.solon.annotation.*;
 
 import java.util.Collection;

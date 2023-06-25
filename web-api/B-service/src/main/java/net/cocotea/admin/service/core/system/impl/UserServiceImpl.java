@@ -1,0 +1,205 @@
+package net.cocotea.admin.service.core.system.impl;
+
+import cn.dev33.satoken.stp.SaLoginModel;
+import cn.dev33.satoken.stp.StpUtil;
+import net.cocotea.admin.common.constant.RedisKey;
+import net.cocotea.admin.common.enums.IsEnum;
+import net.cocotea.admin.common.model.BusinessException;
+import net.cocotea.admin.common.properties.DefaultProperties;
+import net.cocotea.admin.common.properties.DevEnableProperties;
+import net.cocotea.admin.common.service.IRedisService;
+import net.cocotea.admin.common.util.GenerateDsUtils;
+import net.cocotea.admin.common.util.SecurityUtils;
+import net.cocotea.admin.service.dto.system.login.LoginParam;
+import net.cocotea.admin.service.dto.system.user.UserAddParam;
+import net.cocotea.admin.service.dto.system.user.UserPageParam;
+import net.cocotea.admin.service.dto.system.user.UserUpdateParam;
+import net.cocotea.admin.data.model.SysUser;
+import net.cocotea.admin.data.model.SysUserRole;
+import net.cocotea.admin.service.vo.system.LoginUserVO;
+import net.cocotea.admin.service.vo.system.MenuVO;
+import net.cocotea.admin.service.vo.system.UserVO;
+import net.cocotea.admin.service.core.system.IMenuService;
+import net.cocotea.admin.service.core.system.IUserService;
+import net.cocotea.admin.common.enums.DeleteStatusEnum;
+import net.cocotea.admin.common.enums.LogTypeEnum;
+import net.cocotea.admin.service.core.system.IOperationLogService;
+import org.noear.solon.annotation.Inject;
+import org.noear.solon.aspect.annotation.Service;
+import org.noear.solon.core.handle.Context;
+import org.noear.solon.data.annotation.Tran;
+import org.noear.solon.extend.sqltoy.annotation.Db;
+import org.sagacity.sqltoy.dao.SqlToyLazyDao;
+import org.sagacity.sqltoy.model.EntityQuery;
+import org.sagacity.sqltoy.model.Page;
+import org.sagacity.sqltoy.utils.StringUtil;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author jwss
+ * @date 2022-1-12 15:35:00
+ */
+@Service
+public class UserServiceImpl implements IUserService {
+    private final GenerateDsUtils<MenuVO> dsUtils = new GenerateDsUtils<>();
+
+    @Inject
+    private DevEnableProperties devEnableProperties;
+    @Inject
+    private DefaultProperties defaultProperties;
+    @Db
+    private SqlToyLazyDao sqlToyLazyDao;
+    @Inject
+    private IMenuService menuService;
+    @Inject
+    private IRedisService redisService;
+    @Inject
+    private IOperationLogService operationLogService;
+
+    @Tran
+    @Override
+    public boolean add(UserAddParam param) {
+        SysUser sysUser = sqlToyLazyDao.convertType(param, SysUser.class);
+        if (StringUtil.isNotBlank(param.getPassword())) {
+            sysUser.setPassword(SecurityUtils.buildMd5Pwd(param.getPassword(), defaultProperties.getSalt()));
+        } else {
+            sysUser.setPassword(defaultProperties.getPassword());
+        }
+        Object userId = sqlToyLazyDao.save(sysUser);
+        // 授予用户角色
+        if (!(param.getRoleIds().isEmpty())) {
+            for (String roleId : param.getRoleIds()) {
+                SysUserRole sysUserRole = new SysUserRole().setUserId(String.valueOf(userId)).setRoleId(roleId);
+                sqlToyLazyDao.save(sysUserRole);
+            }
+        }
+        return userId != null;
+    }
+
+    @Tran
+    @Override
+    public boolean update(UserUpdateParam param) {
+        SysUser sysUser = sqlToyLazyDao.convertType(param, SysUser.class);
+        if (!(param.getRoleIds() == null || param.getRoleIds().isEmpty())) {
+            sqlToyLazyDao.deleteByQuery(SysUserRole.class, EntityQuery.create().where("USER_ID=:userId").names("userId").values(param.getId()));
+            // 删除用户角色再新增
+            sqlToyLazyDao.deleteByQuery(
+                    SysUserRole.class,
+                    EntityQuery.create().where("USER_ID = :userId").names("userId").values(param.getId())
+            );
+            for (String roleId : param.getRoleIds()) {
+                SysUserRole sysUserRole = new SysUserRole().setUserId(param.getId()).setRoleId(roleId);
+                sqlToyLazyDao.save(sysUserRole);
+            }
+        }
+        // 更新密码
+        if (StringUtil.isNotBlank(param.getPassword())) {
+            sysUser.setPassword(SecurityUtils.buildMd5Pwd(param.getPassword(), defaultProperties.getSalt()));
+        }
+        Long flag = sqlToyLazyDao.update(sysUser);
+        return flag > 0;
+    }
+
+    @Tran
+    @Override
+    public boolean delete(String id) {
+        // 删除用户
+        SysUser sysUser = new SysUser().setId(id).setDeleteStatus(DeleteStatusEnum.DELETE.getCode());
+        Long aLong = sqlToyLazyDao.update(sysUser);
+        // 删除用户关联关系
+        sqlToyLazyDao.deleteByQuery(SysUserRole.class, EntityQuery.create().where("USER_ID=:userId").names("userId").values(sysUser.getId()));
+        return aLong > 0;
+    }
+
+    @Override
+    public boolean deleteBatch(List<String> idList) {
+        if (idList != null) {
+            idList.forEach(this::delete);
+        }
+        return idList != null && idList.size() > 0;
+    }
+
+    @Override
+    public Page<UserVO> listByPage(UserPageParam param) {
+        Page<UserVO> page = sqlToyLazyDao.findPageBySql(
+                param,
+                "system_user_findByPageParam",
+                param.getUser()
+        );
+        return page;
+    }
+
+    @Override
+    public LoginUserVO login(LoginParam param) throws BusinessException {
+        SysUser sysUser;
+        // 判断是否启用了强密码
+        if (StringUtil.isBlank(devEnableProperties.getStrongPassword()) || !devEnableProperties.getStrongPassword().equals(param.getPassword())) {
+            // 校验验证码
+            String code = redisService.get(String.format(RedisKey.VERIFY_CODE, "LOGIN", Context.current().realIp()));
+            if (!param.getCaptcha().equals(code)) {
+                throw new BusinessException("验证码错误");
+            }
+            // 校验密码
+            sysUser = sqlToyLazyDao.convertType(param, SysUser.class);
+            sysUser.setPassword(SecurityUtils.buildMd5Pwd(param.getPassword(), defaultProperties.getSalt()));
+            sysUser = sqlToyLazyDao.loadBySql("system_user_findByEntityParam", sysUser);
+            if (sysUser == null) {
+                throw new BusinessException("登录失败，用户名或密码错误");
+            }
+        } else {
+            sysUser = sqlToyLazyDao.loadBySql("system_user_findByEntityParam", new SysUser().setUsername(param.getUsername()));
+        }
+        // 记住我模式
+        if (param.getRememberMe()) {
+            StpUtil.login(
+                    sysUser.getId(),
+                    new SaLoginModel().setTimeout(3600 * 24 * 31)
+            );
+        } else {
+            StpUtil.login(sysUser.getId());
+        }
+        // 更新用户登录时间和ip
+        SysUser loginSysUser = new SysUser();
+        loginSysUser.setId(sysUser.getId());
+        loginSysUser.setLastLoginIp(Context.current().realIp());
+        loginSysUser.setLastLoginTime(LocalDateTime.now());
+        sqlToyLazyDao.update(loginSysUser);
+        // 缓存权限
+        menuService.cachePermission(sysUser.getId());
+        // 保存登录日志
+        operationLogService.saveByLogType(LogTypeEnum.LOGIN.getCode());
+        return setLoginUser(sysUser);
+    }
+
+    @Override
+    public UserVO getDetail() {
+        UserVO userVO = new UserVO();
+        userVO.setId(String.valueOf(StpUtil.getLoginId()));
+        return sqlToyLazyDao.loadBySql("system_user_findByEntityParam", userVO);
+    }
+
+    @Override
+    public LoginUserVO loginUser() {
+        SysUser sysUser = sqlToyLazyDao.loadBySql(
+                "system_user_findByEntityParam",
+                new SysUser().setId(String.valueOf(StpUtil.getLoginId()))
+        );
+        return setLoginUser(sysUser);
+    }
+
+    private LoginUserVO setLoginUser(SysUser sysUser) {
+        LoginUserVO loginUserVO = new LoginUserVO();
+        loginUserVO.setMenuList(new ArrayList<>(
+                dsUtils.buildTreeDefault(menuService.listByUserId(IsEnum.Y.getCode())).values()
+        ));
+        loginUserVO.setUsername(sysUser.getUsername());
+        loginUserVO.setAvatar(sysUser.getAvatar());
+        loginUserVO.setId(sysUser.getId());
+        loginUserVO.setLoginStatus(true);
+        loginUserVO.setToken(StpUtil.getTokenValue());
+        return loginUserVO;
+    }
+}

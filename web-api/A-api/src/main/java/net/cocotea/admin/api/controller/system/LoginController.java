@@ -8,10 +8,10 @@ import net.cocotea.admin.common.constant.RedisKey;
 import net.cocotea.admin.common.model.ApiResult;
 import net.cocotea.admin.common.model.BusinessException;
 import net.cocotea.admin.common.service.IRedisService;
-import net.cocotea.admin.model.system.dto.login.CaptchaParam;
-import net.cocotea.admin.model.system.dto.login.LoginParam;
-import net.cocotea.admin.model.system.vo.LoginUserVO;
-import net.cocotea.admin.service.system.IUserService;
+import net.cocotea.admin.service.dto.system.login.CaptchaParam;
+import net.cocotea.admin.service.dto.system.login.LoginParam;
+import net.cocotea.admin.service.vo.system.LoginUserVO;
+import net.cocotea.admin.service.core.system.IUserService;
 import org.noear.solon.annotation.*;
 import org.noear.solon.core.handle.Context;
 

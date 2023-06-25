@@ -2,9 +2,9 @@ package net.cocotea.admin.api.controller.system;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import net.cocotea.admin.common.model.ApiResult;
-import net.cocotea.admin.model.system.dto.theme.SysThemeUpdateParam;
-import net.cocotea.admin.model.system.vo.SysThemeVO;
-import net.cocotea.admin.service.system.ISysThemeService;
+import net.cocotea.admin.service.dto.system.theme.SysThemeUpdateParam;
+import net.cocotea.admin.service.vo.system.SysThemeVO;
+import net.cocotea.admin.service.core.system.ISysThemeService;
 import org.noear.solon.annotation.*;
 
 @Mapping("/system/theme")

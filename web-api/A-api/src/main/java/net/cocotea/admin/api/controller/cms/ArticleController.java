@@ -4,11 +4,11 @@ import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.dev33.satoken.annotation.SaMode;
 import net.cocotea.admin.common.model.ApiResult;
 import net.cocotea.admin.common.model.BusinessException;
-import net.cocotea.admin.model.cms.dto.article.ArticleAddParam;
-import net.cocotea.admin.model.cms.dto.article.ArticlePageParam;
-import net.cocotea.admin.model.cms.dto.article.ArticleUpdateParam;
-import net.cocotea.admin.model.cms.vo.ArticleVO;
-import net.cocotea.admin.service.cms.IArticleService;
+import net.cocotea.admin.service.dto.cms.article.ArticleAddParam;
+import net.cocotea.admin.service.dto.cms.article.ArticlePageParam;
+import net.cocotea.admin.service.dto.cms.article.ArticleUpdateParam;
+import net.cocotea.admin.service.vo.cms.ArticleVO;
+import net.cocotea.admin.service.core.cms.IArticleService;
 import org.noear.solon.annotation.*;
 import org.sagacity.sqltoy.model.Page;
 
