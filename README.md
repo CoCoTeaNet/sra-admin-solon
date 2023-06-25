@@ -38,15 +38,15 @@ sra-admin-solon 是一个前后端分离的后台管理系统，国产化核心�
 * 后端
 
 ```text
-1. 配置文件：/sra-bootstrap/src/main/resources/application.yml
-2. 数据库执行脚本：/doc/sql/*.sql
-3. 项目启动类：/sra-bootstrap/src/main/java/com/sraapp/bootstrap/AppBoot.java
+1. 配置文件：/web-api/A-api/src/main/resources/app.yml
+2. 数据库执行脚本：/doc/sra-admin-sql/*.sql
+3. 项目启动类：/web-api/A-api/src/main/java/net/cocotea/admin/api/App.java
 ```
 
 - 前端
 
 ```bash
-$ cd sra-ui                         #切换到前端目录
+$ cd web-ui/web-pc                  #切换到前端目录
 $ npm install   || yarn             #安装依赖  
 $ npm run serve || yarn serve       #开发环境  
 $ npm run build || yarn build       #生产环境
