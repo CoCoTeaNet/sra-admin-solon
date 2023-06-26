@@ -1,4 +1,4 @@
-package net.cocotea.admin.system.controller;
+package net.cocotea.admin.api.controller.system;
 
 import net.cocotea.admin.common.model.ApiResult;
 import net.cocotea.admin.common.model.BusinessException;
