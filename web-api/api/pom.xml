@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <groupId>net.cocotea</groupId>
+        <artifactId>admin-solon-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>api</artifactId>
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <packaging>jar</packaging>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <utf-8>UTF-8</utf-8>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>net.cocotea</groupId>
+            <artifactId>common</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>web-api</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.noear</groupId>
+                <artifactId>solon-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

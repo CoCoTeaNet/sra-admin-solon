@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <groupId>net.cocotea</groupId>
+        <artifactId>admin-solon-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>common</artifactId>
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <utf-8>UTF-8</utf-8>
+    </properties>
+
+    <dependencies>
+        <!-- solon -->
+        <dependency>
+            <groupId>org.noear</groupId>
+            <artifactId>solon-web</artifactId>
+        </dependency>
+        <!-- sqltoy solon starter -->
+        <dependency>
+            <groupId>org.noear</groupId>
+            <artifactId>sqltoy-solon-plugin</artifactId>
+        </dependency>
+        <!-- Sa-Token 权限认证, 在线文档：http://sa-token.dev33.cn/ -->
+        <dependency>
+            <groupId>org.noear</groupId>
+            <artifactId>sa-token-solon-plugin</artifactId>
+        </dependency>
+        <!-- mysql连接器 -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- 连接池 -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+        </dependency>
+        <!-- fastjson -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+        <!-- hutool工具 -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.oshi</groupId>
+            <artifactId>oshi-core</artifactId>
+        </dependency>
+        <!-- 提供Redis连接池 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+        </dependency>
+        <!-- redis -->
+        <dependency>
+            <groupId>org.noear</groupId>
+            <artifactId>redisx</artifactId>
+        </dependency>
+        <!-- logback日志插件 -->
+        <dependency>
+            <groupId>org.noear</groupId>
+            <artifactId>logback-solon-plugin</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>
