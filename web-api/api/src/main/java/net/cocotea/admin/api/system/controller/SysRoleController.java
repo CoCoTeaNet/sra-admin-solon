@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Mapping("/system/role")
 @Controller
-public class RoleController {
+public class SysRoleController {
     @Inject
     private SysRoleService roleService;
 

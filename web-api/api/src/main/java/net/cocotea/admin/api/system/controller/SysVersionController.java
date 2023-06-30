@@ -17,7 +17,7 @@ import java.util.List;
 
 @Mapping("/system/version")
 @Controller
-public class VersionController {
+public class SysVersionController {
     @Inject
     private SysVersionService versionService;
     

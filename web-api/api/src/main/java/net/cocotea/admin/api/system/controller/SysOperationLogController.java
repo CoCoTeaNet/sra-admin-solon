@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Controller
 @Mapping("/system/operationLog")
-public class OperationLogController {
+public class SysOperationLogController {
     @Inject
     private SysOperationLogService operationLogService;
 

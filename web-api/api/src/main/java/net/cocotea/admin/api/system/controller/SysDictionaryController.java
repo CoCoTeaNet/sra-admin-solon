@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Controller
 @Mapping("/system/dictionary")
-public class DictionaryController {
+public class SysDictionaryController {
     @Inject
     private SysDictionaryService dictionaryService;
 

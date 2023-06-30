@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Controller
 @Mapping("/cms/article")
-public class ArticleController {
+public class CmsArticleController {
     @Inject
     private CmsArticleService articleService;
 

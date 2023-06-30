@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Mapping("/system/user")
 @Controller
-public class UserController {
+public class SysUserController {
     @Inject
     private SysUserService userService;
 

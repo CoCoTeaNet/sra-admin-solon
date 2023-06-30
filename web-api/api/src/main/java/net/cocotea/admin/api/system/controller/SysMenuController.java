@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Controller
 @Mapping("/system/menu")
-public class MenuController {
+public class SysMenuController {
     @Inject
     private SysMenuService menuService;
 

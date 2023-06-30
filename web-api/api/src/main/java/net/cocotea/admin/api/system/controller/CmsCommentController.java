@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Controller
 @Mapping("/cms/comment")
-public class CommentController {
+public class CmsCommentController {
     @Inject
     private CmsCommentService commentService;
 

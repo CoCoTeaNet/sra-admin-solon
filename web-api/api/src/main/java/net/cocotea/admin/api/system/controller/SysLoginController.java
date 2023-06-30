@@ -20,7 +20,7 @@ import org.noear.solon.core.handle.Context;
  */
 @Controller
 @Mapping("/system")
-public class LoginController {
+public class SysLoginController {
     @Inject
     private SysUserService userService;
 

@@ -20,7 +20,7 @@ import java.util.Map;
  */
 @Controller
 @Mapping("/system/dashboard")
-public class DashboardController {
+public class SysDashboardController {
     @Inject
     private SysDashboardService dashboardService;
 
