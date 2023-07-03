@@ -1,7 +1,7 @@
 ### 当前版本V1.0.0
 
 #### 介绍
-sra-admin-solon 是一个前后端分离的后台管理系统，国产化核心框架，实现了用户、字典、角色、权限等常见功能，
+sra-admin-solon 是一个前后端分离的脚手架项目，国产化核心框架，实现了用户、字典、角色、权限等常见功能，
 能够快速搭建一个web项目。  
 后端技术栈：solon+sqltoy+satoken+hutool  
 前端技术栈：vue3+vue-router+typescript+elementui
