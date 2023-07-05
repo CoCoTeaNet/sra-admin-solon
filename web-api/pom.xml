@@ -29,6 +29,7 @@
         <admin-solon.version>1.0.0</admin-solon.version>
         <!-- 外部框架版本 -->
         <solon.version>2.2.20</solon.version>
+        <sqltoy.version>5.2.54</sqltoy.version>
         <mysql-connector.version>8.0.30</mysql-connector.version>
         <satoken.version>1.33.0</satoken.version>
         <fastjson.version>1.2.83</fastjson.version>
@@ -63,6 +64,11 @@
                 <groupId>org.noear</groupId>
                 <artifactId>sqltoy-solon-plugin</artifactId>
                 <version>${solon.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sagframe</groupId>
+                <artifactId>sqltoy-plus-core</artifactId>
+                <version>${sqltoy.version}</version>
             </dependency>
             <!-- Sa-Token 权限认证, 在线文档：http://sa-token.dev33.cn/ -->
             <dependency>

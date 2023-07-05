@@ -30,6 +30,10 @@
             <groupId>org.noear</groupId>
             <artifactId>sqltoy-solon-plugin</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.sagframe</groupId>
+            <artifactId>sqltoy-plus-core</artifactId>
+        </dependency>
         <!-- Sa-Token 权限认证, 在线文档：http://sa-token.dev33.cn/ -->
         <dependency>
             <groupId>org.noear</groupId>

@@ -2,6 +2,9 @@ package net.cocotea.admin.api.system.service.impl;
 
 import cn.dev33.satoken.stp.SaLoginModel;
 import cn.dev33.satoken.stp.StpUtil;
+import com.sagframe.sagacity.sqltoy.plus.conditions.Wrappers;
+import com.sagframe.sagacity.sqltoy.plus.conditions.query.LambdaQueryWrapper;
+import com.sagframe.sagacity.sqltoy.plus.dao.SqlToyHelperDao;
 import net.cocotea.admin.api.system.model.dto.SysLoginDTO;
 import net.cocotea.admin.api.system.model.dto.SysUserAddDTO;
 import net.cocotea.admin.api.system.model.dto.SysUserPageDTO;
@@ -39,7 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author jwss
+ * @author CoCoTea
  * @date 2022-1-12 15:35:00
  */
 @Service
@@ -48,16 +51,24 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Inject
     private DevEnableProperties devEnableProperties;
+
     @Inject
     private DefaultProperties defaultProperties;
+
     @Db
     private SqlToyLazyDao sqlToyLazyDao;
+
     @Inject
     private SysMenuService menuService;
+
     @Inject
     private IRedisService redisService;
+
     @Inject
     private SysOperationLogService operationLogService;
+
+    @Inject
+    private SqlToyHelperDao sqlToyHelperDao;
 
     @Tran
     @Override
@@ -188,6 +199,33 @@ public class SysUserServiceImpl implements SysUserService {
                 new SysUser().setId(String.valueOf(StpUtil.getLoginId()))
         );
         return setLoginUser(sysUser);
+    }
+
+    @Override
+    public boolean doModifyPassword(String oldPassword, String newPassword) throws BusinessException {
+        if (StringUtil.isBlank(oldPassword)) {
+            throw new BusinessException("旧密码为空");
+        }
+        if (StringUtil.isBlank(newPassword)) {
+            throw new BusinessException("新密码为空");
+        }
+        String loginId = (String) StpUtil.getLoginId();
+
+        LambdaQueryWrapper<SysUser> queryWrapper = Wrappers
+                .lambdaWrapper(SysUser.class)
+                .select(SysUser::getId)
+                .select(SysUser::getPassword)
+                .eq(SysUser::getId, loginId)
+                .eq(SysUser::getDeleteStatus, DeleteStatusEnum.NOT_DELETE.getCode());
+        SysUser sysUser = sqlToyHelperDao.findOne(queryWrapper);
+
+        String md5PwdOld = SecurityUtils.buildMd5Pwd(oldPassword, defaultProperties.getSalt());
+        if (!sysUser.getPassword().equals(md5PwdOld)) {
+            throw new BusinessException("旧密码不正确");
+        }
+        String md5PwdNew = SecurityUtils.buildMd5Pwd(newPassword, defaultProperties.getSalt());
+        sysUser.setPassword(md5PwdNew);
+        return sqlToyHelperDao.update(sysUser) > 0;
     }
 
     private SysLoginUserVO setLoginUser(SysUser sysUser) {
