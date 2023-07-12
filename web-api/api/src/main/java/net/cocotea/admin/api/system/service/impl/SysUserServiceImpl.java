@@ -67,7 +67,7 @@ public class SysUserServiceImpl implements SysUserService {
     @Inject
     private SysOperationLogService operationLogService;
 
-    @Inject
+    @Db
     private SqlToyHelperDao sqlToyHelperDao;
 
     @Tran
