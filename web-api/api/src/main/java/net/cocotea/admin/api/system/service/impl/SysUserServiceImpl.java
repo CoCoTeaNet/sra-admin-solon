@@ -234,6 +234,7 @@ public class SysUserServiceImpl implements SysUserService {
                 dsUtils.buildTreeDefault(menuService.listByUserId(IsEnum.Y.getCode())).values()
         ));
         sysLoginUserVO.setUsername(sysUser.getUsername());
+        sysLoginUserVO.setNickname(sysUser.getNickname());
         sysLoginUserVO.setAvatar(sysUser.getAvatar());
         sysLoginUserVO.setId(sysUser.getId());
         sysLoginUserVO.setLoginStatus(true);
