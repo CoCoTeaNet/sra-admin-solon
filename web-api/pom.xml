@@ -44,12 +44,12 @@
             <!-- 内部模块 -->
             <dependency>
                 <groupId>net.cocotea</groupId>
-                <artifactId>c-data</artifactId>
+                <artifactId>admin-solon-api</artifactId>
                 <version>${admin-solon.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.cocotea</groupId>
-                <artifactId>common</artifactId>
+                <artifactId>admin-solon-common</artifactId>
                 <version>${admin-solon.version}</version>
             </dependency>
             <!-- 外部框架 -->

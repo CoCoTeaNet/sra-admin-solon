@@ -9,7 +9,7 @@
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>common</artifactId>
+    <artifactId>admin-solon-common</artifactId>
 
     <modelVersion>4.0.0</modelVersion>
 
