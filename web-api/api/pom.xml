@@ -9,7 +9,7 @@
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>api</artifactId>
+    <artifactId>admin-solon-api</artifactId>
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -24,7 +24,7 @@
     <dependencies>
         <dependency>
             <groupId>net.cocotea</groupId>
-            <artifactId>common</artifactId>
+            <artifactId>admin-solon-common</artifactId>
         </dependency>
     </dependencies>
 
