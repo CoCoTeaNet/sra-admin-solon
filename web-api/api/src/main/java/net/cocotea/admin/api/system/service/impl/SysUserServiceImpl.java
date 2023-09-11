@@ -143,6 +143,7 @@ public class SysUserServiceImpl implements SysUserService {
         return page;
     }
 
+    @Tran
     @Override
     public SysLoginUserVO login(SysLoginDTO param) throws BusinessException {
         SysUser sysUser;
