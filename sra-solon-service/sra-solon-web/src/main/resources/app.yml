@@ -1,0 +1,72 @@
+server.port: 9000
+
+solon.app:
+  name: 'sra-solon-web'
+  group: 'v2-api'
+#添加静态目录映射
+solon.staticfiles.mappings:
+  - path: "/download/" #路径，可以是目录或单文件
+    repository: "D:/server/file/" #1.添加本地绝对目录（仓库只能是目录）
+
+sqltoy.sqlResourcesDir: classpath:sqltoy
+
+sra:
+  api:
+    # 限制1秒内频繁访问次数
+    visits: 30
+    # 路由放行
+    excludes:
+      - /test/**
+      - /favicon.ico
+      # 登录
+      - /system/login
+      - /system/captcha
+      - /system/logout
+      # 文件访问路径
+      - /download/**
+  default:
+    password: sra123456
+    salt: sra-salt
+    db-name: DB_SRA_V1
+    # 服务端请求协议
+    agreement: http
+    # 服务器IP 或 域名
+    domain: 127.0.0.1
+  dev-enable:
+    # 开启缓存
+    permission-cache: true
+    # 强密码
+    strong-password: srapwd
+    # 文件上传地址
+  file-upload:
+    # 禁止上传的文件
+    not-support-file-type: js,html,htm,shtml,php,css,java,sh,bat,xml
+    local-url: D:/server/file/
+    browser-url: /download/
+  db1:
+    schema: DB_SRA_V2
+    jdbcUrl: jdbc:mysql://localhost:3306/DB_SRA_V2?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai&tinyInt1isBit=false
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+  rd1:
+    server: localhost:6379
+    db: 1
+    password:
+
+# Sa-Token 配置
+sa-token:
+  # token名称 (同时也是cookie名称)
+  token-name: Authorization
+  # token有效期，单位s 默认30天, -1代表永不过期
+  timeout: 86400
+  # token临时有效期 (指定时间内无操作就视为token过期) 单位: 秒
+  activity-timeout: -1
+  # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
+  is-concurrent: true
+  # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
+  is-share: true
+  # token风格
+  token-style: random-64
+  # 是否输出操作日志
+  is-log: false

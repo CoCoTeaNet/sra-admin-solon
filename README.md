@@ -38,9 +38,9 @@ sra-admin-solon 是一个前后端分离的脚手架项目，国产化核心框�
 * 后端
 
 ```text
-1. 配置文件：/web-api/A-api/src/main/resources/app.yml
+1. 配置文件：src/main/resources/app.yml
 2. 数据库执行脚本：/doc/sra-admin-sql/*.sql
-3. 项目启动类：/web-api/A-api/src/main/java/net/cocotea/admin/api/App.java
+3. 项目启动类：src/main/java/net/cocotea/admin/Launcher.java
 ```
 
 - 前端
