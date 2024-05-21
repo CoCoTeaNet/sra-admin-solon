@@ -1,28 +1,27 @@
 package net.cocotea.admin.api.system.model.dto;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 import net.cocotea.admin.api.system.model.vo.SysFileVO;
 import org.noear.solon.validation.annotation.NotNull;
 import org.sagacity.sqltoy.model.Page;
-import com.alibaba.fastjson.JSONObject;
+
+import java.io.Serial;
 import java.io.Serializable;
 
+@EqualsAndHashCode(callSuper = true)
+@Data
+@Accessors(chain = true)
 public class SysFilePageDTO extends Page<SysFileVO> implements Serializable {
+    @Serial
     private static final long serialVersionUID = -1L;
 
-    @NotNull(message = "sysFile is null")
-    private SysFileVO file;
+    @NotNull(message = "查询参数为空")
+    private SysFileVO sysFile;
 
-    public SysFileVO getFile() {
-        return file;
-    }
-
-    public SysFilePageDTO setFile(SysFileVO file) {
-        this.file = file;
-        return this;
-    }
-
-    @Override
-    public String toString() {
-        return JSONObject.toJSONString(this);
-    }
+    /**
+     * 是否删除：{@link net.cocotea.admin.common.enums.IsEnum}
+     */
+    private Integer isDeleted;
 }

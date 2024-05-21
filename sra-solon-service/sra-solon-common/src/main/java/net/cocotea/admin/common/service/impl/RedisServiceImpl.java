@@ -1,18 +1,24 @@
 package net.cocotea.admin.common.service.impl;
 
-import net.cocotea.admin.common.service.IRedisService;
+import net.cocotea.admin.common.service.RedisService;
 import org.noear.redisx.RedisClient;
 import org.noear.solon.annotation.Inject;
 import org.noear.solon.aspect.annotation.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 
 /**
  * @author CoCoTea
+ * @since v1
  */
 @Service
-public class RedisServiceImpl implements IRedisService {
+public class RedisServiceImpl implements RedisService {
+
+    private final static Logger logger = LoggerFactory.getLogger(RedisServiceImpl.class);
 
     @Inject
     private RedisClient redisClient;
@@ -43,11 +49,6 @@ public class RedisServiceImpl implements IRedisService {
     }
 
     @Override
-    public void set(String key, String value) {
-        redisClient.open(session -> session.key(key).expire(0).set(value));
-    }
-
-    @Override
     public String get(String key) {
         return redisClient.openAndGet(session -> session.key(key).get());
     }
@@ -58,7 +59,32 @@ public class RedisServiceImpl implements IRedisService {
     }
 
     @Override
+    public void hashPut(String key, String hashKey, Object value) {
+
+    }
+
+    @Override
+    public Object hashGet(String key, String hashKey) {
+        return null;
+    }
+
+    @Override
+    public Map<Object, Object> hashGetEntries(String key) {
+        return Map.of();
+    }
+
+    @Override
+    public void hashRemove(String key, Object... hashKeys) {
+
+    }
+
+    @Override
     public Set<String> keys(String pattern) {
         return redisClient.openAndGet(session -> session.keys(pattern));
+    }
+
+    @Override
+    public void set(String key, String value) {
+        redisClient.open(session -> session.key(key).expire(0).set(value));
     }
 }

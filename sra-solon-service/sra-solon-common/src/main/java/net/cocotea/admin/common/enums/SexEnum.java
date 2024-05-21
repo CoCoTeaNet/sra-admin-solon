@@ -1,9 +1,16 @@
 package net.cocotea.admin.common.enums;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /**
- * @date 2022-1-12 16:30:04
- * @author jwss
+ * 性别枚举值
+ *
+ * @author CoCoTea
+ * @version 2.0.0
  */
+@Getter
+@AllArgsConstructor
 public enum SexEnum {
     /**
      * 未知
@@ -20,17 +27,4 @@ public enum SexEnum {
 
     final Integer code;
     final String desc;
-
-    SexEnum(Integer code, String desc) {
-        this.code = code;
-        this.desc = desc;
-    }
-
-    public String getCode() {
-        return String.valueOf(code);
-    }
-
-    public String getDesc() {
-        return desc;
-    }
 }

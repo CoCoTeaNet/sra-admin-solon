@@ -1,83 +1,112 @@
 package net.cocotea.admin.api.system.service.impl;
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.text.CharPool;
+import com.sagframe.sagacity.sqltoy.plus.conditions.query.LambdaQueryWrapper;
+import com.sagframe.sagacity.sqltoy.plus.dao.SqlToyHelperDao;
 import net.cocotea.admin.api.system.model.dto.SysDictionaryAddDTO;
 import net.cocotea.admin.api.system.model.dto.SysDictionaryPageDTO;
 import net.cocotea.admin.api.system.model.dto.SysDictionaryUpdateDTO;
 import net.cocotea.admin.api.system.model.po.SysDictionary;
+import net.cocotea.admin.api.system.model.po.SysUser;
 import net.cocotea.admin.api.system.model.vo.SysDictionaryVO;
-import net.cocotea.admin.common.enums.DeleteStatusEnum;
-import net.cocotea.admin.common.util.GenerateDsUtils;
-import net.cocotea.admin.common.constant.CharConstant;
 import net.cocotea.admin.api.system.service.SysDictionaryService;
+import net.cocotea.admin.common.enums.IsEnum;
+import net.cocotea.admin.common.model.ApiPage;
+import net.cocotea.admin.common.util.TreeBuilder;
+import org.noear.solon.annotation.Inject;
 import org.noear.solon.aspect.annotation.Service;
 import org.noear.solon.data.annotation.Tran;
-import org.noear.solon.extend.sqltoy.annotation.Db;
-import org.sagacity.sqltoy.dao.SqlToyLazyDao;
-import org.sagacity.sqltoy.model.Page;
-import org.sagacity.sqltoy.utils.StringUtil;
 
-import java.util.Collection;
-import java.util.HashMap;
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-/**
- * @author jwss
- */
 @Service
 public class SysDictionaryServiceImpl implements SysDictionaryService {
-    @Db
-    private SqlToyLazyDao sqlToyLazyDao;
+    @Inject
+    private SqlToyHelperDao sqlToyHelperDao;
 
     @Override
-    public boolean add(SysDictionaryAddDTO param) {
-        SysDictionary sysDictionary = sqlToyLazyDao.convertType(param, SysDictionary.class);
-        if (StringUtil.isBlank(sysDictionary.getParentId())) {
-            sysDictionary.setParentId(CharConstant.ZERO);
+    public boolean add(SysDictionaryAddDTO addDTO) {
+        SysDictionary sysDictionary = sqlToyHelperDao.convertType(addDTO, SysDictionary.class);
+        if (sysDictionary.getParentId() == null) {
+            sysDictionary.setParentId(BigInteger.ZERO);
         }
-        Object o = sqlToyLazyDao.save(sysDictionary);
+        if (sysDictionary.getSort() == null) {
+            sysDictionary.setSort(0);
+        }
+        Object o = sqlToyHelperDao.save(sysDictionary);
         return o != null;
     }
 
     @Tran
     @Override
-    public boolean deleteBatch(List<String> idList) {
+    public boolean deleteBatch(List<BigInteger> idList) {
         idList.forEach(this::delete);
-        return idList.size() > 0;
+        return !idList.isEmpty();
     }
 
     @Override
     public boolean update(SysDictionaryUpdateDTO param) {
-        SysDictionary sysDictionary = sqlToyLazyDao.convertType(param, SysDictionary.class);
-        Long update = sqlToyLazyDao.update(sysDictionary);
+        SysDictionary sysDictionary = sqlToyHelperDao.convertType(param, SysDictionary.class);
+        Long update = sqlToyHelperDao.update(sysDictionary);
         return update != null;
     }
 
     @Override
-    public Page<SysDictionaryVO> listByPage(SysDictionaryPageDTO param) {
-        return sqlToyLazyDao.findPageBySql(param, "system_dictionary_findByPageParam", param.getDictionary());
+    public ApiPage<SysDictionaryVO> listByPage(SysDictionaryPageDTO dto) {
+        return null;
     }
 
     @Override
-    public Collection<SysDictionaryVO> listByTree(SysDictionaryPageDTO param) {
-        List<SysDictionaryVO> list = sqlToyLazyDao.findBySql("system_dictionary_findByPageParam", param.getDictionary());
-        GenerateDsUtils<SysDictionaryVO> dsUtils = new GenerateDsUtils<>();
-        return dsUtils.buildTreeDefault(list).values();
+    public List<SysDictionaryVO> listByTree(SysDictionaryPageDTO dto) {
+        return new TreeBuilder<SysDictionaryVO>().get(findList(dto.getSysDictionary()));
+    }
+
+    private List<SysDictionaryVO> findList(SysDictionaryVO sysDictionaryVO) {
+        LambdaQueryWrapper<SysDictionary> wrapper = new LambdaQueryWrapper<>(SysDictionary.class)
+                .select()
+                .eq(SysDictionary::getIsDeleted, IsEnum.N.getCode())
+                .eq(SysDictionary::getEnableStatus, sysDictionaryVO.getEnableStatus())
+                .like(SysDictionary::getDictionaryName, sysDictionaryVO.getDictionaryName())
+                .orderByDesc(SysDictionary::getSort)
+                .orderByDesc(SysDictionary::getId);
+        List<SysDictionary> dictionaryList = sqlToyHelperDao.findList(wrapper);
+        // 查询关联的用户名称
+        List<BigInteger> userIds = dictionaryList.stream().map(SysDictionary::getCreateBy).collect(Collectors.toList());
+        List<SysUser> sysUsers = sqlToyHelperDao.loadByIds(SysUser.class, userIds);
+        Map<BigInteger, String> userMap = sysUsers
+                .stream()
+                .collect(Collectors.toMap(SysUser::getId, i -> i.getUsername().concat(String.valueOf(CharPool.AT)).concat(i.getNickname())));
+        List<SysDictionaryVO> dictionaryVOList = new ArrayList<>(dictionaryList.size());
+        for (SysDictionary dictionary : dictionaryList) {
+            SysDictionaryVO dictionaryVO = Convert.convert(SysDictionaryVO.class, dictionary);
+            if (dictionary.getCreateBy() != null) {
+                String username = userMap.get(dictionary.getCreateBy());
+                dictionaryVO.setCreateBy(username);
+            }
+            dictionaryVOList.add(dictionaryVO);
+        }
+        return dictionaryVOList;
     }
 
     @Override
-    public boolean delete(String id) {
-        SysDictionary sysDictionary = new SysDictionary().setId(id).setDeleteStatus(DeleteStatusEnum.DELETE.getCode());
-        Long update = sqlToyLazyDao.update(sysDictionary);
+    public boolean delete(BigInteger id) {
+        SysDictionary sysDictionary = new SysDictionary().setId(id).setIsDeleted(IsEnum.Y.getCode());
+        Long update = sqlToyHelperDao.update(sysDictionary);
         if (update <= 0) {
             return false;
         }
         // 获取子节点
-        HashMap<String, Object> paramsMap = new HashMap<>(Character.UPPERCASE_LETTER);
-        paramsMap.put("parentId", id);
-        List<SysDictionary> list = sqlToyLazyDao.findBySql(
-                "select id from sys_dictionary where #[PARENT_ID=:parentId] and DELETE_STATUS=1",
-                paramsMap, SysDictionary.class);
-        if (list.size() > 0) {
+        LambdaQueryWrapper<SysDictionary> wrapper = new LambdaQueryWrapper<>(SysDictionary.class)
+                .select()
+                .eq(SysDictionary::getIsDeleted, IsEnum.N.getCode())
+                .eq(SysDictionary::getParentId, id);
+        List<SysDictionary> list = sqlToyHelperDao.findList(wrapper);
+        if (!list.isEmpty()) {
             // 存在子节点，删除子节点
             list.forEach(item -> delete(item.getId()));
         }

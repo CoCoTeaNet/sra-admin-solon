@@ -4,22 +4,22 @@ import net.cocotea.admin.api.system.model.dto.SysDictionaryAddDTO;
 import net.cocotea.admin.api.system.model.dto.SysDictionaryPageDTO;
 import net.cocotea.admin.api.system.model.dto.SysDictionaryUpdateDTO;
 import net.cocotea.admin.api.system.model.vo.SysDictionaryVO;
-import net.cocotea.admin.common.service.IBaseService;
-import org.sagacity.sqltoy.model.Page;
+import net.cocotea.admin.common.model.ApiPage;
+import net.cocotea.admin.common.service.BaseService;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * 字典 接口服务类
- * @author jwss
- * @date 2022-3-22
+ * @author CoCoTea
+ * @version 2.0.0
  */
-public interface SysDictionaryService extends IBaseService<Page<SysDictionaryVO>, SysDictionaryPageDTO, SysDictionaryAddDTO, SysDictionaryUpdateDTO> {
+public interface SysDictionaryService extends BaseService<ApiPage<SysDictionaryVO>, SysDictionaryPageDTO, SysDictionaryAddDTO, SysDictionaryUpdateDTO> {
 
     /**
      * 获取树形结构
      * @param param 分页参数
      * @return 分页对象
      */
-    Collection<SysDictionaryVO> listByTree(SysDictionaryPageDTO param);
+    List<SysDictionaryVO> listByTree(SysDictionaryPageDTO param);
 }

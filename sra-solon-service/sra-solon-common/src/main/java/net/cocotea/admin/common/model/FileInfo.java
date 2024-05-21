@@ -1,16 +1,21 @@
 package net.cocotea.admin.common.model;
 
-import net.cocotea.admin.common.constant.CharConstant;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
 * 文件信息表
 *
 * @author CoCoTea 572315466@qq.com
-* @since 1.2.1 2022-12-29
+* @version 2.0.0
 */
+@Data
+@Accessors(chain = true)
 public class FileInfo implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -43,69 +48,4 @@ public class FileInfo implements Serializable {
 	 */
 	private String fileBasePath;
 
-	public String getFileName() {
-		return fileName;
-	}
-
-	public FileInfo setFileName(String fileName) {
-		this.fileName = fileName;
-		return this;
-	}
-
-	public String getFileSuffix() {
-		return fileSuffix;
-	}
-
-	public FileInfo setFileSuffix(String fileSuffix) {
-		this.fileSuffix = fileSuffix;
-		return this;
-	}
-
-	public String getRealPath() {
-		return realPath;
-	}
-
-	public FileInfo setRealPath(String realPath) {
-		this.realPath = realPath;
-		return this;
-	}
-
-	public Long getFileSize() {
-		return fileSize;
-	}
-
-	public FileInfo setFileSize(Long fileSize) {
-		this.fileSize = fileSize;
-		return this;
-	}
-
-	public String getFileDir() {
-		return fileDir;
-	}
-
-	public FileInfo setFileDir(String fileDir) {
-		this.fileDir = fileDir;
-		return this;
-	}
-
-	public String getFileBasePath() {
-		return fileBasePath;
-	}
-
-	public FileInfo setFileBasePath(String fileBasePath) {
-		this.fileBasePath = fileBasePath;
-		return this;
-	}
-
-	@Override
-	public String toString() {
-		return "FileInfo{" +
-				"fileName='" + fileName + '\'' +
-				", fileSuffix='" + fileSuffix + '\'' +
-				", realPath='" + realPath + '\'' +
-				", fileSize=" + fileSize +
-				", fileDir='" + fileDir + '\'' +
-				", fileBasePath='" + fileBasePath + '\'' +
-				'}';
-	}
 }

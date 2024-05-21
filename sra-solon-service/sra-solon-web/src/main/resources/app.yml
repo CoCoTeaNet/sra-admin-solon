@@ -1,8 +1,9 @@
-server.port: 9000
+server:
+  port: 9000
+  contextPath: /v2-api
 
 solon.app:
   name: 'sra-solon-web'
-  group: 'v2-api'
 #添加静态目录映射
 solon.staticfiles.mappings:
   - path: "/download/" #路径，可以是目录或单文件
@@ -10,49 +11,48 @@ solon.staticfiles.mappings:
 
 sqltoy.sqlResourcesDir: classpath:sqltoy
 
-sra:
-  api:
-    # 限制1秒内频繁访问次数
-    visits: 30
-    # 路由放行
-    excludes:
-      - /test/**
-      - /favicon.ico
-      # 登录
-      - /system/login
-      - /system/captcha
-      - /system/logout
-      # 文件访问路径
-      - /download/**
-  default:
-    password: sra123456
-    salt: sra-salt
-    db-name: DB_SRA_V1
-    # 服务端请求协议
-    agreement: http
-    # 服务器IP 或 域名
-    domain: 127.0.0.1
-  dev-enable:
-    # 开启缓存
-    permission-cache: true
-    # 强密码
-    strong-password: srapwd
-    # 文件上传地址
-  file-upload:
+
+sra-admin:
+  # 默认创建用户的密码
+  password: SraAdmin123456
+  # 密码加密的加盐
+  password-salt: SraAdmin@salt
+  # 开启缓存
+  permission-cache: true
+  # 是否开启系统日志保存功能
+  save-log: true
+  # 强密码，为空或者为none表示关闭
+  strong-password: none
+  # 1秒内访问服务器接口频率
+  once-visits: 30
+  # 路由放行（用逗号分割）
+  excludes: /system/dashboard/index,/system/login,/system/captcha,/,/doc/**
+  # 文件存放配置
+  file:
+    # 默认文件存放位置
+    default-path: F:/Files/default/
+    # 头像保存位置
+    avatar: F:/Files/avatar/
     # 禁止上传的文件
-    not-support-file-type: js,html,htm,shtml,php,css,java,sh,bat,xml
-    local-url: D:/server/file/
-    browser-url: /download/
+    not-support-filetype: js,html,htm,shtml,php,css,java,sh,bat,xml
+    # 媒体格式
+    media-filetype: mp4,avi,mpg,mpeg,wmv,flv,swf,mov,mkv
+
+
+myapp:
+  # MySQL
   db1:
-    schema: DB_SRA_V2
+    schema: db_sra_v2
     jdbcUrl: jdbc:mysql://localhost:3306/DB_SRA_V2?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai&tinyInt1isBit=false
     driverClassName: com.mysql.cj.jdbc.Driver
     username: root
     password: root
+  # Redis
   rd1:
     server: localhost:6379
     db: 1
     password:
+
 
 # Sa-Token 配置
 sa-token:

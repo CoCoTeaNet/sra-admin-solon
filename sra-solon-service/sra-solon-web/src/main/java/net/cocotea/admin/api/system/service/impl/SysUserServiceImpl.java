@@ -2,204 +2,247 @@ package net.cocotea.admin.api.system.service.impl;
 
 import cn.dev33.satoken.stp.SaLoginModel;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.StrUtil;
 import com.sagframe.sagacity.sqltoy.plus.conditions.Wrappers;
 import com.sagframe.sagacity.sqltoy.plus.conditions.query.LambdaQueryWrapper;
+import com.sagframe.sagacity.sqltoy.plus.conditions.update.LambdaUpdateWrapper;
 import com.sagframe.sagacity.sqltoy.plus.dao.SqlToyHelperDao;
-import net.cocotea.admin.api.system.model.dto.SysLoginDTO;
-import net.cocotea.admin.api.system.model.dto.SysUserAddDTO;
-import net.cocotea.admin.api.system.model.dto.SysUserPageDTO;
-import net.cocotea.admin.api.system.model.dto.SysUserUpdateDTO;
+import net.cocotea.admin.api.system.model.dto.*;
 import net.cocotea.admin.api.system.model.po.SysUser;
 import net.cocotea.admin.api.system.model.po.SysUserRole;
 import net.cocotea.admin.api.system.model.vo.SysLoginUserVO;
+import net.cocotea.admin.api.system.model.vo.SysMenuTreeVO;
 import net.cocotea.admin.api.system.model.vo.SysMenuVO;
 import net.cocotea.admin.api.system.model.vo.SysUserVO;
+import net.cocotea.admin.api.system.service.SysLogService;
 import net.cocotea.admin.api.system.service.SysMenuService;
-import net.cocotea.admin.api.system.service.SysOperationLogService;
+import net.cocotea.admin.api.system.service.SysRoleService;
 import net.cocotea.admin.api.system.service.SysUserService;
-import net.cocotea.admin.common.constant.RedisKey;
+import net.cocotea.admin.common.constant.CommonConst;
+import net.cocotea.admin.common.constant.RedisKeyConst;
 import net.cocotea.admin.common.enums.IsEnum;
+import net.cocotea.admin.common.model.ApiPage;
 import net.cocotea.admin.common.model.BusinessException;
-import net.cocotea.admin.common.properties.DefaultProperties;
-import net.cocotea.admin.common.properties.DevEnableProperties;
-import net.cocotea.admin.common.service.IRedisService;
-import net.cocotea.admin.common.util.GenerateDsUtils;
-import net.cocotea.admin.common.util.SecurityUtils;
-import net.cocotea.admin.common.enums.DeleteStatusEnum;
-import net.cocotea.admin.common.enums.LogTypeEnum;
+import net.cocotea.admin.common.service.RedisService;
+import net.cocotea.admin.common.util.TreeBuilder;
+import net.cocotea.admin.properties.DefaultProp;
+import net.cocotea.admin.util.LoginUtils;
+import net.cocotea.admin.util.SecurityUtils;
 import org.noear.solon.annotation.Inject;
-import org.noear.solon.aspect.annotation.Service;
 import org.noear.solon.core.handle.Context;
 import org.noear.solon.data.annotation.Tran;
-import org.noear.solon.extend.sqltoy.annotation.Db;
 import org.sagacity.sqltoy.dao.SqlToyLazyDao;
-import org.sagacity.sqltoy.model.EntityQuery;
 import org.sagacity.sqltoy.model.Page;
 import org.sagacity.sqltoy.utils.StringUtil;
+import org.noear.solon.aspect.annotation.Service;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author CoCoTea
- * @date 2022-1-12 15:35:00
+ * @version 2.0.0
  */
 @Service
 public class SysUserServiceImpl implements SysUserService {
-    private final GenerateDsUtils<SysMenuVO> dsUtils = new GenerateDsUtils<>();
+    @Inject
+    private DefaultProp defaultProp;
 
     @Inject
-    private DevEnableProperties devEnableProperties;
-
-    @Inject
-    private DefaultProperties defaultProperties;
-
-    @Db
     private SqlToyLazyDao sqlToyLazyDao;
 
     @Inject
-    private SysMenuService menuService;
+    private SysMenuService sysMenuService;
 
     @Inject
-    private IRedisService redisService;
+    private RedisService redisService;
 
     @Inject
-    private SysOperationLogService operationLogService;
+    private SysLogService sysLogService;
 
-    @Db
+    @Inject
     private SqlToyHelperDao sqlToyHelperDao;
+
+    @Inject
+    private SecurityUtils securityUtils;
+
+    @Inject
+    private SysRoleService sysRoleService;
 
     @Tran
     @Override
-    public boolean add(SysUserAddDTO param) {
-        SysUser sysUser = sqlToyLazyDao.convertType(param, SysUser.class);
-        if (StringUtil.isNotBlank(param.getPassword())) {
-            sysUser.setPassword(SecurityUtils.buildMd5Pwd(param.getPassword(), defaultProperties.getSalt()));
+    public boolean add(SysUserAddDTO addDTO) {
+        SysUser sysUser = sqlToyHelperDao.convertType(addDTO, SysUser.class);
+        if (StringUtil.isNotBlank(addDTO.getPassword())) {
+            sysUser.setPassword(securityUtils.getPwd(addDTO.getPassword()));
         } else {
-            sysUser.setPassword(defaultProperties.getPassword());
+            sysUser.setPassword(defaultProp.getPassword());
         }
-        Object userId = sqlToyLazyDao.save(sysUser);
+        Object userId = sqlToyHelperDao.save(sysUser);
+
         // 授予用户角色
-        if (!(param.getRoleIds().isEmpty())) {
-            for (String roleId : param.getRoleIds()) {
-                SysUserRole sysUserRole = new SysUserRole().setUserId(String.valueOf(userId)).setRoleId(roleId);
-                sqlToyLazyDao.save(sysUserRole);
+        if (!(addDTO.getRoleIds().isEmpty())) {
+            for (BigInteger roleId : addDTO.getRoleIds()) {
+                SysUserRole sysUserRole = new SysUserRole().setUserId(LoginUtils.parse(userId)).setRoleId(roleId);
+                sqlToyHelperDao.save(sysUserRole);
             }
         }
+
         return userId != null;
     }
 
+    @Override
+    public boolean delete(BigInteger id) {
+        // 假删除，用户关联的数据不必操作
+        SysUser sysUser = new SysUser().setId(id).setIsDeleted(IsEnum.Y.getCode());
+        return sqlToyHelperDao.update(sysUser) > 0;
+    }
+
     @Tran
     @Override
-    public boolean update(SysUserUpdateDTO param) {
-        SysUser sysUser = sqlToyLazyDao.convertType(param, SysUser.class);
-        if (!(param.getRoleIds() == null || param.getRoleIds().isEmpty())) {
-            sqlToyLazyDao.deleteByQuery(SysUserRole.class, EntityQuery.create().where("USER_ID=:userId").names("userId").values(param.getId()));
-            // 删除用户角色再新增
-            sqlToyLazyDao.deleteByQuery(
-                    SysUserRole.class,
-                    EntityQuery.create().where("USER_ID = :userId").names("userId").values(param.getId())
-            );
-            for (String roleId : param.getRoleIds()) {
-                SysUserRole sysUserRole = new SysUserRole().setUserId(param.getId()).setRoleId(roleId);
-                sqlToyLazyDao.save(sysUserRole);
+    public boolean update(SysUserUpdateDTO updateDTO) {
+        SysUser sysUser = Convert.convert(SysUser.class, updateDTO);
+        if (!(updateDTO.getRoleIds() == null || updateDTO.getRoleIds().isEmpty())) {
+            // 删除用户角色关联
+            LambdaUpdateWrapper<SysUserRole> updateWrapper = new LambdaUpdateWrapper<>(SysUserRole.class)
+                    .eq(SysUserRole::getUserId, updateDTO.getId());
+            sqlToyHelperDao.delete(updateWrapper);
+            // 添加用户角色关联
+            for (BigInteger roleId : updateDTO.getRoleIds()) {
+                SysUserRole sysUserRole = new SysUserRole().setUserId(updateDTO.getId()).setRoleId(roleId);
+                sqlToyHelperDao.save(sysUserRole);
             }
         }
         // 更新密码
-        if (StringUtil.isNotBlank(param.getPassword())) {
-            sysUser.setPassword(SecurityUtils.buildMd5Pwd(param.getPassword(), defaultProperties.getSalt()));
+        if (StringUtil.isNotBlank(updateDTO.getPassword())) {
+            sysUser.setPassword(securityUtils.getPwd(updateDTO.getPassword()));
         }
-        Long flag = sqlToyLazyDao.update(sysUser);
+        Long flag = sqlToyHelperDao.update(sysUser);
         return flag > 0;
     }
 
-    @Tran
     @Override
-    public boolean delete(String id) {
-        // 删除用户
-        SysUser sysUser = new SysUser().setId(id).setDeleteStatus(DeleteStatusEnum.DELETE.getCode());
-        Long aLong = sqlToyLazyDao.update(sysUser);
-        // 删除用户关联关系
-        sqlToyLazyDao.deleteByQuery(SysUserRole.class, EntityQuery.create().where("USER_ID=:userId").names("userId").values(sysUser.getId()));
-        return aLong > 0;
-    }
-
-    @Override
-    public boolean deleteBatch(List<String> idList) {
+    public boolean deleteBatch(List<BigInteger> idList) {
         if (idList != null) {
             idList.forEach(this::delete);
         }
-        return idList != null && idList.size() > 0;
+        return idList != null && !idList.isEmpty();
     }
 
     @Override
-    public Page<SysUserVO> listByPage(SysUserPageDTO param) {
-        Page<SysUserVO> page = sqlToyLazyDao.findPageBySql(
-                param,
-                "system_user_findByPageParam",
-                param.getUser()
-        );
-        return page;
+    public ApiPage<SysUserVO> listByPage(SysUserPageDTO param) {
+        // 系统用户查询条件
+        LambdaQueryWrapper<SysUser> userWrapper = Wrappers.lambdaWrapper(SysUser.class)
+                .select()
+                .like(SysUser::getNickname, param.getSysUser().getNickname())
+                .like(SysUser::getUsername, param.getSysUser().getUsername())
+                .eq(SysUser::getSex, param.getSysUser().getSex())
+                .eq(SysUser::getMobilePhone, param.getSysUser().getMobilePhone())
+                .eq(SysUser::getAccountStatus, param.getSysUser().getAccountStatus())
+                .eq(SysUser::getIsDeleted, IsEnum.N.getCode())
+                .orderByDesc(SysUser::getId);
+        Page<SysUser> page = sqlToyHelperDao.findPage(userWrapper, new Page<>(param.getPageSize(), param.getPageNo()));
+        List<SysUserVO> voList = new ArrayList<>(page.getRows().size());
+        page.getRows().forEach(row -> {
+            SysUserVO vo = Convert.convert(SysUserVO.class, row);
+            vo.setRoleList(sysRoleService.loadByUserId(row.getId()));
+            voList.add(vo);
+        });
+        return ApiPage.rest(page, voList);
     }
 
     @Tran
     @Override
-    public SysLoginUserVO login(SysLoginDTO param) throws BusinessException {
+    public void login(SysLoginDTO param, Context context) throws BusinessException {
         SysUser sysUser;
-        // 判断是否启用了强密码
-        if (StringUtil.isBlank(devEnableProperties.getStrongPassword()) || !devEnableProperties.getStrongPassword().equals(param.getPassword())) {
+        // 强密码为空或者为none表示“启用”
+        boolean strongPwdFlag =
+                StrUtil.isBlank(defaultProp.getStrongPassword())
+                        || !defaultProp.getStrongPassword().equals(param.getPassword())
+                        || !"none".equals(param.getPassword());
+        LambdaQueryWrapper<SysUser> userWrapper = new LambdaQueryWrapper<>(SysUser.class)
+                .select(SysUser::getId).select(SysUser::getNickname).select(SysUser::getAvatar)
+                .eq(SysUser::getUsername, param.getUsername())
+                .eq(SysUser::getIsDeleted, IsEnum.N.getCode());
+        if (strongPwdFlag) {
             // 校验验证码
-            String code = redisService.get(String.format(RedisKey.VERIFY_CODE, "LOGIN", Context.current().realIp()));
+            String key = String.format(RedisKeyConst.VERIFY_CODE, CommonConst.LOGIN, context.ip());
+            String code = redisService.get(key);
             if (!param.getCaptcha().equals(code)) {
                 throw new BusinessException("验证码错误");
             }
             // 校验密码
-            sysUser = sqlToyLazyDao.convertType(param, SysUser.class);
-            sysUser.setPassword(SecurityUtils.buildMd5Pwd(param.getPassword(), defaultProperties.getSalt()));
-            sysUser = sqlToyLazyDao.loadBySql("system_user_findByEntityParam", sysUser);
+            String pwd = securityUtils.getPwd(param.getPassword());
+            userWrapper.eq(SysUser::getPassword, pwd);
+            sysUser = sqlToyHelperDao.findOne(userWrapper);
             if (sysUser == null) {
                 throw new BusinessException("登录失败，用户名或密码错误");
             }
         } else {
-            sysUser = sqlToyLazyDao.loadBySql("system_user_findByEntityParam", new SysUser().setUsername(param.getUsername()));
+            sysUser = sqlToyHelperDao.findOne(userWrapper);
         }
         // 记住我模式
         if (param.getRememberMe()) {
-            StpUtil.login(
-                    sysUser.getId(),
-                    new SaLoginModel().setTimeout(3600 * 24 * 31)
-            );
+            StpUtil.login(sysUser.getId(), new SaLoginModel().setTimeout(3600 * 24 * 365));
         } else {
             StpUtil.login(sysUser.getId());
         }
         // 更新用户登录时间和ip
         SysUser loginSysUser = new SysUser();
         loginSysUser.setId(sysUser.getId());
-        loginSysUser.setLastLoginIp(Context.current().realIp());
+        loginSysUser.setLastLoginIp(context.ip());
         loginSysUser.setLastLoginTime(LocalDateTime.now());
         sqlToyLazyDao.update(loginSysUser);
-        // 缓存权限
-        menuService.cachePermission(sysUser.getId());
-        // 保存登录日志
-        operationLogService.saveByLogType(LogTypeEnum.LOGIN.getCode());
-        return setLoginUser(sysUser);
     }
 
     @Override
     public SysUserVO getDetail() {
-        SysUserVO sysUserVO = new SysUserVO();
-        sysUserVO.setId(String.valueOf(StpUtil.getLoginId()));
-        return sqlToyLazyDao.loadBySql("system_user_findByEntityParam", sysUserVO);
+        BigInteger loginId = LoginUtils.loginId();
+        // 用户信息
+        LambdaQueryWrapper<SysUser> userWrapper = new LambdaQueryWrapper<>(SysUser.class)
+                .select()
+                .eq(SysUser::getId, loginId)
+                .eq(SysUser::getIsDeleted, IsEnum.N.getCode());
+        SysUser sysUser = sqlToyHelperDao.findOne(userWrapper);
+        SysUserVO sysUserVO = Convert.convert(SysUserVO.class, sysUser);
+        return sysUserVO.setRoleList(sysRoleService.loadByUserId(loginId));
     }
 
     @Override
     public SysLoginUserVO loginUser() {
-        SysUser sysUser = sqlToyLazyDao.loadBySql(
-                "system_user_findByEntityParam",
-                new SysUser().setId(String.valueOf(StpUtil.getLoginId()))
-        );
-        return setLoginUser(sysUser);
+        BigInteger loginId = LoginUtils.loginIdEx();
+        LambdaQueryWrapper<SysUser> userWrapper = new LambdaQueryWrapper<>(SysUser.class)
+                .select(SysUser::getId).select(SysUser::getUsername).select(SysUser::getAvatar)
+                .select(SysUser::getNickname)
+                .eq(SysUser::getId, loginId)
+                .eq(SysUser::getIsDeleted, IsEnum.N.getCode());
+        SysUser sysUser = sqlToyHelperDao.findOne(userWrapper);
+        SysLoginUserVO sysLoginUser = new SysLoginUserVO();
+        // 用户菜单
+        List<SysMenuVO> menuList = sysMenuService.listByUserId(IsEnum.Y.getCode());
+        menuList = new TreeBuilder<SysMenuVO>().get(menuList);
+        sysLoginUser.setMenuList(Convert.toList(SysMenuTreeVO.class, menuList));
+        // 用户基本信息
+        sysLoginUser
+                .setUsername(sysUser.getUsername())
+                .setNickname(sysUser.getNickname())
+                .setAvatar(sysUser.getAvatar())
+                .setId(sysUser.getId())
+                .setLoginStatus(true)
+                .setToken(StpUtil.getTokenValue());
+        return sysLoginUser;
+    }
+
+    @Override
+    public boolean updateByUser(SysLoginUserUpdateDTO param) {
+        SysUser sysUser = Convert.convert(SysUser.class, param);
+        sysUser.setId(LoginUtils.loginId());
+        return sqlToyLazyDao.update(sysUser) > 0;
     }
 
     @Override
@@ -217,29 +260,30 @@ public class SysUserServiceImpl implements SysUserService {
                 .select(SysUser::getId)
                 .select(SysUser::getPassword)
                 .eq(SysUser::getId, loginId)
-                .eq(SysUser::getDeleteStatus, DeleteStatusEnum.NOT_DELETE.getCode());
+                .eq(SysUser::getIsDeleted, IsEnum.N.getCode());
         SysUser sysUser = sqlToyHelperDao.findOne(queryWrapper);
 
-        String md5PwdOld = SecurityUtils.buildMd5Pwd(oldPassword, defaultProperties.getSalt());
-        if (!sysUser.getPassword().equals(md5PwdOld)) {
+        String pwdOld = securityUtils.getPwd(oldPassword);
+        if (!sysUser.getPassword().equals(pwdOld)) {
             throw new BusinessException("旧密码不正确");
         }
-        String md5PwdNew = SecurityUtils.buildMd5Pwd(newPassword, defaultProperties.getSalt());
-        sysUser.setPassword(md5PwdNew);
+        String pwdNew = securityUtils.getPwd(newPassword);
+        sysUser.setPassword(pwdNew);
         return sqlToyHelperDao.update(sysUser) > 0;
     }
 
-    private SysLoginUserVO setLoginUser(SysUser sysUser) {
-        SysLoginUserVO sysLoginUserVO = new SysLoginUserVO();
-        sysLoginUserVO.setMenuList(new ArrayList<>(
-                dsUtils.buildTreeDefault(menuService.listByUserId(IsEnum.Y.getCode())).values()
-        ));
-        sysLoginUserVO.setUsername(sysUser.getUsername());
-        sysLoginUserVO.setNickname(sysUser.getNickname());
-        sysLoginUserVO.setAvatar(sysUser.getAvatar());
-        sysLoginUserVO.setId(sysUser.getId());
-        sysLoginUserVO.setLoginStatus(true);
-        sysLoginUserVO.setToken(StpUtil.getTokenValue());
-        return sysLoginUserVO;
+    @Override
+    public Map<BigInteger, SysUser> getMap(List<BigInteger> ids) {
+        LambdaQueryWrapper<SysUser> queryWrapper = Wrappers.lambdaWrapper(SysUser.class)
+                .in(SysUser::getId, ids);
+        List<SysUser> list = sqlToyHelperDao.findList(queryWrapper);
+        return list.stream().collect(Collectors.toMap(SysUser::getId, i -> i));
+    }
+
+    @Override
+    public void doModifyAvatar(String avatarName) {
+        BigInteger loginId = LoginUtils.loginId();
+        SysUser sysUser = new SysUser().setId(loginId).setAvatar(avatarName);
+        sqlToyHelperDao.update(sysUser);
     }
 }

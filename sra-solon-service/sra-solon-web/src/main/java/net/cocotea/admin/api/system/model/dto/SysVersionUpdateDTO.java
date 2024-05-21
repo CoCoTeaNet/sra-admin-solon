@@ -1,62 +1,44 @@
 package net.cocotea.admin.api.system.model.dto;
 
+
+import lombok.Data;
+import lombok.experimental.Accessors;
 import org.noear.solon.validation.annotation.NotBlank;
 
+import java.io.Serial;
 import java.io.Serializable;
 
+@Data
+@Accessors(chain = true)
 public class SysVersionUpdateDTO implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 6284028262600112043L;
 
+	/**
+	 * 版本ID
+	 */
 	@NotBlank(message = "id为空")
 	private String id;
+
+	/**
+	 * 版本号
+	 */
 	private String updateNo;
+
+	/**
+	 * 更新描述
+	 */
 	private String updateDesc;
+
+	/**
+	 * 平台名称
+	 */
 	private String platformName;
+
+	/**
+	 * 下载地址
+	 */
 	private String downloadUrl;
 
-	public String getId() {
-		return id;
-	}
-
-	public SysVersionUpdateDTO setId(String id) {
-		this.id = id;
-		return this;
-	}
-
-	public String getUpdateNo() {
-		return updateNo;
-	}
-
-	public SysVersionUpdateDTO setUpdateNo(String updateNo) {
-		this.updateNo = updateNo;
-		return this;
-	}
-
-	public String getUpdateDesc() {
-		return updateDesc;
-	}
-
-	public SysVersionUpdateDTO setUpdateDesc(String updateDesc) {
-		this.updateDesc = updateDesc;
-		return this;
-	}
-
-	public String getPlatformName() {
-		return platformName;
-	}
-
-	public SysVersionUpdateDTO setPlatformName(String platformName) {
-		this.platformName = platformName;
-		return this;
-	}
-
-	public String getDownloadUrl() {
-		return downloadUrl;
-	}
-
-	public SysVersionUpdateDTO setDownloadUrl(String downloadUrl) {
-		this.downloadUrl = downloadUrl;
-		return this;
-	}
 }

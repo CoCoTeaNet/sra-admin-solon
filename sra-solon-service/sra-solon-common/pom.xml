@@ -33,6 +33,20 @@
         <dependency>
             <groupId>com.sagframe</groupId>
             <artifactId>sqltoy-plus-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>sagacity-sqltoy-spring</artifactId>
+                    <groupId>com.sagframe</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>spring-context</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>spring-core</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- Sa-Token 权限认证, 在线文档：http://sa-token.dev33.cn/ -->
         <dependency>
@@ -74,10 +88,16 @@
             <groupId>org.noear</groupId>
             <artifactId>redisx</artifactId>
         </dependency>
-        <!-- logback日志插件 -->
+        <!-- 日志 -->
         <dependency>
-            <groupId>org.noear</groupId>
-            <artifactId>logback-solon-plugin</artifactId>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
+        <!-- lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

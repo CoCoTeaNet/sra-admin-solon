@@ -1,13 +1,19 @@
 package net.cocotea.admin.api.system.model.vo;
 
-import com.alibaba.fastjson.JSONObject;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
-import java.io.Serializable;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 
-public class SysVersionVO implements Serializable {
-    private static final long serialVersionUID = 7698110780485543494L;
-    private String id;
+@Data
+@Accessors(chain = true)
+public class SysVersionVO {
+
+    /**
+     * 版本ID
+     */
+    private BigInteger id;
 
     /**
      * 更新版本号
@@ -49,91 +55,4 @@ public class SysVersionVO implements Serializable {
      */
     private LocalDateTime updateTime;
 
-
-    public String getId() {
-        return this.id;
-    }
-
-    public SysVersionVO setId(String id) {
-        this.id=id;
-        return this;
-    }
-
-    public String getUpdateNo() {
-        return this.updateNo;
-    }
-
-    public SysVersionVO setUpdateNo(String updateNo) {
-        this.updateNo=updateNo;
-        return this;
-    }
-
-    public String getUpdateDesc() {
-        return this.updateDesc;
-    }
-
-    public SysVersionVO setUpdateDesc(String updateDesc) {
-        this.updateDesc=updateDesc;
-        return this;
-    }
-
-    public String getPlatformName() {
-        return this.platformName;
-    }
-
-    public SysVersionVO setPlatformName(String platformName) {
-        this.platformName=platformName;
-        return this;
-    }
-
-    public String getDownloadUrl() {
-        return this.downloadUrl;
-    }
-
-    public SysVersionVO setDownloadUrl(String downloadUrl) {
-        this.downloadUrl=downloadUrl;
-        return this;
-    }
-
-    public String getCreateBy() {
-        return this.createBy;
-    }
-
-    public SysVersionVO setCreateBy(String createBy) {
-        this.createBy=createBy;
-        return this;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return this.createTime;
-    }
-
-    public SysVersionVO setCreateTime(LocalDateTime createTime) {
-        this.createTime=createTime;
-        return this;
-    }
-
-    public String getUpdateBy() {
-        return this.updateBy;
-    }
-
-    public SysVersionVO setUpdateBy(String updateBy) {
-        this.updateBy=updateBy;
-        return this;
-    }
-
-    public LocalDateTime getUpdateTime() {
-        return this.updateTime;
-    }
-
-    public SysVersionVO setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime=updateTime;
-        return this;
-    }
-
-
-    @Override
-    public String toString() {
-        return JSONObject.toJSONString(this);
-    }
 }

@@ -1,50 +1,57 @@
 package net.cocotea.admin.api.system.controller;
 
-import cn.dev33.satoken.annotation.SaCheckLogin;
-import cn.dev33.satoken.annotation.SaCheckPermission;
-import net.cocotea.admin.common.model.ApiResult;
+import net.cocotea.admin.api.system.model.vo.SysOverviewVO;
 import net.cocotea.admin.api.system.model.vo.SystemInfoVO;
 import net.cocotea.admin.api.system.service.SysDashboardService;
+import net.cocotea.admin.common.model.ApiResult;
 import org.noear.solon.annotation.Controller;
-import org.noear.solon.annotation.Get;
 import org.noear.solon.annotation.Inject;
 import org.noear.solon.annotation.Mapping;
+import org.noear.solon.core.handle.MethodType;
 
-import java.net.UnknownHostException;
 import java.util.List;
-import java.util.Map;
 
 /**
- * @date 2022-1-26 11:36:32
- * @author jwss
+ * 系统仪表盘接口
+ *
+ * @author CoCoTea
+ * @version 2.0.0
  */
 @Controller
 @Mapping("/system/dashboard")
 public class SysDashboardController {
     @Inject
-    private SysDashboardService dashboardService;
+    private SysDashboardService sysDashboardService;
 
-    @Get
-    @Mapping("index")
-    @SaCheckPermission("system:dashboard:getSystemInfo")
+    /**
+     * 测试服务是否运行成功
+     *
+     * @return 字符串
+     */
+    @Mapping(value = "index", method = MethodType.GET)
     public ApiResult<String> index() {
-        return ApiResult.ok("Hello sss-rbac-admin.");
+        return ApiResult.ok("Hello SRA-ADMIN.");
     }
 
-    @Get
-    @Mapping("getCount")
-    @SaCheckPermission("system:dashboard:getCount")
-    public ApiResult<List<Map<String, Object>>> getCount() {
-        List<Map<String, Object>> count = dashboardService.getCount();
-        return ApiResult.ok(count);
+    /**
+     * 获取系统数据概览
+     *
+     * @return {@link SysOverviewVO}
+     */
+    @Mapping(value = "getCount", method = MethodType.GET)
+    public ApiResult<List<SysOverviewVO>> getCount() {
+        List<SysOverviewVO> voList = sysDashboardService.getCount();
+        return ApiResult.ok(voList);
     }
 
-    @Get
-    @Mapping("getSystemInfo")
-    @SaCheckPermission("system:dashboard:getSystemInfo")
-    @SaCheckLogin
-    public ApiResult<SystemInfoVO> getSystemInfo() throws UnknownHostException {
-        SystemInfoVO vo = dashboardService.getSystemInfo();
+    /**
+     * 获取服务器运行信息
+     *
+     * @return {@link SystemInfoVO}
+     */
+    @Mapping(value = "getSystemInfo", method = MethodType.GET)
+    public ApiResult<SystemInfoVO> getSystemInfo() {
+        SystemInfoVO vo = sysDashboardService.getSystemInfo();
         return ApiResult.ok(vo);
     }
 

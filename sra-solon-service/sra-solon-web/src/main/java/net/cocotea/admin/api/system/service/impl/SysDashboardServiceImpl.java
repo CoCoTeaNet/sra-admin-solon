@@ -6,74 +6,68 @@ import cn.hutool.system.OsInfo;
 import cn.hutool.system.SystemUtil;
 import cn.hutool.system.oshi.CpuInfo;
 import cn.hutool.system.oshi.OshiUtil;
+import com.sagframe.sagacity.sqltoy.plus.conditions.query.LambdaQueryWrapper;
+import com.sagframe.sagacity.sqltoy.plus.dao.SqlToyHelperDao;
+import net.cocotea.admin.api.system.model.po.SysMenu;
+import net.cocotea.admin.api.system.model.po.SysRole;
+import net.cocotea.admin.api.system.model.po.SysUser;
+import net.cocotea.admin.api.system.model.vo.SysOverviewVO;
 import net.cocotea.admin.api.system.model.vo.SystemInfoVO;
-import net.cocotea.admin.common.constant.GlobalValue;
-import net.cocotea.admin.common.constant.RedisKey;
-import net.cocotea.admin.common.enums.IsEnum;
-import net.cocotea.admin.common.constant.CharConstant;
-import net.cocotea.admin.common.service.IRedisService;
 import net.cocotea.admin.api.system.service.SysDashboardService;
+import net.cocotea.admin.common.constant.GlobalConst;
+import net.cocotea.admin.common.constant.RedisKeyConst;
+import net.cocotea.admin.common.enums.IsEnum;
+import net.cocotea.admin.common.enums.MenuTypeEnum;
+import net.cocotea.admin.common.service.RedisService;
 import org.noear.solon.annotation.Inject;
 import org.noear.solon.aspect.annotation.Service;
-import org.noear.solon.extend.sqltoy.annotation.Db;
-import org.sagacity.sqltoy.dao.SqlToyLazyDao;
 import oshi.hardware.GlobalMemory;
 
 import java.io.File;
-import java.net.UnknownHostException;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
- * @author jwss
+ * @author CoCoTea
  */
 @Service
 public class SysDashboardServiceImpl implements SysDashboardService {
-    @Db
-    private SqlToyLazyDao sqlToyLazyDao;
     @Inject
-    private IRedisService redisService;
+    private SqlToyHelperDao sqlToyHelperDao;
+    @Inject
+    private RedisService redisService;
 
     @Override
-    public List<Map<String, Object>> getCount() {
-        Map<String, Object> hashMap;
-        String tempSql = "select count(1) from %s where DELETE_STATUS=1 ";
+    public List<SysOverviewVO> getCount() {
+        List<SysOverviewVO> sysOverviewList = new ArrayList<>(4);
+        LambdaQueryWrapper<SysUser> sysUserWrapper = new LambdaQueryWrapper<>(SysUser.class)
+                .select().eq(SysUser::getIsDeleted, IsEnum.N.getCode());
+        Long countUser = sqlToyHelperDao.count(sysUserWrapper);
+        sysOverviewList.add(new SysOverviewVO().setTitle("用户数量").setCount(countUser));
 
-        List<Map<String, Object>> mapList = new ArrayList<>(4);
-        Long countUser = sqlToyLazyDao.getCount(String.format(tempSql, "sys_user"), null);
-        hashMap=new HashMap<>(2);
-        hashMap.put("title", "用户数量");
-        hashMap.put("count", countUser);
-        mapList.add(hashMap);
+        LambdaQueryWrapper<SysMenu> sysMenuWrapper = new LambdaQueryWrapper<>(SysMenu.class)
+                .select()
+                .eq(SysMenu::getIsDeleted, IsEnum.N.getCode())
+                .eq(SysMenu::getIsMenu, IsEnum.Y.getCode())
+                .eq(SysMenu::getMenuType, MenuTypeEnum.MENU.getCode());
+        Long countMenu = sqlToyHelperDao.count(sysMenuWrapper);
+        sysOverviewList.add(new SysOverviewVO().setTitle("菜单数量").setCount(countMenu));
 
-        String menuSql = String.format(tempSql, "sys_menu") + "and IS_MENU = " + IsEnum.Y.getCode();
-        Long countMenu = sqlToyLazyDao.getCount(menuSql, null);
-        hashMap=new HashMap<>(2);
-        hashMap.put("title", "菜单数量");
-        hashMap.put("count", countMenu);
-        mapList.add(hashMap);
-
-        Long countRole = sqlToyLazyDao.getCount(String.format(tempSql, "sys_role"), null);
-        hashMap=new HashMap<>(2);
-        hashMap.put("title", "角色数量");
-        hashMap.put("count", countRole);
-        mapList.add(hashMap);
+        LambdaQueryWrapper<SysRole> sysRoleWrapper = new LambdaQueryWrapper<>(SysRole.class)
+                .select().eq(SysRole::getIsDeleted, IsEnum.N.getCode());
+        long countRole = sqlToyHelperDao.count(sysRoleWrapper);
+        sysOverviewList.add(new SysOverviewVO().setTitle("角色数量").setCount(countRole));
 
         Long countOnline = (long) redisService.keys(
-                String.format(RedisKey.ONLINE_USER, CharConstant.ASTERISK)
+                String.format(RedisKeyConst.ONLINE_USER, "*")
         ).size();
-        hashMap=new HashMap<>(2);
-        hashMap.put("title", "在线用户");
-        hashMap.put("count", countOnline);
-        mapList.add(hashMap);
-        return mapList;
+        sysOverviewList.add(new SysOverviewVO().setTitle("在线用户").setCount(countOnline));
+        return sysOverviewList;
     }
 
     @Override
-    public SystemInfoVO getSystemInfo() throws UnknownHostException {
+    public SystemInfoVO getSystemInfo() {
         SystemInfoVO systemInfoVO = new SystemInfoVO();
         // 服务器信息
         OsInfo osInfo = SystemUtil.getOsInfo();
@@ -89,7 +83,7 @@ public class SysDashboardServiceImpl implements SysDashboardService {
         // 服务运行信息
         systemInfoVO.setProjectPath(System.getProperty("user.dir"));
         Duration between = LocalDateTimeUtil.between(
-                LocalDateTimeUtil.ofUTC(GlobalValue.START_TIME),
+                LocalDateTimeUtil.ofUTC(GlobalConst.START_TIME),
                 LocalDateTimeUtil.ofUTC(System.currentTimeMillis())
         );
         systemInfoVO.setRunningTime(between.getSeconds());

@@ -1,20 +1,32 @@
 package net.cocotea.admin.api.system.service.impl;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
+import com.sagframe.sagacity.sqltoy.plus.conditions.Wrappers;
+import com.sagframe.sagacity.sqltoy.plus.dao.SqlToyHelperDao;
+import com.sagframe.sagacity.sqltoy.plus.multi.MultiWrapper;
+import com.sagframe.sagacity.sqltoy.plus.multi.model.LambdaColumn;
 import net.cocotea.admin.api.system.model.dto.SysFileAddDTO;
 import net.cocotea.admin.api.system.model.dto.SysFilePageDTO;
 import net.cocotea.admin.api.system.model.dto.SysFileUpdateDTO;
 import net.cocotea.admin.api.system.model.po.SysFile;
+import net.cocotea.admin.api.system.model.po.SysUser;
 import net.cocotea.admin.api.system.model.vo.SysFileVO;
-import net.cocotea.admin.common.enums.DeleteStatusEnum;
+import net.cocotea.admin.api.system.model.vo.SysLogVO;
 import net.cocotea.admin.api.system.service.SysFileService;
-import org.noear.solon.aspect.annotation.Service;
+import net.cocotea.admin.common.enums.IsEnum;
+import net.cocotea.admin.common.model.ApiPage;
+import net.cocotea.admin.common.model.BusinessException;
+import net.cocotea.admin.properties.FileProp;
+import net.cocotea.admin.util.LoginUtils;
+import org.noear.solon.annotation.Inject;
 import org.noear.solon.data.annotation.Tran;
-import org.noear.solon.extend.sqltoy.annotation.Db;
-import org.sagacity.sqltoy.dao.SqlToyLazyDao;
 import org.sagacity.sqltoy.model.Page;
-import cn.hutool.core.convert.Convert;
+import org.noear.solon.aspect.annotation.Service;
 
+import java.io.File;
+import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,75 +34,128 @@ import java.util.List;
  * 系统文件表
  *
  * @author CoCoTea 572315466@qq.com
- * @since 1.2.1 2022-12-28
+ * @version 2.0.0
  */
 @Service
 public class SysFileServiceImpl implements SysFileService {
 
-    @Db
-    private SqlToyLazyDao sqlToyLazyDao;
+    @Inject
+    private SqlToyHelperDao sqlToyHelperDao;
+
+    @Inject
+    private FileProp fileProp;
 
     @Override
-    public boolean add(SysFileAddDTO param) {
-        SysFile sysFile = Convert.convert(SysFile.class, param);
-        Object save = sqlToyLazyDao.save(sysFile);
+    public boolean add(SysFileAddDTO fileAddDTO) {
+        SysFile sysFile = Convert.convert(SysFile.class, fileAddDTO);
+        Object save = sqlToyHelperDao.save(sysFile);
         return save != null;
     }
 
     @Tran
     @Override
-    public boolean deleteBatch(List<String> param) {
+    public boolean deleteBatch(List<BigInteger> param) {
         List<SysFile> sysFileList = new ArrayList<>(param.size());
-        for (String id : param) {
-            sysFileList.add(new SysFile().setId(id).setDeleteStatus(DeleteStatusEnum.DELETE.getCode()));
+        for (BigInteger id : param) {
+            sysFileList.add(new SysFile().setId(id).setIsDeleted(IsEnum.Y.getCode()));
         }
-        return sqlToyLazyDao.updateAll(sysFileList) > 0;
+        return sqlToyHelperDao.updateAll(sysFileList) > 0;
     }
 
     @Override
-    public boolean update(SysFileUpdateDTO param) {
-        SysFile sysFile = Convert.convert(SysFile.class, param);
-        Long count = sqlToyLazyDao.update(sysFile);
+    public boolean update(SysFileUpdateDTO fileUpdateDTO) {
+        SysFile sysFile = Convert.convert(SysFile.class, fileUpdateDTO);
+        Long count = sqlToyHelperDao.update(sysFile);
         return count > 0;
     }
 
     @Override
-    public Page<SysFileVO> listByPage(SysFilePageDTO param) {
-        Page<SysFileVO> page = sqlToyLazyDao.findPageBySql(param, "system_sysFile_findByPageParam", param.getFile());
-        return page;
+    public ApiPage<SysFileVO> listByPage(SysFilePageDTO pageDTO) {
+        MultiWrapper multiWrapper = Wrappers.lambdaMultiWrapper(SysFile.class)
+                .select(
+                        LambdaColumn.of(SysFile::getId), LambdaColumn.of(SysFile::getFileName),
+                        LambdaColumn.of(SysFile::getFileSuffix), LambdaColumn.of(SysFile::getFileSize),
+                        LambdaColumn.of(SysFile::getCreateTime), LambdaColumn.of(SysFile::getUpdateTime),
+                        LambdaColumn.of(SysFile::getIsShare),
+                        LambdaColumn.of(SysUser::getUsername), LambdaColumn.of(SysUser::getNickname)
+                )
+                .from(SysFile.class)
+                .leftJoin(SysUser.class).on().eq(SysFile::getCreateBy, SysUser::getId)
+                .where()
+                .eq(SysFile::getIsDeleted, pageDTO.getIsDeleted())
+                .eq(SysFile::getFileSuffix, pageDTO.getSysFile().getFileSuffix())
+                .eq(SysFile::getCreateBy, LoginUtils.loginId())
+                .between(SysFile::getCreateTime, pageDTO.getSysFile().getBeginTime(), pageDTO.getSysFile().getEndTime())
+                .orderByDesc(SysFile::getId);
+        Page<SysLogVO> page = sqlToyHelperDao.findPage(multiWrapper, new Page<>(pageDTO.getPageSize(), pageDTO.getPageNo()));
+        return ApiPage.rest(page, SysFileVO.class);
     }
 
     @Override
-    public boolean delete(String id) {
-        return sqlToyLazyDao.update(new SysFile().setId(id).setDeleteStatus(DeleteStatusEnum.DELETE.getCode())) > 0;
+    public boolean delete(BigInteger id) {
+        return sqlToyHelperDao.update(new SysFile().setId(id).setIsDeleted(IsEnum.Y.getCode())) > 0;
     }
 
     @Override
-    public Page<SysFileVO> recycleBinPage(SysFilePageDTO param) {
-        Page<SysFileVO> page = sqlToyLazyDao.findPageBySql(param, "system_sysFile_delete_findByPageParam", param.getFile());
-        return page;
+    public ApiPage<SysFileVO> recycleBinPage(SysFilePageDTO pageDTO) {
+        return listByPage(pageDTO.setIsDeleted(IsEnum.Y.getCode()));
     }
 
     @Tran
     @Override
-    public boolean recycleBinDeleteBatch(List<String> param) {
+    public boolean recycleBinDeleteBatch(List<BigInteger> param) {
         List<SysFile> sysFileList = new ArrayList<>(param.size());
-        for (String id : param) {
-            SysFile sysFile = sqlToyLazyDao.load(new SysFile().setId(id));
+        for (BigInteger id : param) {
+            SysFile sysFile = sqlToyHelperDao.load(new SysFile().setId(id));
             if (sysFile != null) {
-                FileUtil.del(sysFile.getRealPath());
+                FileUtil.del(fileProp.getDefaultSavePath() + sysFile.getRealPath());
             }
             sysFileList.add(new SysFile().setId(id));
         }
-        return sqlToyLazyDao.deleteAll(sysFileList) > 0;
+        return sqlToyHelperDao.deleteAll(sysFileList) > 0;
     }
 
     @Override
-    public boolean recoveryBatch(List<String> param) {
+    public boolean recoveryBatch(List<BigInteger> param) {
         List<SysFile> sysFileList = new ArrayList<>(param.size());
-        for (String id : param) {
-            sysFileList.add(new SysFile().setId(id).setDeleteStatus(DeleteStatusEnum.NOT_DELETE.getCode()));
+        for (BigInteger id : param) {
+            sysFileList.add(new SysFile().setId(id).setIsDeleted(IsEnum.N.getCode()));
         }
-        return sqlToyLazyDao.updateAll(sysFileList) > 0;
+        return sqlToyHelperDao.updateAll(sysFileList) > 0;
     }
+
+    // @Override
+    // public void download(BigInteger fileId, HttpServletResponse response) throws BusinessException, IOException {
+    //     SysFileVO sysFile = getUserFile(fileId);
+    //     String fullPath = fileProp.getDefaultSavePath() + sysFile.getRealPath();
+    //     File file = FileUtil.file(fullPath);
+    //     if (file.exists()) {
+    //         FileUtil.writeToStream(file, response.getOutputStream());
+    //     } else {
+    //         throw new BusinessException("文件不存在");
+    //     }
+    // }
+
+    @Override
+    public SysFileVO getFile(BigInteger fileId) throws BusinessException {
+        SysFile sysFile = sqlToyHelperDao.load(new SysFile().setId(fileId));
+        if (sysFile == null) {
+            throw new BusinessException("文件不存在");
+        }
+        return Convert.convert(SysFileVO.class, sysFile);
+    }
+
+    @Override
+    public SysFileVO getUserFile(BigInteger fileId) throws BusinessException {
+        SysFileVO sysFile = getFile(fileId);
+        boolean isShare = sysFile.getIsShare() == IsEnum.Y.getCode().intValue();
+        if (!isShare) {
+            BigInteger loginId = LoginUtils.loginId();
+            if (!String.valueOf(loginId).equals(sysFile.getCreateBy())) {
+                throw new BusinessException("无权限查看");
+            }
+        }
+        return sysFile;
+    }
+
 }

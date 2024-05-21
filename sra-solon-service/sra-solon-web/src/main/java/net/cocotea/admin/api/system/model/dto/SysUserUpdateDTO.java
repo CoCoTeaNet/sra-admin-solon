@@ -1,135 +1,76 @@
 package net.cocotea.admin.api.system.model.dto;
 
-import org.noear.solon.validation.annotation.NotBlank;
 
-import java.io.Serializable;
+import org.noear.solon.validation.annotation.NotBlank;
+import org.noear.solon.validation.annotation.NotEmpty;
+import org.noear.solon.validation.annotation.NotNull;
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+import java.math.BigInteger;
 import java.util.List;
 
 /**
- * @author jwss
- * @project sss-rbac-admin
- * @version 1.0.0
- * @description sys_user,系统用户表  
+ * 系统用户更新传输对象
+ *
+ * @author CoCoTea
+ * @version 2.0.0
  */
-public class SysUserUpdateDTO implements Serializable {
+@Data
+@Accessors(chain = true)
+public class SysUserUpdateDTO {
 
-	private static final long serialVersionUID = -75070990767806255L;
+    /**
+     * 用户ID
+     */
+    @NotNull(message = "用户ID为空")
+    private BigInteger id;
 
-	@NotBlank(message = "主键ID为空")
-	private String id;
+    /**
+     * 账号名
+     */
+    @NotBlank(message = "账号名为空")
+    private String username;
 
-	/**
-	 * 用户账号
-	 */
-	@NotBlank(message = "账号名为空")
-	private String username;
+    /**
+     * 用户昵称
+     */
+    private String nickname;
 
-	private String nickname;
+    /**
+     * 用户手机号
+     */
+    private String mobilePhone;
 
-	private String mobilePhone;
+    /**
+     * 用户性别
+     */
+    private String sex;
 
-	private String sex;
+    /**
+     * 用户邮箱
+     */
+    private String email;
 
-	private String email;
+    /**
+     * 头像地址
+     */
+    private String avatar;
 
-	private String avatar;
+    /**
+     * 密码
+     */
+    private String password;
 
-	private String password;
+    /**
+     * 账号状态
+     */
+    private String accountStatus;
 
-	private String accountStatus;
+    /**
+     * 角色ID
+     */
+    @NotEmpty(message = "角色ID不能为空")
+    private List<BigInteger> roleIds;
 
-	private List<String> roleIds;
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getMobilePhone() {
-		return mobilePhone;
-	}
-
-	public void setMobilePhone(String mobilePhone) {
-		this.mobilePhone = mobilePhone;
-	}
-
-	/**
-	 *@param username the username to set
-	 */
-	public void setUsername(String username) {
-		this.username=username;
-	}
-		
-	/**
-	 *@return the Username
-	 */
-	public String getUsername() {
-	    return this.username;
-	}
-	
-	/**
-	 *@param password the password to set
-	 */
-	public void setPassword(String password) {
-		this.password=password;
-	}
-		
-	/**
-	 *@return the Password
-	 */
-	public String getPassword() {
-	    return this.password;
-	}
-
-	public String getNickname() {
-		return nickname;
-	}
-
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
-	}
-
-	public String getSex() {
-		return sex;
-	}
-
-	public void setSex(String sex) {
-		this.sex = sex;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getAccountStatus() {
-		return accountStatus;
-	}
-
-	public void setAccountStatus(String accountStatus) {
-		this.accountStatus = accountStatus;
-	}
-
-	public String getAvatar() {
-		return avatar;
-	}
-
-	public void setAvatar(String avatar) {
-		this.avatar = avatar;
-	}
-
-	public List<String> getRoleIds() {
-		return roleIds;
-	}
-
-	public SysUserUpdateDTO setRoleIds(List<String> roleIds) {
-		this.roleIds = roleIds;
-		return this;
-	}
 }

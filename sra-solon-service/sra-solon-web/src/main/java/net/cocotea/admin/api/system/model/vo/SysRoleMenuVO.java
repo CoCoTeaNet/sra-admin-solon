@@ -1,15 +1,22 @@
 package net.cocotea.admin.api.system.model.vo;
 
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * @author jwss
+ * @author CoCoTea
  * @project sss-rbac-admin
  * @version 1.0.0
  * @description sys_role_menu,角色菜单关联表  
  */
+@Data
+@Accessors(chain = true)
 public class SysRoleMenuVO implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 5632526424183418214L;
 	
 	/**
@@ -22,46 +29,4 @@ public class SysRoleMenuVO implements Serializable {
 	 */
 	private String menuId;
 	
-	
-	/**
-	 *@param roleId the roleId to set
-	 */
-	public SysRoleMenuVO setRoleId(String roleId) {
-		this.roleId=roleId;
-		return this;
-	}
-		
-	/**
-	 *@return the RoleId
-	 */
-	public String getRoleId() {
-	    return this.roleId;
-	}
-	
-	/**
-	 *@param menuId the menuId to set
-	 */
-	public SysRoleMenuVO setMenuId(String menuId) {
-		this.menuId=menuId;
-		return this;
-	}
-		
-	/**
-	 *@return the MenuId
-	 */
-	public String getMenuId() {
-	    return this.menuId;
-	}
-
-	/**
-	* @todo vo columns to String
-	*/
-	@Override
-	public String toString() {
-		StringBuilder columnsBuffer=new StringBuilder();
-			columnsBuffer.append("roleId=").append(getRoleId()).append("\n");
-			columnsBuffer.append("menuId=").append(getMenuId()).append("\n");
-		return columnsBuffer.toString();
-	}
-/*---end-auto-generate-don't-update-this-area--*/	
 }

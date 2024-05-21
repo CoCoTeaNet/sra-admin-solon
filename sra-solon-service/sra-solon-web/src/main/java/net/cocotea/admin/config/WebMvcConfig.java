@@ -22,8 +22,10 @@ public class WebMvcConfig {
     private final Logger logger = LoggerFactory.getLogger(WebMvcConfig.class);
 
     @Bean(index = -100)  //-100，是顺序位（低值优先）
-    public SaTokenInterceptor saTokenInterceptor(@Inject("${sra.api.excludes}") List<String> excludes) {
+    public SaTokenInterceptor saTokenInterceptor(@Inject("${sra-admin.excludes}") String excludesStr) {
         SaTokenInterceptor interceptor = new SaTokenInterceptor();
+
+        String[] excludes = excludesStr.split(",");
 
         // 指定 [拦截路由] 与 [放行路由]
         interceptor.addInclude("/**");
@@ -34,9 +36,6 @@ public class WebMvcConfig {
 
         // 认证函数: 每次请求执行
         interceptor.setAuth(req -> SaRouter.match("/**", StpUtil::checkLogin));
-
-        // 异常处理函数：每次认证函数发生异常时执行此函数 //包括注解异常
-        interceptor.setError(e -> ApiResult.error(e.getMessage()));
 
         // 前置函数：在每次认证函数之前执行
         interceptor.setBeforeAuth(req -> {

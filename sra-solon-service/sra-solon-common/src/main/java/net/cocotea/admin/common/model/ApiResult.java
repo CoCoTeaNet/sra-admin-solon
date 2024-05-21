@@ -1,8 +1,10 @@
 package net.cocotea.admin.common.model;
 
+import lombok.Data;
+import lombok.experimental.Accessors;
 import net.cocotea.admin.common.enums.ApiResultEnum;
-import net.cocotea.admin.common.constant.CharConstant;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -10,14 +12,32 @@ import java.time.LocalDateTime;
  * 返回数据模型
  *
  * @author CoCoTea
- * @date 2022-1-12 16:21:52
+ * @version 2.0.0
  */
+@Data
+@Accessors(chain = true)
 public class ApiResult<T> implements Serializable {
+    @Serial
     private static final long serialVersionUID = -4073679724104914374L;
 
+    /**
+     * 接口响应编号：{@link ApiResultEnum}
+     */
     private Integer code;
+
+    /**
+     * 接口返回数据
+     */
     private T data;
+
+    /**
+     * 接口提示信息
+     */
     private String message;
+
+    /**
+     * 接口返回时间
+     */
     private LocalDateTime time;
 
     public ApiResult(Integer code, T data, String message) {
@@ -33,7 +53,7 @@ public class ApiResult<T> implements Serializable {
      * @param b 布尔值
      * @return 结果集
      */
-    public static ApiResult<String> flag(Boolean b) {
+    public static ApiResult<?> flag(Boolean b) {
         if (b) {
             return ok();
         } else {
@@ -56,8 +76,8 @@ public class ApiResult<T> implements Serializable {
      *
      * @return 成功结果
      */
-    public static ApiResult<String> ok() {
-        return new ApiResult<>(ApiResultEnum.SUCCESS.getCode(), CharConstant.EMPTY_STRING, ApiResultEnum.SUCCESS.getDesc());
+    public static ApiResult<?> ok() {
+        return new ApiResult<>(ApiResultEnum.SUCCESS.getCode(), null, ApiResultEnum.SUCCESS.getDesc());
     }
 
     /**
@@ -65,8 +85,8 @@ public class ApiResult<T> implements Serializable {
      *
      * @return 错误结果
      */
-    public static ApiResult<String> error() {
-        return new ApiResult<>(ApiResultEnum.ERROR.getCode(), CharConstant.EMPTY_STRING, ApiResultEnum.ERROR.getDesc());
+    public static ApiResult<?> error() {
+        return new ApiResult<>(ApiResultEnum.ERROR.getCode(), null, ApiResultEnum.ERROR.getDesc());
     }
 
     /**
@@ -96,19 +116,19 @@ public class ApiResult<T> implements Serializable {
      * @param message 通知消息
      * @return 成功结果
      */
-    public static ApiResult<String> error(String message) {
-        return error(CharConstant.EMPTY_STRING, message);
+    public static ApiResult<?> error(String message) {
+        return error(ApiResultEnum.ERROR, message);
     }
 
     /**
      * 失败通知结果
      *
      * @param errorCode 错误码
-     * @param message 通知消息
+     * @param message   通知消息
      * @return 成功结果
      */
-    public static ApiResult<String> error(Integer errorCode, String message) {
-        return new ApiResult<>(errorCode, CharConstant.EMPTY_STRING, message);
+    public static ApiResult<?> error(Integer errorCode, String message) {
+        return new ApiResult<>(errorCode, null, message);
     }
 
     /**
@@ -121,37 +141,7 @@ public class ApiResult<T> implements Serializable {
         return new ApiResult<>(errorCode, data, ApiResultEnum.SUCCESS.getDesc());
     }
 
-    public Integer getCode() {
-        return code;
-    }
-
-    public void setCode(Integer code) {
-        this.code = code;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public ApiResult<T> setData(T data) {
-        this.data = data;
-        return this;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public LocalDateTime getTime() {
-        return time;
-    }
-
-    public ApiResult<T> setTime(LocalDateTime time) {
-        this.time = time;
-        return this;
+    public static ApiResult<?> error(ApiResultEnum resultEnum) {
+        return error(resultEnum.getCode(), resultEnum.getDesc());
     }
 }

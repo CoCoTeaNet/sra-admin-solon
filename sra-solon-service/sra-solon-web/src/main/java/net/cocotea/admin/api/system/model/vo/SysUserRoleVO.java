@@ -1,68 +1,26 @@
 package net.cocotea.admin.api.system.model.vo;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
+import net.cocotea.admin.api.system.model.po.SysUserRole;
+
 import java.io.Serializable;
 
 /**
- * @author jwss
- * @project sss-rbac-admin
- * @version 1.0.0
- * @description sys_user_role,用户角色关联表  
+ * @author CoCoTea
+ * @version 2.0.0
  */
-public class SysUserRoleVO implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+@Data
+@Accessors(chain = true)
+public class SysUserRoleVO extends SysUserRole implements Serializable {
 
-	private static final long serialVersionUID = 4531576278077869409L;
-	
-/*---begin-auto-generate-don't-update-this-area--*/	
-	/**
-	 * 用户主键ID
-	 */
-	private String userId;
-	
-	/**
-	 * 角色主键ID
-	 */
-	private String roleId;
-	
-	
-	/**
-	 *@param userId the userId to set
-	 */
-	public SysUserRoleVO setUserId(String userId) {
-		this.userId=userId;
-		return this;
-	}
-		
-	/**
-	 *@return the UserId
-	 */
-	public String getUserId() {
-	    return this.userId;
-	}
-	
-	/**
-	 *@param roleId the roleId to set
-	 */
-	public SysUserRoleVO setRoleId(String roleId) {
-		this.roleId=roleId;
-		return this;
-	}
-		
-	/**
-	 *@return the RoleId
-	 */
-	public String getRoleId() {
-	    return this.roleId;
-	}
+    private static final long serialVersionUID = 4531576278077869409L;
 
-	/**
-	* @todo vo columns to String
-	*/
-	@Override
-	public String toString() {
-		StringBuilder columnsBuffer=new StringBuilder();
-			columnsBuffer.append("userId=").append(getUserId()).append("\n");
-			columnsBuffer.append("roleId=").append(getRoleId()).append("\n");
-		return columnsBuffer.toString();
-	}
-/*---end-auto-generate-don't-update-this-area--*/	
+    /**
+     * 角色名称
+     */
+    private String roleName;
+
 }

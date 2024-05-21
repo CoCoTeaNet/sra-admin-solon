@@ -5,18 +5,19 @@ import net.cocotea.admin.api.system.model.dto.SysRolePageDTO;
 import net.cocotea.admin.api.system.model.dto.SysRoleUpdateDTO;
 import net.cocotea.admin.api.system.model.vo.SysRoleMenuVO;
 import net.cocotea.admin.api.system.model.vo.SysRoleVO;
+import net.cocotea.admin.common.model.ApiPage;
 import net.cocotea.admin.common.model.BusinessException;
-import net.cocotea.admin.common.service.IBaseService;
-import org.sagacity.sqltoy.model.Page;
+import net.cocotea.admin.common.service.BaseService;
 
+import java.math.BigInteger;
 import java.util.List;
 
 /**
  * 角色服务类
  * @date 2022-1-17 17:14:06
- * @author jwss
+ * @author CoCoTea
  */
-public interface SysRoleService extends IBaseService<Page<SysRoleVO>, SysRolePageDTO, SysRoleAddDTO, SysRoleUpdateDTO> {
+public interface SysRoleService extends BaseService<ApiPage<SysRoleVO>, SysRolePageDTO, SysRoleAddDTO, SysRoleUpdateDTO> {
     /**
      * 给角色赋予权限
      * @param sysRoleMenuVOList 角色菜单列表
@@ -30,5 +31,5 @@ public interface SysRoleService extends IBaseService<Page<SysRoleVO>, SysRolePag
      * @param userId 用户id
      * @return 角色
      */
-    List<SysRoleVO> loadByUserId(String userId);
+    List<SysRoleVO> loadByUserId(BigInteger userId);
 }

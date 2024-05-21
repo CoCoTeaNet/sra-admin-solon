@@ -1,54 +1,90 @@
 package net.cocotea.admin.api.system.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaCheckRole;
+import cn.dev33.satoken.annotation.SaMode;
 import net.cocotea.admin.api.system.model.dto.SysDictionaryAddDTO;
 import net.cocotea.admin.api.system.model.dto.SysDictionaryPageDTO;
-import net.cocotea.admin.common.model.ApiResult;
-import net.cocotea.admin.common.model.BusinessException;
 import net.cocotea.admin.api.system.model.dto.SysDictionaryUpdateDTO;
 import net.cocotea.admin.api.system.model.vo.SysDictionaryVO;
 import net.cocotea.admin.api.system.service.SysDictionaryService;
+import net.cocotea.admin.common.model.ApiResult;
+import net.cocotea.admin.common.model.BusinessException;
 import org.noear.solon.annotation.*;
+import org.noear.solon.validation.annotation.Valid;
+import org.noear.solon.validation.annotation.Validated;
 
-import java.util.Collection;
+import java.math.BigInteger;
 import java.util.List;
 
 /**
- * @author jwss
- * @date 2022-3-22
+ * 系统字典管理接口
+ *
+ * @author CoCoTea
+ * @version 2.0.0
  */
 @Controller
 @Mapping("/system/dictionary")
+@Valid
 public class SysDictionaryController {
     @Inject
-    private SysDictionaryService dictionaryService;
+    private SysDictionaryService sysDictionaryService;
 
-    @Post
+    /**
+     * 新增字典
+     *
+     * @param dictionaryAddDTO {@link SysDictionaryAddDTO}
+     * @return 成功返回true
+     * @throws BusinessException 业务异常
+     */
     @Mapping("/add")
-    @SaCheckPermission("system:dictionary:add")
-    public ApiResult<String> add(@Body SysDictionaryAddDTO param) throws BusinessException {
-        boolean b = dictionaryService.add(param);
-        return ApiResult.flag(b);
+    @Post
+    @SaCheckRole(value = {"role:super:admin", "role:simple:admin"}, mode = SaMode.OR)
+    public ApiResult<Boolean> add(@Validated @Body SysDictionaryAddDTO dictionaryAddDTO) throws BusinessException {
+        boolean b = sysDictionaryService.add(dictionaryAddDTO);
+        return ApiResult.ok(b);
     }
 
+    /**
+     * 批量删除
+     *
+     * @param list 字典主键ID集合
+     * @return 成功返回true
+     * @throws BusinessException 业务异常
+     */
     @Mapping("/deleteBatch")
-    @SaCheckPermission("system:dictionary:deleteBatch")
-    public ApiResult<String> deleteBatch(@Body List<String> list) throws BusinessException {
-        boolean b = dictionaryService.deleteBatch(list);
-        return ApiResult.flag(b);
+    @Post
+    @SaCheckRole(value = {"role:super:admin", "role:simple:admin"}, mode = SaMode.OR)
+    public ApiResult<Boolean> deleteBatch(@Validated @Body List<BigInteger> list) throws BusinessException {
+        boolean b = sysDictionaryService.deleteBatch(list);
+        return ApiResult.ok(b);
     }
 
+    /**
+     * 更新字典信息
+     *
+     * @param param {@link SysDictionaryUpdateDTO}
+     * @return 成功返回true
+     * @throws BusinessException 业务异常
+     */
     @Mapping("/update")
-    @SaCheckPermission("system:dictionary:update")
-    public ApiResult<String> update(@Body SysDictionaryUpdateDTO param) throws BusinessException {
-        boolean b = dictionaryService.update(param);
-        return ApiResult.flag(b);
+    @Post
+    @SaCheckRole(value = {"role:super:admin", "role:simple:admin"}, mode = SaMode.OR)
+    public ApiResult<Boolean> update(@Validated @Body SysDictionaryUpdateDTO param) throws BusinessException {
+        boolean b = sysDictionaryService.update(param);
+        return ApiResult.ok(b);
     }
 
+    /**
+     * 分页获取字典树形列表
+     *
+     * @param dictionaryPageDTO {@link SysDictionaryPageDTO}
+     * @return {@link SysDictionaryVO}
+     */
     @Mapping("/listByTree")
-    @SaCheckPermission("system:dictionary:listByTree")
-    public ApiResult<?> listByTree(@Body SysDictionaryPageDTO param) {
-        Collection<SysDictionaryVO> list = dictionaryService.listByTree(param);
+    @Post
+    @SaCheckRole(value = {"role:super:admin", "role:simple:admin"}, mode = SaMode.OR)
+    public ApiResult<List<SysDictionaryVO>> listByTree(@Validated @Body SysDictionaryPageDTO dictionaryPageDTO) {
+        List<SysDictionaryVO> list = sysDictionaryService.listByTree(dictionaryPageDTO);
         return ApiResult.ok(list);
     }
 }

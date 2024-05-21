@@ -1,30 +1,35 @@
 package net.cocotea.admin.api.system.service.impl;
 
-import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.text.CharPool;
 import cn.hutool.json.JSONUtil;
+import com.sagframe.sagacity.sqltoy.plus.conditions.query.LambdaQueryWrapper;
+import com.sagframe.sagacity.sqltoy.plus.dao.SqlToyHelperDao;
 import net.cocotea.admin.api.system.model.dto.SysMenuAddDTO;
 import net.cocotea.admin.api.system.model.dto.SysMenuPageDTO;
 import net.cocotea.admin.api.system.model.dto.SysMenuUpdateDTO;
 import net.cocotea.admin.api.system.model.po.SysMenu;
+import net.cocotea.admin.api.system.model.po.SysRoleMenu;
+import net.cocotea.admin.api.system.model.po.SysUserRole;
 import net.cocotea.admin.api.system.model.vo.SysMenuVO;
 import net.cocotea.admin.api.system.service.SysMenuService;
-import net.cocotea.admin.common.constant.RedisKey;
-import net.cocotea.admin.common.enums.DeleteStatusEnum;
+import net.cocotea.admin.common.constant.RedisKeyConst;
 import net.cocotea.admin.common.enums.IsEnum;
-import net.cocotea.admin.common.service.IRedisService;
-import net.cocotea.admin.common.util.GenerateDsUtils;
-import net.cocotea.admin.common.constant.CharConstant;
+import net.cocotea.admin.common.model.ApiPage;
+import net.cocotea.admin.common.service.RedisService;
+import net.cocotea.admin.common.util.TreeBuilder;
+import net.cocotea.admin.util.LoginUtils;
 import org.noear.solon.annotation.Inject;
-import org.noear.solon.aspect.annotation.Service;
 import org.noear.solon.data.annotation.Tran;
-import org.noear.solon.extend.sqltoy.annotation.Db;
-import org.sagacity.sqltoy.dao.SqlToyLazyDao;
 import org.sagacity.sqltoy.model.Page;
 import org.sagacity.sqltoy.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.noear.solon.aspect.annotation.Service;
 
-import java.util.*;
+import java.math.BigInteger;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author CoCoTea
@@ -33,74 +38,102 @@ import java.util.*;
 @Service
 public class SysMenuServiceImpl implements SysMenuService {
     private static final Logger logger = LoggerFactory.getLogger(SysMenuServiceImpl.class);
-    @Db
-    private SqlToyLazyDao sqlToyLazyDao;
+
     @Inject
-    private IRedisService redisService;
+    private SqlToyHelperDao sqlToyHelperDao;
+
+    @Inject
+    private RedisService redisService;
 
     @Override
     public boolean add(SysMenuAddDTO param) {
-        SysMenu sysMenu = sqlToyLazyDao.convertType(param, SysMenu.class);
+        SysMenu sysMenu = sqlToyHelperDao.convertType(param, SysMenu.class);
+        // 菜单
         if (StringUtil.isBlank(sysMenu.getParentId())) {
-            sysMenu.setParentId(String.valueOf(0));
+            sysMenu.setParentId(BigInteger.ZERO);
         }
+        // 权限
         if (StringUtil.isBlank(sysMenu.getPermissionCode()) && StringUtil.isNotBlank(sysMenu.getRouterPath())) {
-            sysMenu.setPermissionCode(sysMenu.getRouterPath().replace(CharConstant.LEFT_LINE, CharConstant.COLON));
+            sysMenu.setPermissionCode(sysMenu.getRouterPath().replace(CharPool.SLASH, CharPool.COLON));
         }
-        Object menuId = sqlToyLazyDao.save(sysMenu);
+        Object menuId = sqlToyHelperDao.save(sysMenu);
         return menuId != null;
     }
 
     @Override
-    public boolean deleteBatch(List<String> idList) {
+    public boolean deleteBatch(List<BigInteger> idList) {
         idList.forEach(this::delete);
-        return idList.size() > 0;
+        return !idList.isEmpty();
     }
 
     @Override
-    public Page<SysMenuVO> listByPage(SysMenuPageDTO pageParam) {
-        Page<SysMenuVO> page = sqlToyLazyDao.findPageBySql(pageParam, "system_menu_findByPageParam", pageParam.getMenu());
-        return page;
+    public ApiPage<SysMenuVO> listByPage(SysMenuPageDTO pageDTO) {
+        Page<SysMenu> page = sqlToyHelperDao.findPage(baseQueryWrapper(pageDTO.getPO()), new Page<SysMenu>());
+        return ApiPage.rest(page, SysMenuVO.class);
     }
 
     @Override
-    public Collection<SysMenuVO> listByTree(SysMenuPageDTO param) {
-        List<SysMenuVO> sysMenuVOList = sqlToyLazyDao.findBySql("system_menu_findByPageParam", param.getMenu());
-        GenerateDsUtils<SysMenuVO> dsUtils = new GenerateDsUtils<>();
-        return dsUtils.buildTreeDefault(sysMenuVOList).values();
+    public List<SysMenuVO> listByTree(SysMenuPageDTO pageDTO) {
+        LambdaQueryWrapper<SysMenu> wrapper = baseQueryWrapper(pageDTO.getPO());
+        List<SysMenuVO> list = Convert.toList(SysMenuVO.class, sqlToyHelperDao.findList(wrapper));
+        return new TreeBuilder<SysMenuVO>().get(list);
     }
 
     @Override
     public boolean update(SysMenuUpdateDTO param) {
-        SysMenu sysMenu = sqlToyLazyDao.convertType(param, SysMenu.class);
-        Long update = sqlToyLazyDao.update(sysMenu);
+        SysMenu sysMenu = sqlToyHelperDao.convertType(param, SysMenu.class);
+        Long update = sqlToyHelperDao.update(sysMenu);
         return update > 0;
     }
 
     @Override
     public List<SysMenuVO> listByUserId(Integer isMenu) {
-        Map<String, Object> hashMap = new HashMap<>(2);
-        hashMap.put("userId", StpUtil.getLoginId());
-        hashMap.put("isMenu", isMenu);
-        List<SysMenuVO> sysMenuVOList = sqlToyLazyDao.findBySql("system_menu_findUserPermission", hashMap, SysMenuVO.class);
-        return sysMenuVOList;
+        // 1、获取登录用户ID
+        BigInteger loginId = LoginUtils.loginId();
+        // 2、查询用户的角色
+        LambdaQueryWrapper<SysUserRole> userRoleWrapper = new LambdaQueryWrapper<>(SysUserRole.class)
+                .select(SysUserRole::getRoleId)
+                .eq(SysUserRole::getUserId, loginId);
+        List<BigInteger> roleIds = sqlToyHelperDao
+                .findList(userRoleWrapper).stream().map(SysUserRole::getRoleId).collect(Collectors.toList());
+        // 3、查询角色含有的菜单
+        LambdaQueryWrapper<SysRoleMenu> menuRoleWrapper = new LambdaQueryWrapper<>(SysRoleMenu.class)
+                .select(SysRoleMenu::getMenuId)
+                .in(SysRoleMenu::getRoleId, roleIds);
+        List<BigInteger> menuIds = sqlToyHelperDao
+                .findList(menuRoleWrapper).stream().map(SysRoleMenu::getMenuId).collect(Collectors.toList());
+        // 4、根据菜单ID查询菜单信息
+        LambdaQueryWrapper<SysMenu> menuWrapper = new LambdaQueryWrapper<>(SysMenu.class)
+                .select(SysMenu::getId).select(SysMenu::getParentId).select(SysMenu::getMenuName)
+                .select(SysMenu::getIconPath).select(SysMenu::getIsExternalLink)
+                .eq(SysMenu::getIsMenu, isMenu)
+                .in(SysMenu::getId, menuIds)
+                .orderByDesc(SysMenu::getSort)
+                .orderByDesc(SysMenu::getId);
+        if (isMenu == IsEnum.Y.getCode().intValue()) {
+            menuWrapper.select(SysMenu::getRouterPath);
+        } else {
+            menuWrapper.select(SysMenu::getPermissionCode);
+        }
+        List<SysMenu> list = sqlToyHelperDao.findList(menuWrapper);
+        return Convert.toList(SysMenuVO.class, list);
     }
 
     @Tran
     @Override
-    public boolean delete(String id) {
-        SysMenu sysMenu = new SysMenu().setId(id).setDeleteStatus(DeleteStatusEnum.DELETE.getCode());
-        Long update = sqlToyLazyDao.update(sysMenu);
+    public boolean delete(BigInteger id) {
+        SysMenu sysMenu = new SysMenu().setId(id).setIsDeleted(IsEnum.Y.getCode());
+        Long update = sqlToyHelperDao.update(sysMenu);
         if (update <= 0) {
             return false;
         }
         // 获取子节点
-        HashMap<String, Object> paramsMap = new HashMap<>(Character.UPPERCASE_LETTER);
-        paramsMap.put("parentId", id);
-        List<SysMenu> sysMenuList = sqlToyLazyDao.findBySql(
-                "select id from sys_menu where #[PARENT_ID=:parentId] and DELETE_STATUS=1",
-                paramsMap, SysMenu.class);
-        if (sysMenuList.size() > 0) {
+        LambdaQueryWrapper<SysMenu> wrapper = new LambdaQueryWrapper<>(SysMenu.class)
+                .select()
+                .eq(SysMenu::getParentId, id)
+                .eq(SysMenu::getIsDeleted, IsEnum.N.getCode());
+        List<SysMenu> sysMenuList = sqlToyHelperDao.findList(wrapper);
+        if (!sysMenuList.isEmpty()) {
             // 存在子节点，删除子节点
             sysMenuList.forEach(item -> delete(item.getId()));
         }
@@ -109,32 +142,55 @@ public class SysMenuServiceImpl implements SysMenuService {
 
     @Override
     public List<SysMenuVO> listByRoleId(String roleId) {
-        Map<String, Object> hashMap = new HashMap<>(1);
-        hashMap.put("roleId", roleId);
-        List<SysMenuVO> sysMenuVOList = sqlToyLazyDao.findBySql("system_menu_findByCommonParam", hashMap, SysMenuVO.class);
-        return sysMenuVOList;
+        // 查找角色关联的菜单
+        LambdaQueryWrapper<SysRoleMenu> roleMenuWrapper = new LambdaQueryWrapper<>(SysRoleMenu.class)
+                .select()
+                .in(SysRoleMenu::getRoleId, roleId);
+        List<BigInteger> menuIds = sqlToyHelperDao
+                .findList(roleMenuWrapper).stream().map(SysRoleMenu::getMenuId).collect(Collectors.toList());
+        // 查找菜单
+        LambdaQueryWrapper<SysMenu> menuWrapper = new LambdaQueryWrapper<>(SysMenu.class)
+                .select()
+                .in(SysMenu::getId, menuIds)
+                .eq(SysMenu::getIsDeleted, IsEnum.N.getCode())
+                .orderByDesc(SysMenu::getSort)
+                .orderByDesc(SysMenu::getId);
+        List<SysMenu> list = sqlToyHelperDao.findList(menuWrapper);
+        return Convert.toList(SysMenuVO.class, list);
     }
 
     @Override
-    public List<SysMenuVO> cachePermission(String userId) {
+    public List<SysMenuVO> cachePermission(BigInteger userId) {
         // 缓存权限
         List<SysMenuVO> permissions = listByUserId(IsEnum.N.getCode());
-        redisService.save(String.format(RedisKey.USER_PERMISSION, userId), JSONUtil.toJsonStr(permissions), 3600 * 24L);
+        redisService.save(String.format(RedisKeyConst.USER_PERMISSION, userId), JSONUtil.toJsonStr(permissions), 3600 * 24L);
         return permissions;
     }
 
     @Override
-    public List<SysMenuVO> getCachePermission(String userId) {
-        String s = redisService.get(String.format(RedisKey.USER_PERMISSION, userId));
+    public List<SysMenuVO> getCachePermission(BigInteger userId) {
+        String s = redisService.get(String.format(RedisKeyConst.USER_PERMISSION, userId));
         logger.info("[{}]-permissions={}", userId, s);
         return JSONUtil.toList(s, SysMenuVO.class);
     }
 
     @Override
-    public Collection<SysMenuVO> listByTreeAsRoleSelection(SysMenuPageDTO pageParam) {
-        List<SysMenuVO> sysMenuVOList = sqlToyLazyDao.findBySql("system_menu_findByPageParam", pageParam.getMenu());
-        GenerateDsUtils<SysMenuVO> dsUtils = new GenerateDsUtils<>();
-        return dsUtils.buildTreeDefault(sysMenuVOList).values();
+    public List<SysMenuVO> listByTreeAsRoleSelection(SysMenuPageDTO pageDTO) {
+        List<SysMenu> list = sqlToyHelperDao.findList(baseQueryWrapper(pageDTO.getPO()));
+        List<SysMenuVO> sysMenuVOList = Convert.toList(SysMenuVO.class, list);
+        return new TreeBuilder<SysMenuVO>().get(sysMenuVOList);
+    }
+
+    private LambdaQueryWrapper<SysMenu> baseQueryWrapper(SysMenu sysMenu) {
+        return new LambdaQueryWrapper<>(SysMenu.class)
+                .select()
+                .eq(SysMenu::getIsDeleted, IsEnum.N.getCode())
+                .eq(SysMenu::getIsMenu, sysMenu.getIsMenu())
+                .eq(SysMenu::getPermissionCode, sysMenu.getPermissionCode())
+                .like(SysMenu::getMenuName, sysMenu.getMenuName())
+                .eq(SysMenu::getMenuStatus, sysMenu.getMenuStatus())
+                .orderByDesc(SysMenu::getSort)
+                .orderByDesc(SysMenu::getId);
     }
 
 }

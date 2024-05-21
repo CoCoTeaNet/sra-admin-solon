@@ -1,7 +1,7 @@
 package net.cocotea.admin;
 
-import net.cocotea.admin.common.constant.GlobalValue;
-import net.cocotea.admin.common.properties.DevEnableProperties;
+import net.cocotea.admin.common.constant.GlobalConst;
+import net.cocotea.admin.properties.DefaultProp;
 import org.noear.solon.Solon;
 import org.noear.solon.SolonApp;
 import org.noear.solon.annotation.Import;
@@ -23,12 +23,9 @@ public class Launcher {
         SolonApp app = Solon.start(Launcher.class, args);
         AopContext aopContext = app.context();
 
-        GlobalValue.PORT = Solon.cfg().serverPort();
-        GlobalValue.SERVER_IP = Solon.cfg().sourceLocation().getPath();
+        DefaultProp defaultProp = aopContext.getBean("devEnableProps");
+        logger.warn("强密码：{}, 权限缓存状态：{}", defaultProp.getStrongPassword(), defaultProp.getPermissionCache());
 
-        DevEnableProperties devEnableProps = aopContext.getBean("devEnableProps");
-        logger.warn("强密码：{}, 权限缓存状态：{}", devEnableProps.getStrongPassword(), devEnableProps.getPermissionCache());
-
-        GlobalValue.START_TIME = System.currentTimeMillis();
+        GlobalConst.START_TIME = System.currentTimeMillis();
     }
 }

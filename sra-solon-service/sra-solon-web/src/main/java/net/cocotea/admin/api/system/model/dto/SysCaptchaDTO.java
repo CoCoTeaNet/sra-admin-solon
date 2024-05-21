@@ -1,34 +1,35 @@
 package net.cocotea.admin.api.system.model.dto;
 
+import com.alibaba.fastjson.JSONObject;
+
+import lombok.Data;
+import lombok.experimental.Accessors;
+import net.cocotea.admin.common.constant.CommonConst;
 import org.noear.solon.validation.annotation.NotBlank;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * @date 2022-1-15 16:57:57
- * @author jwss
+ * 图片验证码参数
+ *
+ * @author CoCoTea
  */
+@Data
+@Accessors(chain = true)
 public class SysCaptchaDTO implements Serializable {
+    @Serial
     private static final long serialVersionUID = 8511400433671973527L;
 
+    /**
+     * 验证码类型 {@link CommonConst}
+     */
     @NotBlank(message = "验证码类型为空")
     private String codeType;
 
-    private String otherParam;
+    /**
+     * 拓展参数
+     */
+    private JSONObject extraParam;
 
-    public String getCodeType() {
-        return codeType;
-    }
-
-    public void setCodeType(String codeType) {
-        this.codeType = codeType;
-    }
-
-    public String getOtherParam() {
-        return otherParam;
-    }
-
-    public void setOtherParam(String otherParam) {
-        this.otherParam = otherParam;
-    }
 }

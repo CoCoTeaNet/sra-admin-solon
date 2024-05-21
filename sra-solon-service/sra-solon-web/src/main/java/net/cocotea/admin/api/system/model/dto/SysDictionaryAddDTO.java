@@ -1,63 +1,47 @@
 package net.cocotea.admin.api.system.model.dto;
 
+
+import lombok.Data;
+import lombok.experimental.Accessors;
+import org.noear.solon.validation.annotation.NotBlank;
+
+import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigInteger;
 
 /**
- * @author jwss
- * @project sss-rbac-admin
- * @version 1.0.0
- * @description sys_dictionary,系统字典表  
+ * @author CoCoTea
+ * @version 2.0.0
  */
+@Data
+@Accessors(chain = true)
 public class SysDictionaryAddDTO implements Serializable {
+	@Serial
 	private static final long serialVersionUID = -1767974905556894292L;
 
-	private String parentId;
-	
+	/**
+	 * 父节点主键ID
+	 */
+	private BigInteger parentId;
+
+	/**
+	 * 字典名称
+	 */
+	@NotBlank(message = "字典名称不能为空")
 	private String dictionaryName;
-	
+
+	/**
+	 * 备注
+	 */
 	private String remark;
-	
+
+	/**
+	 * 序号
+	 */
 	private Integer sort;
-	
-	private String enableStatus;
 
-	public String getParentId() {
-		return parentId;
-	}
-
-	public void setParentId(String parentId) {
-		this.parentId = parentId;
-	}
-
-	public String getDictionaryName() {
-		return dictionaryName;
-	}
-
-	public void setDictionaryName(String dictionaryName) {
-		this.dictionaryName = dictionaryName;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
-	public Integer getSort() {
-		return sort;
-	}
-
-	public void setSort(Integer sort) {
-		this.sort = sort;
-	}
-
-	public String getEnableStatus() {
-		return enableStatus;
-	}
-
-	public void setEnableStatus(String enableStatus) {
-		this.enableStatus = enableStatus;
-	}
+	/**
+	 * 启用状态;0关闭 1启用
+	 */
+	private Integer enableStatus;
 }

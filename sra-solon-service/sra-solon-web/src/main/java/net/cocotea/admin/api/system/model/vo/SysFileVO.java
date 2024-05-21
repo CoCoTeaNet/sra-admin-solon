@@ -1,8 +1,10 @@
 package net.cocotea.admin.api.system.model.vo;
 
-import java.io.Serializable;
-import com.alibaba.fastjson.JSONObject;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -10,10 +12,14 @@ import java.util.Date;
 * 系统文件表
 *
 * @author CoCoTea 572315466@qq.com
-* @since 1.2.1 2022-12-28
+* @version v2.0.0
 */
+@Data
+@Accessors(chain = true)
 public class SysFileVO implements Serializable {
-	private static final long serialVersionUID = 1L;
+
+	@Serial
+	private static final long serialVersionUID = 8804619777318495362L;
 
 	/**
 	 *主键ID
@@ -71,131 +77,18 @@ public class SysFileVO implements Serializable {
 	private Date updateTime;
 
 	/**
-	 *删除状态：0删除 1未删除
+	 * 是否共享
 	 */
-	private Integer deleteStatus;
+	private Integer isShare;
 
+	/**
+	 * 开始时间
+	 */
 	private LocalDateTime beginTime;
+
+	/**
+	 * 结束时间
+	 */
 	private LocalDateTime endTime;
 
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getFileName() {
-		return fileName;
-	}
-
-	public SysFileVO setFileName(String fileName) {
-		this.fileName = fileName;
-		return this;
-	}
-	public String getFileSuffix() {
-		return fileSuffix;
-	}
-
-	public SysFileVO setFileSuffix(String fileSuffix) {
-		this.fileSuffix = fileSuffix;
-		return this;
-	}
-	public String getRealPath() {
-		return realPath;
-	}
-
-	public SysFileVO setRealPath(String realPath) {
-		this.realPath = realPath;
-		return this;
-	}
-	public String getBrowsePath() {
-		return browsePath;
-	}
-
-	public SysFileVO setBrowsePath(String browsePath) {
-		this.browsePath = browsePath;
-		return this;
-	}
-	public String getFullPath() {
-		return fullPath;
-	}
-
-	public SysFileVO setFullPath(String fullPath) {
-		this.fullPath = fullPath;
-		return this;
-	}
-	public Long getFileSize() {
-		return fileSize;
-	}
-
-	public SysFileVO setFileSize(Long fileSize) {
-		this.fileSize = fileSize;
-		return this;
-	}
-	public String getCreateBy() {
-		return createBy;
-	}
-
-	public SysFileVO setCreateBy(String createBy) {
-		this.createBy = createBy;
-		return this;
-	}
-	public Date getCreateTime() {
-		return createTime;
-	}
-
-	public SysFileVO setCreateTime(Date createTime) {
-		this.createTime = createTime;
-		return this;
-	}
-	public String getUpdateBy() {
-		return updateBy;
-	}
-
-	public SysFileVO setUpdateBy(String updateBy) {
-		this.updateBy = updateBy;
-		return this;
-	}
-	public Date getUpdateTime() {
-		return updateTime;
-	}
-
-	public SysFileVO setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-		return this;
-	}
-	public Integer getDeleteStatus() {
-		return deleteStatus;
-	}
-
-	public SysFileVO setDeleteStatus(Integer deleteStatus) {
-		this.deleteStatus = deleteStatus;
-		return this;
-	}
-
-	public LocalDateTime getBeginTime() {
-		return beginTime;
-	}
-
-	public SysFileVO setBeginTime(LocalDateTime beginTime) {
-		this.beginTime = beginTime;
-		return this;
-	}
-
-	public LocalDateTime getEndTime() {
-		return endTime;
-	}
-
-	public SysFileVO setEndTime(LocalDateTime endTime) {
-		this.endTime = endTime;
-		return this;
-	}
-
-	@Override
-	public String toString() {
-		return JSONObject.toJSONString(this);
-	}
 }

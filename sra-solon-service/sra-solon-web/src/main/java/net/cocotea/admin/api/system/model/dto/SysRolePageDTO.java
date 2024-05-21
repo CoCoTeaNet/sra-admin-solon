@@ -1,29 +1,28 @@
 package net.cocotea.admin.api.system.model.dto;
 
+import org.noear.solon.validation.annotation.NotNull;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 import net.cocotea.admin.api.system.model.vo.SysMenuVO;
 import net.cocotea.admin.api.system.model.vo.SysRoleVO;
 import org.sagacity.sqltoy.model.Page;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * @author jwss
- * @project sss-rbac-admin
- * @version 1.0.0
- * @description sys_role,角色菜单表
+ * @author CoCoTea
+ * @version 2.0.0
  */
+@EqualsAndHashCode(callSuper = true)
+@Data
+@Accessors(chain = true)
 public class SysRolePageDTO extends Page<SysMenuVO> implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = -8722226920902960302L;
 
-	private SysRoleVO role;
-
-	public SysRoleVO getRole() {
-		return role;
-	}
-
-	public SysRolePageDTO setRole(SysRoleVO role) {
-		this.role = role;
-		return this;
-	}
+	@NotNull(message = "查询参数为空")
+	private SysRoleVO sysRole;
 }

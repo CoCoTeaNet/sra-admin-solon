@@ -1,17 +1,24 @@
 package net.cocotea.admin.api.system.model.dto;
 
+
+import lombok.Data;
+import lombok.experimental.Accessors;
 import org.noear.solon.validation.annotation.NotBlank;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * @author jwss
+ * @author CoCoTea
  * @project sss-rbac-admin
- * @version 1.0.0
+ * @version 2.0.0
  * @description sys_role,系统角色表  
  */
+@Data
+@Accessors(chain = true)
 public class SysRoleAddDTO implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = -6663565327923196565L;
 
 	/**
@@ -31,27 +38,4 @@ public class SysRoleAddDTO implements Serializable {
 	 */
 	private Integer sort;
 
-	public String getRoleName() {
-		return roleName;
-	}
-
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
-
-	public String getRoleKey() {
-		return roleKey;
-	}
-
-	public void setRoleKey(String roleKey) {
-		this.roleKey = roleKey;
-	}
-
-	public Integer getSort() {
-		return sort;
-	}
-
-	public void setSort(Integer sort) {
-		this.sort = sort;
-	}
 }

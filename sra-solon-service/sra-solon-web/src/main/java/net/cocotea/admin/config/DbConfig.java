@@ -13,7 +13,7 @@ public class DbConfig {
 
     //typed=true，表示默认数据源。@Db 可不带名字注入
     @Bean(name = "db1", typed = true)
-    public DataSource db1(@Inject("${sra.db1}") HikariDataSource ds) {
+    public DataSource db1(@Inject("${myapp.db1}") HikariDataSource ds) {
         return ds;
     }
 
@@ -23,7 +23,7 @@ public class DbConfig {
     // /
 
     @Bean
-    public RedisClient redisClient(@Inject("${sra.rd1}") RedisClient client) {
+    public RedisClient redisClient(@Inject("${myapp.rd1}") RedisClient client) {
         return client;
     }
 }
