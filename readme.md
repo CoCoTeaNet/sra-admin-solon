@@ -83,7 +83,7 @@ $ npm run build || yarn build       #生产环境
 #### 软件版本要求
 
 - JDK：17+
-- Nodejs：14.0+
+- Nodejs：14.0 ~ 19
 - MySQL：8.0+
 
 #### 参与贡献
