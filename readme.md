@@ -14,6 +14,11 @@ sra-admin-solon 是一个前后端分离的脚手架项目，国产化核心框�
 - XXX管理系统
 
 
+#### 其它仓库地址
+- sra-admin-vue（前端项目，基于VUE开发）：https://gitee.com/momoljw/sra-admin-vue
+- sra-admin（springboot3版本）：https://gitee.com/momoljw/sss-rbac-admin
+
+
 #### 图片演示
 <table>
     <tr>
