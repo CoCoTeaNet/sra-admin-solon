@@ -57,7 +57,7 @@ public class SysDashboardServiceImpl implements SysDashboardService {
         paramsMap.put("isDeleted", IsEnum.N.getCode());
         paramsMap.put("isMenu", IsEnum.Y.getCode());
         paramsMap.put("menuType", MenuTypeEnum.MENU.getCode());
-        long countMenu = sqlToyLazyDao.getCount("select count(1) from ", paramsMap);
+        long countMenu = sqlToyLazyDao.getCount("select count(1) from sys_menu where is_deleted=:isDeleted and is_menu = :isMenu and menu_type = :menuType", paramsMap);
         sysOverviewList.add(new SysOverviewVO().setTitle("菜单数量").setCount(countMenu));
 
         paramsMap = MapUtil.newHashMap();

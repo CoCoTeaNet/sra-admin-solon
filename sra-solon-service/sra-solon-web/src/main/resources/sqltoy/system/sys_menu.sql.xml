@@ -13,7 +13,7 @@
             #[and permission_code = :permissionCode]
             #[and menu_name like :menuName]
             #[and menu_status = :menuStatus]
-            #[and menu_id in (:menuIds)]
+            #[and id in (:menuIds)]
             #[and parent_id = :parentId]
             order by sort desc, id desc
             ]]>

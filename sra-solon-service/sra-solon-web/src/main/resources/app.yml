@@ -9,7 +9,9 @@ solon.staticfiles.mappings:
   - path: "/download/" #路径，可以是目录或单文件
     repository: "D:/server/file/" #1.添加本地绝对目录（仓库只能是目录）
 
-sqltoy.sqlResourcesDir: classpath:sqltoy
+sqltoy:
+  sqlResourcesDir: classpath:sqltoy
+  unify-fields-handler: net.cocotea.admin.handler.SqlToyUnifyFieldsHandler
 
 
 sra-admin:
