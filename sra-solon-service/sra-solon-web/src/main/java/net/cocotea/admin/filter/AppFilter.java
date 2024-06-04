@@ -26,6 +26,9 @@ import org.slf4j.LoggerFactory;
 public class AppFilter implements Filter {
     private final Logger logger = LoggerFactory.getLogger(AppFilter.class);
 
+    @Inject("${sra-admin.once-visits}")
+    Integer visits;
+
     @Inject
     private SysLogService sysLogService;
 
@@ -93,11 +96,7 @@ public class AppFilter implements Filter {
     }
 
     private void saveLog(Context ctx) throws BusinessException {
-        logger.info("=============== handlerException-START ===============");
-        logger.info("请求IP：{}", ctx.realIp());
-        logger.info("请求地址：{}", ctx.path());
-        logger.info("请求方式：{}", ctx.method());
-        logger.info("=============== 请求内容-END ===============");
+        logger.info("saveLog >>>>> 请求IP：{},请求地址：{},请求方式：{}", ctx.realIp(), ctx.path(), ctx.method());
         sysLogService.saveErrorLog(ctx);
         // 保存登录日志与操作日志,如果没有登录不去保存
         if (StpUtil.isLogin()) {
@@ -117,13 +116,14 @@ public class AppFilter implements Filter {
         }
     }
 
-    @Inject("${sra-admin.once-visits}")
-    Integer visits;
-
     /**
      * 接口访问限制：1秒内运行访问N次
      */
     private void apiLimitAccessTimes(String ip) throws BusinessException {
+        if (visits <= 0) {
+            logger.warn("apiLimitAccessTimes >>>>> 不启用访问次数限制");
+            return;
+        }
         if (StpUtil.isLogin()) {
             String redisKey = ip + ":" + StpUtil.getLoginId();
             String value = redisService.get(redisKey);

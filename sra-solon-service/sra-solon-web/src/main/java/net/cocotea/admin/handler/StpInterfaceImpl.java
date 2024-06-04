@@ -8,6 +8,7 @@ import net.cocotea.admin.api.system.service.SysMenuService;
 import net.cocotea.admin.api.system.service.SysRoleService;
 import net.cocotea.admin.common.enums.IsEnum;
 import net.cocotea.admin.properties.DefaultProp;
+import net.cocotea.admin.util.LoginUtils;
 import org.noear.solon.annotation.Component;
 import org.noear.solon.annotation.Inject;
 
@@ -54,7 +55,7 @@ public class StpInterfaceImpl implements StpInterface {
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
         StpUtil.checkLogin();
-        List<SysRoleVO> roles = roleService.loadByUserId((BigInteger) loginId);
+        List<SysRoleVO> roles = roleService.loadByUserId(LoginUtils.parse(loginId));
         List<String> roleKeys = new ArrayList<>(roles.size());
         for (SysRoleVO role : roles) {
             roleKeys.add(role.getRoleKey());
