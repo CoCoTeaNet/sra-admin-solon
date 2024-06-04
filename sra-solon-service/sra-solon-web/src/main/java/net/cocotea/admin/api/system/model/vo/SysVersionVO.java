@@ -3,12 +3,13 @@ package net.cocotea.admin.api.system.model.vo;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @Data
 @Accessors(chain = true)
-public class SysVersionVO {
+public class SysVersionVO implements Serializable {
 
     /**
      * 版本ID

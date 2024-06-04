@@ -23,7 +23,7 @@ public class Launcher {
         SolonApp app = Solon.start(Launcher.class, args);
         AopContext aopContext = app.context();
 
-        DefaultProp defaultProp = aopContext.getBean("devEnableProps");
+        DefaultProp defaultProp = aopContext.getBean("defaultProp");
         logger.warn("强密码：{}, 权限缓存状态：{}", defaultProp.getStrongPassword(), defaultProp.getPermissionCache());
 
         GlobalConst.START_TIME = System.currentTimeMillis();

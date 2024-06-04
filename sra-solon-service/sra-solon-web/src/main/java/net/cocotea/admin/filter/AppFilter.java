@@ -67,8 +67,10 @@ public class AppFilter implements Filter {
                 logger.error("权限不足异常:{}", e.getMessage());
                 result = ApiResult.error(ApiResultEnum.NOT_PERMISSION.getCode(), ApiResultEnum.NOT_PERMISSION.getDesc());
             } else if (e instanceof BusinessException) {
-                logger.error("业务逻辑异常: {}", e.getMessage());
-                result = ApiResult.error(ApiResultEnum.ERROR.getCode(), ApiResultEnum.ERROR.getDesc());
+                String errorMsg = ((BusinessException) e).getErrorMsg();
+                logger.error("业务逻辑异常: {}", errorMsg);
+                errorMsg = StrUtil.isBlank(errorMsg) ? ApiResultEnum.ERROR.getDesc() : errorMsg;
+                result = ApiResult.error(ApiResultEnum.ERROR.getCode(), errorMsg);
             } else if (e instanceof NotLogException) {
                 saveLogFlag = false;
                 result = ApiResult.error(ApiResultEnum.ERROR.getCode(), ApiResultEnum.ERROR.getDesc());
@@ -76,6 +78,7 @@ public class AppFilter implements Filter {
                 logger.error("角色未知异常: {}", e.getMessage());
                 result = ApiResult.error(ApiResultEnum.NOT_PERMISSION.getCode(), ApiResultEnum.NOT_PERMISSION.getDesc());
             } else {
+                logger.error("未知异常: {}", e.getMessage(), e);
                 result = ApiResult.error(ApiResultEnum.ERROR.getDesc());
             }
             if (saveLogFlag) {

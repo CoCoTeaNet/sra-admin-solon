@@ -11,7 +11,7 @@ import org.noear.solon.annotation.Inject;
  * @version 2.0.0
  */
 @Data
-@Component
+@Component("defaultProp")
 public class DefaultProp {
 
     /**

@@ -31,11 +31,13 @@
         <lombok.version>1.18.28</lombok.version>
         <!-- 外部框架版本 -->
         <solon.version>2.2.20</solon.version>
+        <sqltoy.version>5.6.10</sqltoy.version>
         <mysql-connector.version>8.0.30</mysql-connector.version>
         <satoken.version>1.33.0</satoken.version>
         <fastjson.version>1.2.83</fastjson.version>
         <hutool.version>5.8.12</hutool.version>
         <hutool-oshi.version>5.6.1</hutool-oshi.version>
+        <bcprov.version>1.69</bcprov.version>
         <commons-pool2.version>2.11.1</commons-pool2.version>
         <redisx.version>1.4.7</redisx.version>
         <logback-classic.version>1.4.12</logback-classic.version>
@@ -66,21 +68,16 @@
             <!-- solon -->
             <dependency>
                 <groupId>org.noear</groupId>
-                <artifactId>solon-web</artifactId>
+                <artifactId>solon-api</artifactId>
                 <version>${solon.version}</version>
             </dependency>
-            <!-- sqltoy solon starter -->
-            <dependency>
-                <groupId>org.noear</groupId>
-                <artifactId>sqltoy-solon-plugin</artifactId>
-                <version>${solon.version}</version>
-            </dependency>
+            <!--sqltoy-solon-->
             <dependency>
                 <groupId>com.sagframe</groupId>
-                <artifactId>sqltoy-plus-core</artifactId>
+                <artifactId>sagacity-sqltoy-solon-plugin</artifactId>
                 <version>${sqltoy.version}</version>
             </dependency>
-            <!-- Sa-Token 权限认证, 在线文档：http://sa-token.dev33.cn/ -->
+            <!-- Sa-Token 权限认证 -->
             <dependency>
                 <groupId>org.noear</groupId>
                 <artifactId>sa-token-solon-plugin</artifactId>
@@ -115,6 +112,11 @@
                 <groupId>com.github.oshi</groupId>
                 <artifactId>oshi-core</artifactId>
                 <version>${hutool-oshi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk15to18</artifactId>
+                <version>${bcprov.version}</version>
             </dependency>
             <!-- 提供Redis连接池 -->
             <dependency>

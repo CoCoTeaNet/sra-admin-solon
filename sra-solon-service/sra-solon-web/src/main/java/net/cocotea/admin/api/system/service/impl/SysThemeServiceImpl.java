@@ -1,17 +1,16 @@
 package net.cocotea.admin.api.system.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.convert.Convert;
-import com.sagframe.sagacity.sqltoy.plus.conditions.Wrappers;
-import com.sagframe.sagacity.sqltoy.plus.conditions.query.LambdaQueryWrapper;
-import com.sagframe.sagacity.sqltoy.plus.dao.SqlToyHelperDao;
 import net.cocotea.admin.api.system.model.dto.SysThemeUpdateDTO;
 import net.cocotea.admin.api.system.model.po.SysTheme;
 import net.cocotea.admin.api.system.model.vo.SysThemeVO;
 import net.cocotea.admin.api.system.service.SysThemeService;
 import net.cocotea.admin.util.LoginUtils;
-import org.noear.solon.annotation.Inject;
 import org.noear.solon.aspect.annotation.Service;
+import org.sagacity.sqltoy.dao.SqlToyLazyDao;
+import org.sagacity.sqltoy.solon.annotation.Db;
 
 import java.math.BigInteger;
 
@@ -24,32 +23,27 @@ import java.math.BigInteger;
 @Service
 public class SysThemeServiceImpl implements SysThemeService {
 
-    @Inject
-    private SqlToyHelperDao sqlToyHelperDao;
+    @Db("db1")
+    private SqlToyLazyDao sqlToyLazyDao;
 
     @Override
     public boolean updateByUser(SysThemeUpdateDTO param) {
         BigInteger userId = LoginUtils.loginId();
         SysTheme sysTheme = Convert.convert(SysTheme.class, param);
-        LambdaQueryWrapper<SysTheme> queryWrapper = Wrappers.lambdaWrapper(SysTheme.class)
-                .eq(SysTheme::getUserId, userId);
-        SysTheme loadSysTheme = sqlToyHelperDao.findOne(queryWrapper);
+        SysTheme loadSysTheme = sqlToyLazyDao.loadBySql("select * from sys_theme where user_id = :userId", new SysTheme().setUserId(userId));
         if (loadSysTheme == null) {
             sysTheme.setLayoutMode(0);
             sysTheme.setUserId(userId);
-            return sqlToyHelperDao.save(sysTheme) != null;
+            return sqlToyLazyDao.save(sysTheme) != null;
         } else {
             sysTheme.setId(loadSysTheme.getId());
-            return sqlToyHelperDao.update(sysTheme) > 0;
+            return sqlToyLazyDao.update(sysTheme) > 0;
         }
     }
 
     @Override
     public SysThemeVO loadByUser() {
         String userId = StpUtil.getLoginId().toString();
-        LambdaQueryWrapper<SysTheme> queryWrapper = Wrappers.lambdaWrapper(SysTheme.class)
-                .eq(SysTheme::getUserId, userId);
-        SysTheme loadSysTheme = sqlToyHelperDao.findOne(queryWrapper);
-        return Convert.convert(SysThemeVO.class, loadSysTheme);
+        return sqlToyLazyDao.loadBySql("select * from sys_theme where user_id = :userId", new SysThemeVO().setUserId(userId));
     }
 }

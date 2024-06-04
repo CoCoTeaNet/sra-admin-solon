@@ -1,9 +1,6 @@
 package net.cocotea.admin.api.system.service.impl;
 
-import cn.hutool.core.convert.Convert;
-import com.sagframe.sagacity.sqltoy.plus.conditions.Wrappers;
-import com.sagframe.sagacity.sqltoy.plus.conditions.query.LambdaQueryWrapper;
-import com.sagframe.sagacity.sqltoy.plus.dao.SqlToyHelperDao;
+import cn.hutool.core.map.MapUtil;
 import net.cocotea.admin.api.system.model.dto.SysRoleAddDTO;
 import net.cocotea.admin.api.system.model.dto.SysRolePageDTO;
 import net.cocotea.admin.api.system.model.dto.SysRoleUpdateDTO;
@@ -12,18 +9,20 @@ import net.cocotea.admin.api.system.model.po.SysRoleMenu;
 import net.cocotea.admin.api.system.model.po.SysUserRole;
 import net.cocotea.admin.api.system.model.vo.SysRoleMenuVO;
 import net.cocotea.admin.api.system.model.vo.SysRoleVO;
-import net.cocotea.admin.api.system.model.vo.SysUserRoleVO;
 import net.cocotea.admin.api.system.service.SysRoleService;
 import net.cocotea.admin.common.enums.IsEnum;
 import net.cocotea.admin.common.model.ApiPage;
 import net.cocotea.admin.common.model.BusinessException;
-import org.noear.solon.annotation.Inject;
 import org.noear.solon.data.annotation.Tran;
+import org.sagacity.sqltoy.dao.SqlToyLazyDao;
+import org.sagacity.sqltoy.model.EntityQuery;
 import org.sagacity.sqltoy.model.Page;
 import org.noear.solon.aspect.annotation.Service;
+import org.sagacity.sqltoy.solon.annotation.Db;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,21 +31,20 @@ import java.util.stream.Collectors;
  */
 @Service
 public class SysRoleServiceImpl implements SysRoleService {
-    @Inject
-    private SqlToyHelperDao sqlToyHelperDao;
+
+    @Db("db1")
+    private SqlToyLazyDao sqlToyLazyDao;
 
     @Override
     public boolean add(SysRoleAddDTO addDTO) throws BusinessException {
-        SysRole sysRole = sqlToyHelperDao.convertType(addDTO, SysRole.class);
-        LambdaQueryWrapper<SysRole> wrapper = new LambdaQueryWrapper<>(SysRole.class)
-                .select(SysRole::getId)
-                .eq(SysRole::getRoleKey, addDTO.getRoleKey())
-                .eq(SysRole::getIsDeleted, IsEnum.N.getCode());
-        SysRole existSysRole = sqlToyHelperDao.findOne(wrapper);
+        SysRole sysRole = sqlToyLazyDao.convertType(addDTO, SysRole.class);
+        HashMap<String, Object> map = MapUtil.newHashMap(1);
+        map.put("roleKey", addDTO.getRoleKey());
+        SysRole existSysRole = sqlToyLazyDao.loadBySql("sys_role_findList", map, SysRole.class);
         if (existSysRole != null) {
             throw new BusinessException("已存在该角色标识");
         }
-        Object id = sqlToyHelperDao.save(sysRole);
+        Object id = sqlToyLazyDao.save(sysRole);
         return id != null;
     }
 
@@ -59,72 +57,63 @@ public class SysRoleServiceImpl implements SysRoleService {
             article.setIsDeleted(IsEnum.Y.getCode());
             sysRoleList.add(article);
         }
-        Long count = sqlToyHelperDao.updateAll(sysRoleList);
+        Long count = sqlToyLazyDao.updateAll(sysRoleList);
         return count > 0;
     }
 
     @Override
     public boolean update(SysRoleUpdateDTO updateDTO) {
-        SysRole sysRole = sqlToyHelperDao.convertType(updateDTO, SysRole.class);
-        Long update = sqlToyHelperDao.update(sysRole);
+        SysRole sysRole = sqlToyLazyDao.convertType(updateDTO, SysRole.class);
+        Long update = sqlToyLazyDao.update(sysRole);
         return update > 0;
     }
 
     @Tran
     @Override
     public boolean grantPermissionsByRoleId(List<SysRoleMenuVO> sysRoleMenuVOList) throws BusinessException {
-        List<SysRoleMenu> sysRoleMenuList = sqlToyHelperDao.convertType(sysRoleMenuVOList, SysRoleMenu.class);
+        List<SysRoleMenu> sysRoleMenuList = sqlToyLazyDao.convertType(sysRoleMenuVOList, SysRoleMenu.class);
         if (sysRoleMenuList.isEmpty()) {
             throw new BusinessException("集合为空");
         }
         // 先删除所有权限再设置
-        LambdaQueryWrapper<SysRoleMenu> queryWrapper = Wrappers.lambdaWrapper(SysRoleMenu.class)
-                .eq(SysRoleMenu::getRoleId, sysRoleMenuList.get(0).getRoleId());
-        sqlToyHelperDao.delete(queryWrapper);
+        BigInteger roleId = sysRoleMenuList.get(0).getRoleId();
+        EntityQuery entityQuery = EntityQuery.create().where("#[role_id = :roleId]").names("roleId").values(roleId);
+        sqlToyLazyDao.deleteByQuery(SysRoleMenu.class, entityQuery);
         // 重新添加权限
-        long saved = sqlToyHelperDao.saveOrUpdateAll(sysRoleMenuList);
+        long saved = sqlToyLazyDao.saveOrUpdateAll(sysRoleMenuList);
         return saved > 0;
     }
 
     @Override
     public List<SysRoleVO> loadByUserId(BigInteger userId) {
         // 角色与用户关联
-        LambdaQueryWrapper<SysUserRoleVO> userRoleWrapper = new LambdaQueryWrapper<>(SysUserRoleVO.class)
-                .select(SysUserRoleVO::getRoleId)
-                .eq(SysUserRoleVO::getUserId, userId);
-        List<BigInteger> roleIds = sqlToyHelperDao
-                .findList(userRoleWrapper).stream().map(SysUserRole::getRoleId).collect(Collectors.toList());
+        HashMap<String, Object> userRoleMap = MapUtil.newHashMap(1);
+        userRoleMap.put("userId", userId);
+        List<BigInteger> roleIds = sqlToyLazyDao.findBySql("sys_user_role_findList", userRoleMap, SysUserRole.class).stream().map(SysUserRole::getRoleId).collect(Collectors.toList());
         // 角色列表
-        LambdaQueryWrapper<SysRole> roleWrapper = new LambdaQueryWrapper<>(SysRole.class)
-                .select(SysRole::getId).select(SysRole::getRoleName).select(SysRole::getRoleKey)
-                .in(SysRole::getId, roleIds)
-                .eq(SysRole::getIsDeleted, IsEnum.N.getCode());
-        return Convert.toList(SysRoleVO.class, sqlToyHelperDao.findList(roleWrapper));
+        HashMap<String, Object> roleMap = MapUtil.newHashMap(1);
+        roleMap.put("roleIds", roleIds);
+        return sqlToyLazyDao.findBySql("sys_role_findList", roleMap, SysRoleVO.class);
     }
 
     @Tran
     @Override
     public boolean delete(BigInteger id) {
         // 删除角色
-        sqlToyHelperDao.delete(new SysRole().setId(id));
+        sqlToyLazyDao.delete(new SysRole().setId(id));
         // 删除角色权限关联关系
-        LambdaQueryWrapper<SysRoleMenu> queryWrapper = Wrappers.lambdaWrapper(SysRoleMenu.class)
-                        .eq(SysRoleMenu::getRoleId, id);
-        long deleted = sqlToyHelperDao.delete(queryWrapper);
+        EntityQuery entityQuery = EntityQuery.create().where("#[role_id = :roleId]").names("roleId").values(id);
+        long deleted = sqlToyLazyDao.delete(entityQuery);
         return deleted > 0;
     }
 
     @Override
-    public ApiPage<SysRoleVO> listByPage(SysRolePageDTO param) {
-        LambdaQueryWrapper<SysRole> wrapper = new LambdaQueryWrapper<>(SysRole.class)
-                .select()
-                .eq(SysRole::getIsDeleted, IsEnum.N.getCode())
-                .like(SysRole::getRoleName, param.getSysRole().getRoleName())
-                .like(SysRole::getRoleKey, param.getSysRole().getRoleKey())
-                .like(SysRole::getRemark, param.getSysRole().getRemark())
-                .orderByDesc(SysRole::getSort)
-                .orderByDesc(SysRole::getId);
-        Page<SysRole> page = sqlToyHelperDao.findPage(wrapper, new Page<SysRole>());
+    public ApiPage<SysRoleVO> listByPage(SysRolePageDTO pageDTO) {
+        HashMap<String, Object> map = MapUtil.newHashMap(3);
+        map.put("roleName", pageDTO.getSysRole().getRoleName());
+        map.put("roleKey", pageDTO.getSysRole().getRoleKey());
+        map.put("remark", pageDTO.getSysRole().getRemark());
+        Page<SysRole> page = sqlToyLazyDao.findPageBySql(pageDTO, "sys_role_findList", map, SysRole.class);
         return ApiPage.rest(page, SysRoleVO.class);
     }
 }
