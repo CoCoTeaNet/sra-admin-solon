@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <groupId>org.noear</groupId>
+        <artifactId>solon-parent</artifactId>
+        <version>2.8.0</version>
+    </parent>
+
+    <groupId>net.cocotea</groupId>
+    <artifactId>sra-solon-service</artifactId>
+    <version>1.0.2</version>
+    <packaging>pom</packaging>
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <modules>
+        <module>sra-solon-web</module>
+        <module>sra-solon-common</module>
+    </modules>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <utf-8>UTF-8</utf-8>
+        <!-- 内部模块版本 -->
+        <sra-solon.version>1.0.2</sra-solon.version>
+        <!-- 插件版本 -->
+        <lombok.version>1.18.28</lombok.version>
+        <!-- 外部框架版本 -->
+        <sqltoy.version>5.6.10</sqltoy.version>
+        <mysql-connector.version>8.0.30</mysql-connector.version>
+        <satoken.version>1.33.0</satoken.version>
+        <fastjson.version>1.2.83</fastjson.version>
+        <hutool.version>5.8.12</hutool.version>
+        <hutool-oshi.version>5.6.1</hutool-oshi.version>
+        <bcprov.version>1.69</bcprov.version>
+        <commons-pool2.version>2.11.1</commons-pool2.version>
+        <redisx.version>1.4.7</redisx.version>
+        <logback-classic.version>1.4.12</logback-classic.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- 内部模块 -->
+            <dependency>
+                <groupId>net.cocotea</groupId>
+                <artifactId>sra-solon-web</artifactId>
+                <version>${sra-solon.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.cocotea</groupId>
+                <artifactId>sra-solon-common</artifactId>
+                <version>${sra-solon.version}</version>
+            </dependency>
+            <!-- 外部框架 -->
+
+            <!-- 插件使用 -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+
+            <!-- solon -->
+            <dependency>
+                <groupId>org.noear</groupId>
+                <artifactId>solon-api</artifactId>
+                <version>${solon.version}</version>
+            </dependency>
+            <!--sqltoy-solon-->
+            <dependency>
+                <groupId>com.sagframe</groupId>
+                <artifactId>sagacity-sqltoy-solon-plugin</artifactId>
+                <version>${sqltoy.version}</version>
+            </dependency>
+            <!-- Sa-Token 权限认证 -->
+            <dependency>
+                <groupId>org.noear</groupId>
+                <artifactId>sa-token-solon-plugin</artifactId>
+                <version>${solon.version}</version>
+            </dependency>
+            <!-- mysql连接器 -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql-connector.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <!-- 连接池 -->
+            <dependency>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>${hikaricp.version}</version>
+            </dependency>
+            <!-- fastjson -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+            <!-- hutool工具 -->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.oshi</groupId>
+                <artifactId>oshi-core</artifactId>
+                <version>${hutool-oshi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk15to18</artifactId>
+                <version>${bcprov.version}</version>
+            </dependency>
+            <!-- 提供Redis连接池 -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-pool2</artifactId>
+                <version>${commons-pool2.version}</version>
+            </dependency>
+            <!-- redis -->
+            <dependency>
+                <groupId>org.noear</groupId>
+                <artifactId>redisx</artifactId>
+                <version>${redisx.version}</version>
+            </dependency>
+            <!-- 日志 -->
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback-classic.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>
