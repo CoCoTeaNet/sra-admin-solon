@@ -26,7 +26,7 @@ import org.sagacity.sqltoy.solon.annotation.Db;
 import org.sagacity.sqltoy.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.noear.solon.aspect.annotation.Service;
+import org.noear.solon.annotation.Component;
 
 import java.math.BigInteger;
 import java.util.HashMap;
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  * @author CoCoTea
  * @since 2022-11-28 17:51:41
  */
-@Service
+@Component
 public class SysMenuServiceImpl implements SysMenuService {
     private static final Logger logger = LoggerFactory.getLogger(SysMenuServiceImpl.class);
 

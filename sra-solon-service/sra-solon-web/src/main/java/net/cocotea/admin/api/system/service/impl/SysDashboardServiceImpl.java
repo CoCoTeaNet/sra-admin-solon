@@ -18,8 +18,8 @@ import net.cocotea.admin.common.constant.RedisKeyConst;
 import net.cocotea.admin.common.enums.IsEnum;
 import net.cocotea.admin.common.enums.MenuTypeEnum;
 import net.cocotea.admin.common.service.RedisService;
+import org.noear.solon.annotation.Component;
 import org.noear.solon.annotation.Inject;
-import org.noear.solon.aspect.annotation.Service;
 import org.sagacity.sqltoy.dao.SqlToyLazyDao;
 import org.sagacity.sqltoy.model.EntityQuery;
 import org.sagacity.sqltoy.solon.annotation.Db;
@@ -35,7 +35,7 @@ import java.util.Map;
 /**
  * @author CoCoTea
  */
-@Service
+@Component
 public class SysDashboardServiceImpl implements SysDashboardService {
     
     @Db("db1")

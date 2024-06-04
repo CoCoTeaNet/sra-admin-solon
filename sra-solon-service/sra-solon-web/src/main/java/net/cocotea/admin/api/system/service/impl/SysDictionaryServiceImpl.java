@@ -13,7 +13,7 @@ import net.cocotea.admin.api.system.service.SysDictionaryService;
 import net.cocotea.admin.common.enums.IsEnum;
 import net.cocotea.admin.common.model.ApiPage;
 import net.cocotea.admin.common.util.TreeBuilder;
-import org.noear.solon.aspect.annotation.Service;
+import org.noear.solon.annotation.Component;
 import org.noear.solon.data.annotation.Tran;
 import org.sagacity.sqltoy.dao.SqlToyLazyDao;
 import org.sagacity.sqltoy.solon.annotation.Db;
@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Service
+@Component
 public class SysDictionaryServiceImpl implements SysDictionaryService {
 
     @Db("db1")

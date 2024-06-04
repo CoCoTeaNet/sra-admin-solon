@@ -35,7 +35,7 @@ import org.sagacity.sqltoy.model.EntityQuery;
 import org.sagacity.sqltoy.model.Page;
 import org.sagacity.sqltoy.solon.annotation.Db;
 import org.sagacity.sqltoy.utils.StringUtil;
-import org.noear.solon.aspect.annotation.Service;
+import org.noear.solon.annotation.Component;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
@@ -49,7 +49,7 @@ import java.util.stream.Collectors;
  * @author CoCoTea
  * @version 2.0.0
  */
-@Service
+@Component
 public class SysUserServiceImpl implements SysUserService {
     @Inject
     private DefaultProp defaultProp;

@@ -12,13 +12,13 @@ import net.cocotea.admin.common.model.BusinessException;
 import org.noear.solon.data.annotation.Tran;
 import org.sagacity.sqltoy.dao.SqlToyLazyDao;
 import org.sagacity.sqltoy.model.Page;
-import org.noear.solon.aspect.annotation.Service;
+import org.noear.solon.annotation.Component;
 import org.sagacity.sqltoy.solon.annotation.Db;
 
 import java.math.BigInteger;
 import java.util.List;
 
-@Service
+@Component
 public class SysVersionServiceImpl implements SysVersionService {
 
     @Db("db1")

@@ -21,14 +21,14 @@ import org.noear.solon.annotation.Inject;
 import org.noear.solon.core.handle.Context;
 import org.sagacity.sqltoy.dao.SqlToyLazyDao;
 import org.sagacity.sqltoy.model.Page;
-import org.noear.solon.aspect.annotation.Service;
+import org.noear.solon.annotation.Component;
 import org.sagacity.sqltoy.solon.annotation.Db;
 
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
-@Service
+@Component
 public class SysLogServiceImpl implements SysLogService {
     @Db("db1")
     private SqlToyLazyDao sqlToyLazyDao;

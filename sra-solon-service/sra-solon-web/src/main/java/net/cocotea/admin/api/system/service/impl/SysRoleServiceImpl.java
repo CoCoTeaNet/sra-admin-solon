@@ -17,7 +17,7 @@ import org.noear.solon.data.annotation.Tran;
 import org.sagacity.sqltoy.dao.SqlToyLazyDao;
 import org.sagacity.sqltoy.model.EntityQuery;
 import org.sagacity.sqltoy.model.Page;
-import org.noear.solon.aspect.annotation.Service;
+import org.noear.solon.annotation.Component;
 import org.sagacity.sqltoy.solon.annotation.Db;
 
 import java.math.BigInteger;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 /**
  * @author CoCoTea
  */
-@Service
+@Component
 public class SysRoleServiceImpl implements SysRoleService {
 
     @Db("db1")

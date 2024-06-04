@@ -2,8 +2,8 @@ package net.cocotea.admin.common.service.impl;
 
 import net.cocotea.admin.common.service.RedisService;
 import org.noear.redisx.RedisClient;
+import org.noear.solon.annotation.Component;
 import org.noear.solon.annotation.Inject;
-import org.noear.solon.aspect.annotation.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +15,7 @@ import java.util.Set;
  * @author CoCoTea
  * @since v1
  */
-@Service
+@Component
 public class RedisServiceImpl implements RedisService {
 
     private final static Logger logger = LoggerFactory.getLogger(RedisServiceImpl.class);

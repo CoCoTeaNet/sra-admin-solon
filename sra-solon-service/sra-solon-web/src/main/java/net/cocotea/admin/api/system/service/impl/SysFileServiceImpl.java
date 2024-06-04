@@ -17,7 +17,7 @@ import net.cocotea.admin.util.LoginUtils;
 import org.noear.solon.annotation.Inject;
 import org.noear.solon.data.annotation.Tran;
 import org.sagacity.sqltoy.dao.SqlToyLazyDao;
-import org.noear.solon.aspect.annotation.Service;
+import org.noear.solon.annotation.Component;
 import org.sagacity.sqltoy.model.Page;
 import org.sagacity.sqltoy.solon.annotation.Db;
 
@@ -32,7 +32,7 @@ import java.util.Map;
  * @author CoCoTea 572315466@qq.com
  * @version 2.0.0
  */
-@Service
+@Component
 public class SysFileServiceImpl implements SysFileService {
 
     @Db("db1")
