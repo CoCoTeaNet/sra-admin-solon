@@ -10,7 +10,7 @@
             from sys_role
             where is_deleted = 0
             #[and role_key = :roleKey]
-            #[and role_id in (:roleIds)]
+            #[and id in (:roleIds)]
             #[and role_name like :roleName]
             #[and remark like :remark]
             ]]>

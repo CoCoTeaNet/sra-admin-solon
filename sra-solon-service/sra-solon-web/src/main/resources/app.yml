@@ -2,12 +2,14 @@ server:
   port: 9000
   contextPath: /v2-api
 
+
 solon.app:
   name: 'sra-solon-web'
 #添加静态目录映射
 solon.staticfiles.mappings:
   - path: "/download/" #路径，可以是目录或单文件
     repository: "D:/server/file/" #1.添加本地绝对目录（仓库只能是目录）
+
 
 sqltoy:
   sqlResourcesDir: classpath:sqltoy
@@ -26,7 +28,7 @@ sra-admin:
   # 强密码，为空或者为none表示关闭
   strong-password: none
   # 1秒内访问服务器接口频率
-  once-visits: 30
+  once-visits: 0
   # 路由放行（用逗号分割）
   excludes: /system/dashboard/index,/system/login,/system/captcha,/,/doc/**
   # 文件存放配置

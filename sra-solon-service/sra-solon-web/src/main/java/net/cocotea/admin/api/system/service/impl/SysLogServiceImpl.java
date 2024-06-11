@@ -69,11 +69,11 @@ public class SysLogServiceImpl implements SysLogService {
     }
 
     @Override
-    public void saveByLogType(Integer logType, Context context) throws BusinessException {
+    public void saveByLogType(Integer logType, Context context) {
         ThreadUtil.execAsync(() -> {
             if (defaultProp.getSaveLog()) {
                 SysLogAddDTO sysLogAddDTO = new SysLogAddDTO();
-                sysLogAddDTO.setIpAddress(context.ip());
+                sysLogAddDTO.setIpAddress(context.realIp());
                 sysLogAddDTO.setLogType(logType);
                 sysLogAddDTO.setRequestWay(context.method());
                 sysLogAddDTO.setOperator(LoginUtils.loginId());
@@ -91,7 +91,7 @@ public class SysLogServiceImpl implements SysLogService {
     public void saveErrorLog(Context context) {
         if (StpUtil.isLogin() && defaultProp.getSaveLog()) {
             SysLogAddDTO sysLogAddDTO = new SysLogAddDTO();
-            sysLogAddDTO.setIpAddress(context.ip());
+            sysLogAddDTO.setIpAddress(context.realIp());
             sysLogAddDTO.setLogType(LogTypeEnum.OPERATION.getCode());
             sysLogAddDTO.setRequestWay(context.method());
             sysLogAddDTO.setOperator(LoginUtils.loginId());
