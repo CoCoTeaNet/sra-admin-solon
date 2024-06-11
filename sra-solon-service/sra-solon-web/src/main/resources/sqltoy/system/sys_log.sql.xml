@@ -12,7 +12,7 @@
                 from sys_log a
                 left join sys_user b on (a.operator = b.id)
                 where 1=1
-                #[and id = :id]
+                #[and a.id = :id]
                 #[and b.username like :operator]
                 #[and b.nickname like :operator]
             ]]>
