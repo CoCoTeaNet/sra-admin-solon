@@ -1,5 +1,6 @@
 package net.cocotea.admin.api.system.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.convert.Convert;
 import net.cocotea.admin.api.system.model.dto.SysVersionAddDTO;
 import net.cocotea.admin.api.system.model.dto.SysVersionPageDTO;
@@ -17,6 +18,7 @@ import org.sagacity.sqltoy.solon.annotation.Db;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class SysVersionServiceImpl implements SysVersionService {
@@ -49,7 +51,8 @@ public class SysVersionServiceImpl implements SysVersionService {
 
     @Override
     public ApiPage<SysVersionVO> listByPage(SysVersionPageDTO pageDTO) throws BusinessException {
-        Page<SysVersionVO> page = sqlToyLazyDao.findPageBySql(pageDTO, "sys_version_findList", pageDTO.getSysVersion());
+        Map<String, Object> map = BeanUtil.beanToMap(pageDTO.getSysVersion());
+        Page<SysVersionVO> page = sqlToyLazyDao.findPageBySql(pageDTO, "sys_version_findList", map, SysVersionVO.class);
         return ApiPage.rest(page, SysVersionVO.class);
     }
 

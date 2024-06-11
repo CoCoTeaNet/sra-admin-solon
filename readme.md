@@ -22,12 +22,12 @@ sra-admin-solon 是一个前后端分离的脚手架项目，国产化核心框�
 #### 图片演示
 <table>
     <tr>
-        <td><img src="./doc/imgs/ys_1.jpg" alt="ys_1"/></td>
-        <td><img src="./doc/imgs/ys_2.jpg" alt="ys_2"/></td>
+        <td><img src="./doc/imgs/ys_21.jpg" alt="ys_1"/></td>
+        <td><img src="./doc/imgs/ys_22.png" alt="ys_2"/></td>
     </tr>
     <tr>
-        <td><img src="./doc/imgs/ys_3.jpg" alt="ys_3"/></td>
-        <td><img src="./doc/imgs/ys_4.png" alt="ys_4"/></td>
+        <td><img src="./doc/imgs/ys_23.jpg" alt="ys_3"/></td>
+        <td><img src="./doc/imgs/ys_24.jpg" alt="ys_4"/></td>
     </tr>
 </table>
 
