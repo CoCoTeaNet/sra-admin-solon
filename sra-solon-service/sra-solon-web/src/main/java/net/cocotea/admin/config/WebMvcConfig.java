@@ -4,14 +4,11 @@ import cn.dev33.satoken.context.SaHolder;
 import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.solon.integration.SaTokenInterceptor;
 import cn.dev33.satoken.stp.StpUtil;
-import net.cocotea.admin.common.model.ApiResult;
 import org.noear.solon.annotation.Bean;
 import org.noear.solon.annotation.Configuration;
 import org.noear.solon.annotation.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 /**
  * @author jwss
