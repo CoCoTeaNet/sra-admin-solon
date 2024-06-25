@@ -4,11 +4,20 @@ import cn.dev33.satoken.context.SaHolder;
 import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.solon.integration.SaTokenInterceptor;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateUtil;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import org.noear.solon.annotation.Bean;
 import org.noear.solon.annotation.Configuration;
 import org.noear.solon.annotation.Inject;
+import org.noear.solon.serialization.fastjson.FastjsonActionExecutor;
+import org.noear.solon.serialization.fastjson.FastjsonRenderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.math.BigInteger;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * @author jwss
@@ -49,6 +58,24 @@ public class WebMvcConfig {
         });
 
         return interceptor;
+    }
+
+    @Bean
+    public void jsonInit(@Inject FastjsonRenderFactory factory, @Inject FastjsonActionExecutor executor){
+        // 解决前端精度问题
+        factory.addConvertor(BigInteger.class, String::valueOf);
+
+        // 日期转换
+        factory.addConvertor(Date.class, s -> DateUtil.format(s, DatePattern.NORM_DATETIME_PATTERN));
+        factory.addConvertor(LocalDateTime.class, s -> DateUtil.format(s, DatePattern.NORM_DATETIME_PATTERN));
+
+        factory.addFeatures(
+                SerializerFeature.PrettyFormat,
+                SerializerFeature.WriteMapNullValue,
+                SerializerFeature.WriteNullNumberAsZero,
+                SerializerFeature.WriteNullStringAsEmpty
+        );
+
     }
 
 }

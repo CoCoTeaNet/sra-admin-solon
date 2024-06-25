@@ -108,7 +108,7 @@ public class SysUserServiceImpl implements SysUserService {
         if (!(updateDTO.getRoleIds() == null || updateDTO.getRoleIds().isEmpty())) {
             // 删除用户角色关联
             EntityQuery sysUserRoleQuery = EntityQuery.create().where("#[user_id = :userId]").names("userId").values(updateDTO.getId());
-            sqlToyLazyDao.delete(sysUserRoleQuery);
+            sqlToyLazyDao.deleteByQuery(SysUserRole.class, sysUserRoleQuery);
             // 添加用户角色关联
             for (BigInteger roleId : updateDTO.getRoleIds()) {
                 SysUserRole sysUserRole = new SysUserRole().setUserId(updateDTO.getId()).setRoleId(roleId);

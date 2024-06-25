@@ -26,6 +26,7 @@ import java.util.List;
 @Mapping("/system/role")
 @Controller
 public class SysRoleController {
+
     @Inject
     private SysRoleService sysRoleService;
 

@@ -82,6 +82,12 @@
                 <artifactId>sa-token-solon-plugin</artifactId>
                 <version>${solon.version}</version>
             </dependency>
+            <!-- Sa-Token 整合 Redis （使用 jdk 默认序列化方式） -->
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-redis</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
             <!-- mysql连接器 -->
             <dependency>
                 <groupId>mysql</groupId>

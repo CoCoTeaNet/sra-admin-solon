@@ -127,14 +127,9 @@ public class SysMenuServiceImpl implements SysMenuService {
 
     @Override
     public List<SysMenuVO> listByRoleId(String roleId) {
-        // 查找角色关联的菜单
-        HashMap<String, Object> sysRoleMenuMap = MapUtil.newHashMap(1);
-        sysRoleMenuMap.put("roleId", roleId);
-        List<BigInteger> menuIds = sqlToyLazyDao.findBySql("sys_role_menu_findList", sysRoleMenuMap, SysRoleMenu.class).stream().map(SysRoleMenu::getMenuId).collect(Collectors.toList());
-        // 查找菜单
         HashMap<String, Object> sysMenuMap = MapUtil.newHashMap(1);
-        sysRoleMenuMap.put("menuIds", menuIds);
-        List<SysMenu> list = sqlToyLazyDao.findBySql("sys_menu_findList", sysMenuMap, SysMenu.class);
+        sysMenuMap.put("roleId", roleId);
+        List<SysMenu> list = sqlToyLazyDao.findBySql("sys_menu_IN_findList", sysMenuMap, SysMenu.class);
         return Convert.toList(SysMenuVO.class, list);
     }
 

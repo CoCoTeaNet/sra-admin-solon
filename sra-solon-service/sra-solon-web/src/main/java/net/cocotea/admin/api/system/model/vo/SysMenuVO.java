@@ -3,6 +3,8 @@ package net.cocotea.admin.api.system.model.vo;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,7 +15,10 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
-public class SysMenuVO {
+public class SysMenuVO implements Serializable {
+
+	@Serial
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 菜单ID

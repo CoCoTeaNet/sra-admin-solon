@@ -17,7 +17,7 @@ public class SysRoleVO {
     /**
      * 角色ID
      */
-    private BigInteger id;
+    private String id;
 
     /**
      * 角色名称
