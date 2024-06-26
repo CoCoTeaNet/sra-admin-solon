@@ -18,7 +18,7 @@ import java.util.List;
 public class SysMenuVO implements Serializable {
 
 	@Serial
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1020925827373568354L;
 
 	/**
 	 * 菜单ID

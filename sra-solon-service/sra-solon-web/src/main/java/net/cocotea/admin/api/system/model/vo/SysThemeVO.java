@@ -16,8 +16,9 @@ import java.io.Serializable;
 @Data
 @Accessors(chain = true)
 public class SysThemeVO implements Serializable {
+
 	@Serial
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -967332912336559860L;
 
 	/**
 	 *系统主题ID

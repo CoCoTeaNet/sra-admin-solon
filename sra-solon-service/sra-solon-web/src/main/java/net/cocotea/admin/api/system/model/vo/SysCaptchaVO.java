@@ -3,6 +3,9 @@ package net.cocotea.admin.api.system.model.vo;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * 验证码视图对象
  *
@@ -11,7 +14,10 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-public class SysCaptchaVO {
+public class SysCaptchaVO implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -8446236240287643428L;
 
     /**
      * 验证码ID

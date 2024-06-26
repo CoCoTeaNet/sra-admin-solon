@@ -3,12 +3,17 @@ package net.cocotea.admin.api.system.model.vo;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @Data
 @Accessors(chain = true)
-public class SysLogVO {
+public class SysLogVO implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 4883072904594356224L;
 
     private String id;
     private String ipAddress;

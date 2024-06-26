@@ -13,6 +13,7 @@ import java.io.Serializable;
 @Data
 @Accessors(chain = true)
 public class SystemInfoVO implements Serializable {
+
     @Serial
     private static final long serialVersionUID = 8671770549214978920L;
 
