@@ -1,0 +1,5 @@
+{
+  "outPath": "./src/main/resources/static/doc",
+  "framework": "solon",
+  "packageFilters": "net.cocotea.admin.api.system.controller.*"
+}
