@@ -1,7 +1,9 @@
 package net.cocotea.admin.config;
 
 import cn.dev33.satoken.context.SaHolder;
+import cn.dev33.satoken.dao.SaTokenDao;
 import cn.dev33.satoken.router.SaRouter;
+import cn.dev33.satoken.solon.dao.SaTokenDaoOfRedisJson;
 import cn.dev33.satoken.solon.integration.SaTokenInterceptor;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.date.DatePattern;
@@ -76,6 +78,14 @@ public class WebMvcConfig {
                 SerializerFeature.WriteNullStringAsEmpty
         );
 
+    }
+
+    /**
+     * 使用Redis缓存token
+     */
+    @Bean
+    public SaTokenDao saTokenDaoInit(@Inject("${myapp.rd1}") SaTokenDaoOfRedisJson saTokenDao) {
+        return saTokenDao;
     }
 
 }

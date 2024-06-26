@@ -55,7 +55,8 @@
                 <artifactId>sra-solon-common</artifactId>
                 <version>${sra-solon.version}</version>
             </dependency>
-            <!-- 外部框架 -->
+
+            <!-- ↓ 外部框架 ↓ -->
 
             <!-- 插件使用 -->
             <dependency>
@@ -82,10 +83,10 @@
                 <artifactId>sa-token-solon-plugin</artifactId>
                 <version>${solon.version}</version>
             </dependency>
-            <!-- Sa-Token 整合 Redis （使用 jdk 默认序列化方式） -->
+            <!-- sa-token整合redis (使用jdk默认序列化方式) -->
             <dependency>
                 <groupId>cn.dev33</groupId>
-                <artifactId>sa-token-redis</artifactId>
+                <artifactId>sa-token-redisx</artifactId>
                 <version>${sa-token.version}</version>
             </dependency>
             <!-- mysql连接器 -->
@@ -122,12 +123,6 @@
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcprov-jdk15to18</artifactId>
                 <version>${bcprov.version}</version>
-            </dependency>
-            <!-- 提供Redis连接池 -->
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-pool2</artifactId>
-                <version>${commons-pool2.version}</version>
             </dependency>
             <!-- redis -->
             <dependency>

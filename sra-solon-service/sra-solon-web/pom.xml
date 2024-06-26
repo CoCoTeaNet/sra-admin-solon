@@ -29,7 +29,7 @@
 
         <dependency>
             <groupId>cn.dev33</groupId>
-            <artifactId>sa-token-redis</artifactId>
+            <artifactId>sa-token-redisx</artifactId>
         </dependency>
 
         <dependency>
