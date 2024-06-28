@@ -16,7 +16,6 @@ sra-admin-solon 是一个前后端分离的脚手架项目，国产化核心框�
 
 #### 其它仓库地址
 - sra-admin-vue（前端项目，基于VUE开发）：https://gitee.com/momoljw/sra-admin-vue
-- sra-admin（springboot3版本）：https://gitee.com/momoljw/sss-rbac-admin
 
 
 #### 图片演示
@@ -68,9 +67,8 @@ sra-admin-solon 是一个前后端分离的脚手架项目，国产化核心框�
 
 
 #### 核心技术栈
-- [SpringBoot](https://spring.io/projects/spring-boot) ：Spring Boot 可以轻松创建可以“直接运行”的独立的、生产级的基于 Spring 的应用程序。
+- [Solon](https://gitee.com/opensolon/solon) ：Java “纯血国产”应用开发框架：更快、更小、更简单！！！
 - [Sqltoy](https://gitee.com/sagacity/sagacity-sqltoy) ：java真正最强大的ORM框架，支持市场上流行数据库。
-- [sqltoy-plus](https://gitee.com/gzghde/sqltoy-plus)：Sqltoy的加强版插件
 - [Satoken](https://sa-token.cc/doc.html#/) ：一个轻量级 Java 权限认证框架，让鉴权变得简单、优雅！
 - [Hutool](https://www.hutool.cn/) ：小而全的Java工具类库，使Java拥有函数式语言般的优雅，让Java语言也可以“甜甜的”。
 
