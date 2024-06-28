@@ -108,7 +108,7 @@ public class SysUserServiceImpl implements SysUserService {
         if (!(updateDTO.getRoleIds() == null || updateDTO.getRoleIds().isEmpty())) {
             // 删除用户角色关联
             EntityQuery sysUserRoleQuery = EntityQuery.create().where("#[user_id = :userId]").names("userId").values(updateDTO.getId());
-            sqlToyLazyDao.delete(sysUserRoleQuery);
+            sqlToyLazyDao.deleteByQuery(SysUserRole.class, sysUserRoleQuery);
             // 添加用户角色关联
             for (BigInteger roleId : updateDTO.getRoleIds()) {
                 SysUserRole sysUserRole = new SysUserRole().setUserId(updateDTO.getId()).setRoleId(roleId);
@@ -140,16 +140,18 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Tran
     @Override
-    public void login(SysLoginDTO loginDTO, Context context) throws BusinessException {
+    public String login(SysLoginDTO loginDTO, Context context) throws BusinessException {
         SysUser sysUser;
         // 强密码为空或者为none表示“启用”
         boolean strongPwdFlag =
                 StrUtil.isBlank(defaultProp.getStrongPassword())
                         || !defaultProp.getStrongPassword().equals(loginDTO.getPassword())
                         || !"none".equals(loginDTO.getPassword());
+        // 验证码缓存键
+        String key = null;
         if (strongPwdFlag) {
             // 校验验证码
-            String key = String.format(RedisKeyConst.VERIFY_CODE, CommonConst.LOGIN, context.ip());
+            key = String.format(RedisKeyConst.VERIFY_CODE_LOGIN, loginDTO.getCaptchaId());
             String code = redisService.get(key);
             if (!loginDTO.getCaptcha().equals(code)) {
                 throw new BusinessException("验证码错误");
@@ -175,6 +177,11 @@ public class SysUserServiceImpl implements SysUserService {
         loginSysUser.setLastLoginIp(context.ip());
         loginSysUser.setLastLoginTime(LocalDateTime.now());
         sqlToyLazyDao.update(loginSysUser);
+        // 删除缓存
+        if (StrUtil.isNotBlank(key)) {
+            redisService.delete(key);
+        }
+        return StpUtil.getTokenValue();
     }
 
     @Override

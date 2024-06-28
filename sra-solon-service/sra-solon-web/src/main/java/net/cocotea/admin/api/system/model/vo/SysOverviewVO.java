@@ -3,6 +3,9 @@ package net.cocotea.admin.api.system.model.vo;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * 系统数据概览
  *
@@ -10,7 +13,10 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-public class SysOverviewVO {
+public class SysOverviewVO implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 5798937800323621804L;
 
     /**
      * 标题

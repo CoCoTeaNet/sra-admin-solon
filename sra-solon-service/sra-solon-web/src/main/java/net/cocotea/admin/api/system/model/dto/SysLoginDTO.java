@@ -39,6 +39,18 @@ public class SysLoginDTO implements Serializable {
     private String captcha;
 
     /**
+     * 验证码ID
+     */
+    @NotBlank(message = "验证码ID不能为空")
+    private String captchaId;
+
+    /**
+     * 公钥
+     */
+    @NotBlank(message = "公钥不能为空")
+    private String publicKey;
+
+    /**
      * 是否记住我
      */
     private Boolean rememberMe;

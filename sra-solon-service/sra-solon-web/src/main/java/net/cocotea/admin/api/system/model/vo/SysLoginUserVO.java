@@ -3,6 +3,7 @@ package net.cocotea.admin.api.system.model.vo;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
 @Accessors(chain = true)
 public class SysLoginUserVO implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1641777558644610990L;
 
     private Boolean loginStatus;

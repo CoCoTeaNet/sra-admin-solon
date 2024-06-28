@@ -20,4 +20,16 @@
         </value>
     </sql>
 
+    <sql id="sys_menu_IN_findList">
+        <value>
+            <![CDATA[
+            select id, menu_name, permission_code, router_path, parent_id, menu_type, is_menu, menu_status, component_path, is_external_link, icon_path, sort, create_by, create_time, update_by, update_time, is_deleted, revision
+            from sys_menu
+            where is_deleted = 0
+            #[and id in (select menu_id from sys_role_menu where role_id = :roleId)]
+            order by sort desc, id desc
+            ]]>
+        </value>
+    </sql>
+
 </sqltoy>

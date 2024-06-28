@@ -29,6 +29,7 @@
             #[and id = :id]
             #[and username = :username]
             #[and nickname = :nickname]
+            #[and password = :password]
             #[and sex = :sex]
             #[and mobile_phone = :mobilePhone]
             #[and account_status = :accountStatus]

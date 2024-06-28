@@ -11,7 +11,7 @@
 
     <groupId>net.cocotea</groupId>
     <artifactId>sra-solon-service</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <packaging>pom</packaging>
 
     <modelVersion>4.0.0</modelVersion>
@@ -26,7 +26,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <utf-8>UTF-8</utf-8>
         <!-- 内部模块版本 -->
-        <sra-solon.version>1.0.2</sra-solon.version>
+        <sra-solon.version>1.0.3</sra-solon.version>
         <!-- 插件版本 -->
         <lombok.version>1.18.28</lombok.version>
         <!-- 外部框架版本 -->
@@ -55,7 +55,8 @@
                 <artifactId>sra-solon-common</artifactId>
                 <version>${sra-solon.version}</version>
             </dependency>
-            <!-- 外部框架 -->
+
+            <!-- ↓ 外部框架 ↓ -->
 
             <!-- 插件使用 -->
             <dependency>
@@ -81,6 +82,12 @@
                 <groupId>org.noear</groupId>
                 <artifactId>sa-token-solon-plugin</artifactId>
                 <version>${solon.version}</version>
+            </dependency>
+            <!-- sa-token整合redis (使用jdk默认序列化方式) -->
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-redisx</artifactId>
+                <version>${sa-token.version}</version>
             </dependency>
             <!-- mysql连接器 -->
             <dependency>
@@ -116,12 +123,6 @@
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcprov-jdk15to18</artifactId>
                 <version>${bcprov.version}</version>
-            </dependency>
-            <!-- 提供Redis连接池 -->
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-pool2</artifactId>
-                <version>${commons-pool2.version}</version>
             </dependency>
             <!-- redis -->
             <dependency>

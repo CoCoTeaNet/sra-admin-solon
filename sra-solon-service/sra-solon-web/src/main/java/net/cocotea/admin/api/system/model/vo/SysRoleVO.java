@@ -3,6 +3,8 @@ package net.cocotea.admin.api.system.model.vo;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 
@@ -12,12 +14,15 @@ import java.time.LocalDateTime;
  */
 @Data
 @Accessors(chain = true)
-public class SysRoleVO {
+public class SysRoleVO implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 7530186405143341065L;
 
     /**
      * 角色ID
      */
-    private BigInteger id;
+    private String id;
 
     /**
      * 角色名称
