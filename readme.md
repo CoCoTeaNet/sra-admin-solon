@@ -37,7 +37,7 @@ sra-admin-solon 是一个前后端分离的脚手架项目，国产化核心框�
 
 #### 启动说明
 ##### 步骤
-1. 运行数据库脚本
+1. 运行数据库脚本：表结构、初始化数据
 2. 启动本地Redis并运行后端服务
 3. 安装前端依赖并运行前端项目
 
@@ -60,6 +60,8 @@ sra-admin-solon 是一个前后端分离的脚手架项目，国产化核心框�
 │  ├─bin                服务运行脚本
 │  ├─imgs               演示图片
 │  └─sra-admin-sql      数据库运行脚本 
+│      ├─table_ddl.sql  表结构
+│      └─table_data.sql 初始化数据
 └─sra-admin-service     
     ├─sra-common        通用模块
     └─sra-web           web模块
