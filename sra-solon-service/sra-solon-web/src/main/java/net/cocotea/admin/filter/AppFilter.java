@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 
 @Component
 public class AppFilter implements Filter {
-    private final Logger logger = LoggerFactory.getLogger(AppFilter.class);
+    private static final Logger logger = LoggerFactory.getLogger(AppFilter.class);
 
     @Inject("${sra-admin.once-visits}")
     Integer visits;

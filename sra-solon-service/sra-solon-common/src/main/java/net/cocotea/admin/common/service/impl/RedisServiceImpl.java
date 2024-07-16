@@ -18,7 +18,7 @@ import java.util.Set;
 @Component
 public class RedisServiceImpl implements RedisService {
 
-    private final static Logger logger = LoggerFactory.getLogger(RedisServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(RedisServiceImpl.class);
 
     @Inject
     private RedisClient redisClient;

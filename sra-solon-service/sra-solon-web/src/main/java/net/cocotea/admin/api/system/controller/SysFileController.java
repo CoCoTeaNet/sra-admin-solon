@@ -41,7 +41,7 @@ import java.util.List;
 @Mapping("/system/file")
 @Controller
 public class SysFileController {
-    private final Logger logger = LoggerFactory.getLogger(SysFileController.class);
+    private static final Logger logger = LoggerFactory.getLogger(SysFileController.class);
 
     @Inject
     private FileProp fileProp;
