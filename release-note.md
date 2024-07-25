@@ -7,6 +7,7 @@
 - 修复：文件上传无法自动创建目录
 - 优化：创建Logger实例增加static关键词
 - 废弃：删除FileUploadUtils注释的代码
+- 变更：初始化脚本变成ddl+data两个文件（PS：table_ddl.sql是表结构）
 
 
 #### 1.0.3
