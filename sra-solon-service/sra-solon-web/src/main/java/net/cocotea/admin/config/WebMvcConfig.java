@@ -27,7 +27,7 @@ import java.util.Date;
  */
 @Configuration
 public class WebMvcConfig {
-    private final Logger logger = LoggerFactory.getLogger(WebMvcConfig.class);
+    private static final Logger logger = LoggerFactory.getLogger(WebMvcConfig.class);
 
     @Bean(index = -100)  //-100，是顺序位（低值优先）
     public SaTokenInterceptor saTokenInterceptor(@Inject("${sra-admin.excludes}") String excludesStr) {

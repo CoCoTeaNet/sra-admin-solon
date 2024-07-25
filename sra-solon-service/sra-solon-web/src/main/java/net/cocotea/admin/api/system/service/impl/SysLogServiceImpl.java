@@ -37,8 +37,8 @@ public class SysLogServiceImpl implements SysLogService {
     private DefaultProp defaultProp;
 
     @Override
-    public boolean add(SysLogAddDTO param) throws BusinessException {
-        SysLog sysOperationLog = Convert.convert(SysLog.class, param);
+    public boolean add(SysLogAddDTO sysLogAddDTO) throws BusinessException {
+        SysLog sysOperationLog = BeanUtil.toBean(sysLogAddDTO, SysLog.class);
         Object save = sqlToyLazyDao.save(sysOperationLog);
         return save != null;
     }

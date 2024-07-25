@@ -20,7 +20,17 @@ public class SysLogVO implements Serializable {
     private String operator;
     private String username;
     private String nickname;
+
+    /**
+     * 请求方法
+     */
     private String requestWay;
+
+    /**
+     * 接口路径
+     */
+    private String apiPath;
+
     private Integer logStatus;
     private Integer logType;
     private LocalDateTime createTime;

@@ -18,7 +18,7 @@ import java.util.Map;
  * @author CoCoTea
  */
 public class SqlToyUnifyFieldsHandler implements IUnifyFieldsHandler {
-    private final Logger logger = LoggerFactory.getLogger(SqlToyUnifyFieldsHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(SqlToyUnifyFieldsHandler.class);
 
     private String getLoginId() {
         String loginId;

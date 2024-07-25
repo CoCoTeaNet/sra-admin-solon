@@ -4,30 +4,39 @@ import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.exception.NotPermissionException;
 import cn.dev33.satoken.exception.NotRoleException;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
+import net.cocotea.admin.api.system.model.dto.SysLogAddDTO;
 import net.cocotea.admin.api.system.service.SysLogService;
+import net.cocotea.admin.common.annotation.LogPersistence;
 import net.cocotea.admin.common.constant.RedisKeyConst;
 import net.cocotea.admin.common.enums.ApiResultEnum;
+import net.cocotea.admin.common.enums.LogStatusEnum;
 import net.cocotea.admin.common.enums.LogTypeEnum;
 import net.cocotea.admin.common.model.ApiResult;
 import net.cocotea.admin.common.model.BusinessException;
 import net.cocotea.admin.common.model.NotLogException;
 import net.cocotea.admin.common.service.RedisService;
+import net.cocotea.admin.properties.DefaultProp;
+import net.cocotea.admin.util.LoginUtils;
 import org.noear.solon.annotation.Component;
 import org.noear.solon.annotation.Inject;
-import org.noear.solon.core.handle.Context;
-import org.noear.solon.core.handle.Filter;
-import org.noear.solon.core.handle.FilterChain;
+import org.noear.solon.core.handle.*;
 import org.sagacity.sqltoy.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigInteger;
+
 @Component
 public class AppFilter implements Filter {
-    private final Logger logger = LoggerFactory.getLogger(AppFilter.class);
+    private static final Logger logger = LoggerFactory.getLogger(AppFilter.class);
 
     @Inject("${sra-admin.once-visits}")
     Integer visits;
+
+    @Inject
+    private DefaultProp defaultProp;
 
     @Inject
     private SysLogService sysLogService;
@@ -59,7 +68,6 @@ public class AppFilter implements Filter {
             ctx.status(ApiResultEnum.SUCCESS.getCode());
             //4.异常捕促与控制
             logger.error(e.getMessage());
-            boolean saveLogFlag = true;
 
             ApiResult<?> result;
 
@@ -75,7 +83,6 @@ public class AppFilter implements Filter {
                 errorMsg = StrUtil.isBlank(errorMsg) ? ApiResultEnum.ERROR.getDesc() : errorMsg;
                 result = ApiResult.error(ApiResultEnum.ERROR.getCode(), errorMsg);
             } else if (e instanceof NotLogException) {
-                saveLogFlag = false;
                 result = ApiResult.error(ApiResultEnum.ERROR.getCode(), ApiResultEnum.ERROR.getDesc());
             } else if (e instanceof NotRoleException) {
                 logger.error("角色未知异常: {}", e.getMessage());
@@ -84,24 +91,54 @@ public class AppFilter implements Filter {
                 logger.error("未知异常: {}", e.getMessage(), e);
                 result = ApiResult.error(ApiResultEnum.ERROR.getDesc());
             }
-            if (saveLogFlag) {
-                saveLog(ctx);
-            }
 
+            saveSystemLog(ctx, LogStatusEnum.ERROR.getCode());
             ctx.render(result);
         }
         //5.获得接口响应时长
         long times = System.currentTimeMillis() - start;
         logger.info("用时：{}ms", times);
+        saveSystemLog(ctx, LogStatusEnum.SUCCESS.getCode());
     }
 
-    private void saveLog(Context ctx) throws BusinessException {
+    /**
+     * 保存用户请求日志
+     */
+    private void saveSystemLog(Context ctx, int logStatus) {
         logger.info("saveLog >>>>> 请求IP：{},请求地址：{},请求方式：{}", ctx.realIp(), ctx.path(), ctx.method());
-        sysLogService.saveErrorLog(ctx);
-        // 保存登录日志与操作日志,如果没有登录不去保存
-        if (StpUtil.isLogin()) {
-            sysLogService.saveByLogType(LogTypeEnum.OPERATION.getCode(), ctx);
+
+        if (!defaultProp.getSaveLog()) {
+            logger.warn("saveSystemLog >>>>> saveLog is not enable, sra-admin.save-log: false");
+            return;
         }
+
+        Handler mainHandler = ctx.mainHandler();
+        if (!(mainHandler instanceof Action action)) {
+            logger.warn("saveSystemLog >>>>> is not mainHandler");
+            return;
+        }
+        LogPersistence logPersistence = action.method().getAnnotation(LogPersistence.class);
+        if (logPersistence == null) {
+            logger.debug("saveSystemLog >>>>> LogPersistence is null");
+            return;
+        }
+        if (logPersistence.logType() != LogTypeEnum.OPERATION.getCode()) {
+            logger.warn("saveSystemLog >>>>> is not LogTypeEnum.OPERATION");
+            return;
+        }
+        BigInteger loginId = LoginUtils.loginId();
+        if (loginId == null) {
+            logger.warn("saveSystemLog >>>>> is not login");
+            return;
+        }
+        SysLogAddDTO sysLogAddDTO = new SysLogAddDTO()
+                .setIpAddress(ctx.realIp())
+                .setRequestWay(ctx.method())
+                .setApiPath(ctx.path())
+                .setLogType(logPersistence.logType())
+                .setOperator(loginId)
+                .setLogStatus(logStatus);
+        ThreadUtil.execAsync(() -> sysLogService.add(sysLogAddDTO));
     }
 
     /**
