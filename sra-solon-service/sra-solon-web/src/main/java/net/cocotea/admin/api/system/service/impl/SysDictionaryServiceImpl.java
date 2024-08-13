@@ -5,6 +5,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.text.CharPool;
 import net.cocotea.admin.api.system.model.dto.SysDictionaryAddDTO;
 import net.cocotea.admin.api.system.model.dto.SysDictionaryPageDTO;
+import net.cocotea.admin.api.system.model.dto.SysDictionaryTreeDTO;
 import net.cocotea.admin.api.system.model.dto.SysDictionaryUpdateDTO;
 import net.cocotea.admin.api.system.model.po.SysDictionary;
 import net.cocotea.admin.api.system.model.po.SysUser;
@@ -63,8 +64,12 @@ public class SysDictionaryServiceImpl implements SysDictionaryService {
     }
 
     @Override
-    public List<SysDictionaryVO> listByTree(SysDictionaryPageDTO dto) {
-        return new TreeBuilder<SysDictionaryVO>().get(findList(dto.getSysDictionary()));
+    public List<SysDictionaryVO> listByTree(SysDictionaryTreeDTO dictionaryTreeDTO) {
+        SysDictionaryVO dictionaryVO = new SysDictionaryVO()
+                .setDictionaryName(dictionaryTreeDTO.getDictionaryName())
+                .setEnableStatus(dictionaryTreeDTO.getEnableStatus());
+        List<SysDictionaryVO> list = findList(dictionaryVO);
+        return new TreeBuilder<SysDictionaryVO>().get(list);
     }
 
     private List<SysDictionaryVO> findList(SysDictionaryVO sysDictionaryVO) {

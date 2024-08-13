@@ -146,10 +146,11 @@ public class AppFilter implements Filter {
      */
     private void onlineUsersRenewal() {
         if (StpUtil.isLogin()) {
-            if (StringUtil.isBlank(redisService.get(RedisKeyConst.ONLINE_USER))) {
-                String loginId = String.valueOf(StpUtil.getLoginId());
-                redisService.save(String.format(RedisKeyConst.ONLINE_USER, loginId), loginId, 30L);
-            }
+            String loginId = String.valueOf(StpUtil.getLoginId());
+            ThreadUtil.execAsync(() -> {
+                String key = String.format(RedisKeyConst.ONLINE_USER, loginId);
+                redisService.save(key, loginId, 30L);
+            });
         }
     }
 

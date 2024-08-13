@@ -4,6 +4,7 @@ import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.dev33.satoken.annotation.SaMode;
 import net.cocotea.admin.api.system.model.dto.SysDictionaryAddDTO;
 import net.cocotea.admin.api.system.model.dto.SysDictionaryPageDTO;
+import net.cocotea.admin.api.system.model.dto.SysDictionaryTreeDTO;
 import net.cocotea.admin.api.system.model.dto.SysDictionaryUpdateDTO;
 import net.cocotea.admin.api.system.model.vo.SysDictionaryVO;
 import net.cocotea.admin.api.system.service.SysDictionaryService;
@@ -83,7 +84,7 @@ public class SysDictionaryController {
     @Mapping("/listByTree")
     @Post
     @SaCheckRole(value = {"role:super:admin", "role:simple:admin"}, mode = SaMode.OR)
-    public ApiResult<List<SysDictionaryVO>> listByTree(@Validated @Body SysDictionaryPageDTO dictionaryPageDTO) {
+    public ApiResult<List<SysDictionaryVO>> listByTree(@Validated @Body SysDictionaryTreeDTO dictionaryPageDTO) {
         List<SysDictionaryVO> list = sysDictionaryService.listByTree(dictionaryPageDTO);
         return ApiResult.ok(list);
     }

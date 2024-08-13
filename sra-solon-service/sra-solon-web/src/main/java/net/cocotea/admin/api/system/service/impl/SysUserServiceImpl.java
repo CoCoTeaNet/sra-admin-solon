@@ -133,7 +133,9 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     public ApiPage<SysUserVO> listByPage(SysUserPageDTO pageDTO) {
-        Page<SysUserVO> page = sqlToyLazyDao.findPageBySql(pageDTO, "sys_user_findList", pageDTO.getSysUser());
+        Map<String, Object> params = BeanUtil.beanToMap(pageDTO.getSysUser());
+
+        Page<SysUserVO> page = sqlToyLazyDao.findPageBySql(ApiPage.create(pageDTO), "sys_user_findList", params, SysUserVO.class);
         page.getRows().forEach(row -> row.setRoleList(sysRoleService.loadByUserId(row.getId())));
         return ApiPage.rest(page);
     }
