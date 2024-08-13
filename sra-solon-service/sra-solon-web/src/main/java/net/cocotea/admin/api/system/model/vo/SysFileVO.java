@@ -5,7 +5,6 @@ import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -80,15 +79,5 @@ public class SysFileVO implements Serializable {
 	 * 是否共享
 	 */
 	private Integer isShare;
-
-	/**
-	 * 开始时间
-	 */
-	private LocalDateTime beginTime;
-
-	/**
-	 * 结束时间
-	 */
-	private LocalDateTime endTime;
 
 }

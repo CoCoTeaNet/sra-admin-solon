@@ -11,6 +11,7 @@ import net.cocotea.admin.api.system.service.SysVersionService;
 import net.cocotea.admin.common.model.ApiPage;
 import net.cocotea.admin.common.model.BusinessException;
 import org.noear.solon.data.annotation.Tran;
+import org.sagacity.sqltoy.dao.LightDao;
 import org.sagacity.sqltoy.dao.SqlToyLazyDao;
 import org.sagacity.sqltoy.model.Page;
 import org.noear.solon.annotation.Component;
@@ -25,6 +26,9 @@ public class SysVersionServiceImpl implements SysVersionService {
 
     @Db("db1")
     private SqlToyLazyDao sqlToyLazyDao;
+
+    @Db("db1")
+    private LightDao lightDao;
 
     @Override
     public boolean add(SysVersionAddDTO param) throws BusinessException {
@@ -52,8 +56,8 @@ public class SysVersionServiceImpl implements SysVersionService {
     @Override
     public ApiPage<SysVersionVO> listByPage(SysVersionPageDTO pageDTO) throws BusinessException {
         Map<String, Object> map = BeanUtil.beanToMap(pageDTO.getSysVersion());
-        Page<SysVersionVO> page = sqlToyLazyDao.findPageBySql(pageDTO, "sys_version_findList", map, SysVersionVO.class);
-        return ApiPage.rest(page, SysVersionVO.class);
+        Page<SysVersionVO> page = lightDao.findPage(ApiPage.create(pageDTO), "sys_version_findList", map, SysVersionVO.class);
+        return ApiPage.rest(page);
     }
 
     @Override

@@ -19,6 +19,7 @@ import net.cocotea.admin.properties.DefaultProp;
 import net.cocotea.admin.util.LoginUtils;
 import org.noear.solon.annotation.Inject;
 import org.noear.solon.core.handle.Context;
+import org.sagacity.sqltoy.dao.LightDao;
 import org.sagacity.sqltoy.dao.SqlToyLazyDao;
 import org.sagacity.sqltoy.model.Page;
 import org.noear.solon.annotation.Component;
@@ -30,8 +31,12 @@ import java.util.Map;
 
 @Component
 public class SysLogServiceImpl implements SysLogService {
+
     @Db("db1")
     private SqlToyLazyDao sqlToyLazyDao;
+
+    @Db("db1")
+    private LightDao lightDao;
 
     @Inject
     private DefaultProp defaultProp;
@@ -62,10 +67,14 @@ public class SysLogServiceImpl implements SysLogService {
     @Override
     public ApiPage<SysLogVO> listByPage(SysLogPageDTO pageDTO) throws BusinessException {
         String operator = pageDTO.getSysLog().getOperator();
+
         Map<String, Object> sysLogMap = BeanUtil.beanToMap(pageDTO.getSysLog());
         sysLogMap.put("operator", operator);
-        Page<SysLogVO> page = sqlToyLazyDao.findPageBySql(pageDTO, "sys_log_JOIN_findList", sysLogMap, SysLogVO.class);
-        return ApiPage.rest(page, SysLogVO.class);
+
+        Page<SysLogVO> logVOPage = ApiPage.create(pageDTO);
+        Page<SysLogVO> page = lightDao.findPage(logVOPage, "sys_log_JOIN_findList", sysLogMap, SysLogVO.class);
+
+        return ApiPage.rest(page);
     }
 
     @Override

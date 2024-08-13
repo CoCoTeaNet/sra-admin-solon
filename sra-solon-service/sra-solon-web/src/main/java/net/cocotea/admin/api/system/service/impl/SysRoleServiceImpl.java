@@ -113,7 +113,7 @@ public class SysRoleServiceImpl implements SysRoleService {
         map.put("roleName", pageDTO.getSysRole().getRoleName());
         map.put("roleKey", pageDTO.getSysRole().getRoleKey());
         map.put("remark", pageDTO.getSysRole().getRemark());
-        Page<SysRole> page = sqlToyLazyDao.findPageBySql(pageDTO, "sys_role_findList", map, SysRole.class);
-        return ApiPage.rest(page, SysRoleVO.class);
+        Page<SysRoleVO> page = sqlToyLazyDao.findPageBySql(ApiPage.create(pageDTO), "sys_role_findList", map, SysRoleVO.class);
+        return ApiPage.rest(page);
     }
 }

@@ -11,6 +11,7 @@
             where is_deleted=0
             #[and username like :username]
             #[and nickname like :nickname]
+            #[and email like :email]
             #[and sex = :sex]
             #[and mobile_phone = :mobilePhone]
             #[and account_status = :accountStatus]

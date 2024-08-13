@@ -16,6 +16,7 @@ import net.cocotea.admin.properties.FileProp;
 import net.cocotea.admin.util.LoginUtils;
 import org.noear.solon.annotation.Inject;
 import org.noear.solon.data.annotation.Tran;
+import org.sagacity.sqltoy.dao.LightDao;
 import org.sagacity.sqltoy.dao.SqlToyLazyDao;
 import org.noear.solon.annotation.Component;
 import org.sagacity.sqltoy.model.Page;
@@ -37,6 +38,9 @@ public class SysFileServiceImpl implements SysFileService {
 
     @Db("db1")
     private SqlToyLazyDao sqlToyLazyDao;
+
+    @Db("db1")
+    private LightDao lightDao;
 
     @Inject
     private FileProp fileProp;
@@ -69,8 +73,9 @@ public class SysFileServiceImpl implements SysFileService {
     public ApiPage<SysFileVO> listByPage(SysFilePageDTO pageDTO) {
         Map<String, Object> sysFileMap = BeanUtil.beanToMap(pageDTO.getSysFile());
         sysFileMap.put("userId", LoginUtils.loginId());
-        Page<SysFileVO> page = sqlToyLazyDao.findPageBySql(pageDTO, "sys_file_JOIN_findList", sysFileMap, SysFileVO.class);
-        return ApiPage.rest(page, SysFileVO.class);
+
+        Page<SysFileVO> page = lightDao.findPage(ApiPage.create(pageDTO), "sys_file_JOIN_findList", sysFileMap, SysFileVO.class);
+        return ApiPage.rest(page);
     }
 
     @Override

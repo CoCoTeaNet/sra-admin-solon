@@ -1,11 +1,13 @@
 package net.cocotea.admin.api.system.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.CharPool;
 import cn.hutool.json.JSONUtil;
 import net.cocotea.admin.api.system.model.dto.SysMenuAddDTO;
 import net.cocotea.admin.api.system.model.dto.SysMenuPageDTO;
+import net.cocotea.admin.api.system.model.dto.SysMenuTreeDTO;
 import net.cocotea.admin.api.system.model.dto.SysMenuUpdateDTO;
 import net.cocotea.admin.api.system.model.po.SysMenu;
 import net.cocotea.admin.api.system.model.po.SysRoleMenu;
@@ -20,6 +22,7 @@ import net.cocotea.admin.common.util.TreeBuilder;
 import net.cocotea.admin.util.LoginUtils;
 import org.noear.solon.annotation.Inject;
 import org.noear.solon.data.annotation.Tran;
+import org.sagacity.sqltoy.dao.LightDao;
 import org.sagacity.sqltoy.dao.SqlToyLazyDao;
 import org.sagacity.sqltoy.model.Page;
 import org.sagacity.sqltoy.solon.annotation.Db;
@@ -44,6 +47,9 @@ public class SysMenuServiceImpl implements SysMenuService {
 
     @Db("db1")
     private SqlToyLazyDao sqlToyLazyDao;
+
+    @Db("db1")
+    private LightDao lightDao;
 
     @Inject
     private RedisService redisService;
@@ -71,13 +77,16 @@ public class SysMenuServiceImpl implements SysMenuService {
 
     @Override
     public ApiPage<SysMenuVO> listByPage(SysMenuPageDTO pageDTO) {
-        Page<SysMenu> page = sqlToyLazyDao.findPageBySql(pageDTO, "sys_menu_findList", pageDTO.getPO());
+        Map<String, Object> map = BeanUtil.beanToMap(pageDTO.getSysMenu());
+        Page<Object> fastPage = ApiPage.create(pageDTO);
+        Page<SysMenu> page = lightDao.findPage(fastPage, "sys_menu_findList", map, SysMenu.class);
         return ApiPage.rest(page, SysMenuVO.class);
     }
 
     @Override
-    public List<SysMenuVO> listByTree(SysMenuPageDTO pageDTO) {
-        List<SysMenuVO> list = Convert.toList(SysMenuVO.class, sqlToyLazyDao.findBySql("sys_menu_findList", pageDTO.getPO()));
+    public List<SysMenuVO> listByTree(SysMenuTreeDTO treeDTO) {
+        Map<String, Object> map = BeanUtil.beanToMap(treeDTO);
+        List<SysMenuVO> list = lightDao.find("sys_menu_findList", map, SysMenuVO.class);
         return new TreeBuilder<SysMenuVO>().get(list);
     }
 
@@ -149,10 +158,10 @@ public class SysMenuServiceImpl implements SysMenuService {
     }
 
     @Override
-    public List<SysMenuVO> listByTreeAsRoleSelection(SysMenuPageDTO pageDTO) {
-        List<SysMenu> list = sqlToyLazyDao.findBySql("sys_menu_findList", pageDTO.getPO());
-        List<SysMenuVO> sysMenuVOList = Convert.toList(SysMenuVO.class, list);
-        return new TreeBuilder<SysMenuVO>().get(sysMenuVOList);
+    public List<SysMenuVO> listByTreeAsRoleSelection(SysMenuTreeDTO treeDTO) {
+        Map<String, Object> map = BeanUtil.beanToMap(treeDTO);
+        List<SysMenuVO> list = lightDao.find("sys_menu_findList", map, SysMenuVO.class);
+        return new TreeBuilder<SysMenuVO>().get(list);
     }
 
 }
