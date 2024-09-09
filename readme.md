@@ -1,5 +1,5 @@
 ## 介绍
-sra-admin-solon 是一个前后端分离的脚手架项目，国产化核心框架，实现了用户、字典、角色、权限等常见功能，
+SraAdmin-Solon 是一个前后端分离的脚手架项目，国产化核心框架，实现了用户、字典、角色、权限等常见功能，
 能够快速搭建一个web项目。  
 后端技术栈：solon+sqltoy+satoken+hutool  
 前端技术栈：vue3+vue-router+typescript+elementui
@@ -12,7 +12,7 @@ sra-admin-solon 是一个前后端分离的脚手架项目，国产化核心框�
 
 
 ## 其它仓库地址
-- sra-admin-vue（前端项目，基于VUE开发）：https://gitee.com/momoljw/sra-admin-vue
+- SraAdmin-Vue（前端项目，基于VUE开发）：https://gitee.com/momoljw/sra-admin-vue
 
 
 ## 图片演示
@@ -88,7 +88,7 @@ sra-admin-solon 是一个前后端分离的脚手架项目，国产化核心框�
 - 如有更好的想法，欢迎提[issue](https://gitee.com/momoljw/sss-rbac-admin/issues)
 
 
-## SRA交流群
+## SraAdmin交流群
 QQ群：[![加入QQ群](https://img.shields.io/badge/-543112505-brightgreen)](https://jq.qq.com/?_wv=1027&k=lxODRWpq)
 
 
