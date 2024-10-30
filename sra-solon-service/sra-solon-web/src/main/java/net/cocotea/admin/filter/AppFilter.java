@@ -21,6 +21,7 @@ import net.cocotea.admin.properties.DefaultProp;
 import net.cocotea.admin.util.LoginUtils;
 import org.noear.solon.annotation.Component;
 import org.noear.solon.annotation.Inject;
+import org.noear.solon.core.exception.StatusException;
 import org.noear.solon.core.handle.*;
 import org.sagacity.sqltoy.utils.StringUtil;
 import org.slf4j.Logger;
@@ -87,6 +88,9 @@ public class AppFilter implements Filter {
             } else if (e instanceof NotRoleException) {
                 logger.error("角色未知异常: {}", e.getMessage());
                 result = ApiResult.error(ApiResultEnum.NOT_PERMISSION.getCode(), ApiResultEnum.NOT_PERMISSION.getDesc());
+            } else if (e instanceof StatusException statusException){
+                logger.error("StatusException: {}", e.getMessage());
+                result = ApiResult.error(statusException.getCode(), statusException.getMessage());
             } else {
                 logger.error("未知异常: {}", e.getMessage(), e);
                 result = ApiResult.error(ApiResultEnum.ERROR.getDesc());

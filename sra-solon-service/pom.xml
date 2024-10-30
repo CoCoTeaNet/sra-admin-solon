@@ -6,12 +6,12 @@
     <parent>
         <groupId>org.noear</groupId>
         <artifactId>solon-parent</artifactId>
-        <version>2.8.0</version>
+        <version>3.0.2</version>
     </parent>
 
     <groupId>net.cocotea</groupId>
     <artifactId>sra-solon-service</artifactId>
-    <version>1.0.5</version>
+    <version>1.1.0</version>
     <packaging>pom</packaging>
 
     <modelVersion>4.0.0</modelVersion>
@@ -26,15 +26,15 @@
         <maven.compiler.target>17</maven.compiler.target>
         <utf-8>UTF-8</utf-8>
         <!-- 内部模块版本 -->
-        <sra-solon.version>1.0.5</sra-solon.version>
+        <sra-solon.version>1.1.0</sra-solon.version>
         <!-- 插件版本 -->
         <lombok.version>1.18.28</lombok.version>
         <!-- 外部框架版本 -->
-        <sqltoy.version>5.6.10</sqltoy.version>
+        <sqltoy.version>5.6.22</sqltoy.version>
         <mysql-connector.version>8.0.30</mysql-connector.version>
         <satoken.version>1.33.0</satoken.version>
         <fastjson.version>1.2.83</fastjson.version>
-        <hutool.version>5.8.12</hutool.version>
+        <hutool.version>5.8.32</hutool.version>
         <hutool-oshi.version>5.6.1</hutool-oshi.version>
         <bcprov.version>1.69</bcprov.version>
         <commons-pool2.version>2.11.1</commons-pool2.version>
@@ -68,7 +68,12 @@
             <!-- solon -->
             <dependency>
                 <groupId>org.noear</groupId>
-                <artifactId>solon-api</artifactId>
+                <artifactId>solon-web</artifactId>
+                <version>${solon.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.noear</groupId>
+                <artifactId>solon-security-validation</artifactId>
                 <version>${solon.version}</version>
             </dependency>
             <!--sqltoy-solon-->
