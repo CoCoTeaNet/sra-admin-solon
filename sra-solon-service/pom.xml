@@ -11,7 +11,7 @@
 
     <groupId>net.cocotea</groupId>
     <artifactId>sra-solon-service</artifactId>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
     <packaging>pom</packaging>
 
     <modelVersion>4.0.0</modelVersion>
@@ -26,7 +26,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <utf-8>UTF-8</utf-8>
         <!-- 内部模块版本 -->
-        <sra-solon.version>1.1.1</sra-solon.version>
+        <sra-solon.version>1.1.2</sra-solon.version>
         <!-- 插件版本 -->
         <lombok.version>1.18.28</lombok.version>
         <!-- 外部框架版本 -->
@@ -73,6 +73,11 @@
             <dependency>
                 <groupId>org.noear</groupId>
                 <artifactId>solon-security-validation</artifactId>
+                <version>${solon.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.noear</groupId>
+                <artifactId>solon-config-banner</artifactId>
                 <version>${solon.version}</version>
             </dependency>
             <!--sqltoy-solon-->
