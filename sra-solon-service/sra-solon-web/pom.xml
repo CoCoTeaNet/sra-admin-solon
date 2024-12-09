@@ -6,7 +6,7 @@
     <parent>
         <groupId>net.cocotea</groupId>
         <artifactId>sra-solon-service</artifactId>
-        <version>1.1.1</version>
+        <version>1.1.2</version>
     </parent>
 
     <artifactId>sra-solon-web</artifactId>
@@ -19,7 +19,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <utf-8>UTF-8</utf-8>
-        <smart-doc.version>3.0.1</smart-doc.version>
+        <smart-doc.version>3.0.9</smart-doc.version>
     </properties>
 
     <dependencies>
@@ -56,6 +56,11 @@
                 </exclusion>
             </exclusions>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.noear</groupId>
+            <artifactId>solon-config-banner</artifactId>
         </dependency>
     </dependencies>
 
