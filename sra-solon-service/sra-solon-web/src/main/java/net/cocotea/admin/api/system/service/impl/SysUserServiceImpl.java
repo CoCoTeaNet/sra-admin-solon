@@ -148,7 +148,7 @@ public class SysUserServiceImpl implements SysUserService {
         boolean strongPwdFlag =
                 StrUtil.isBlank(defaultProp.getStrongPassword())
                         || !defaultProp.getStrongPassword().equals(loginDTO.getPassword())
-                        || !"none".equals(loginDTO.getPassword());
+                        || "none".equals(loginDTO.getPassword());
         // 验证码缓存键
         String key = null;
         if (strongPwdFlag) {
