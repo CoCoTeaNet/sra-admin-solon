@@ -4,6 +4,7 @@ import cn.dev33.satoken.stp.SaLoginModel;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import net.cocotea.admin.api.system.model.dto.*;
@@ -39,10 +40,7 @@ import org.noear.solon.annotation.Component;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -144,14 +142,17 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public String login(SysLoginDTO loginDTO, Context context) throws BusinessException {
         SysUser sysUser;
-        // 强密码为空或者为none表示“启用”
-        boolean strongPwdFlag =
-                StrUtil.isBlank(defaultProp.getStrongPassword())
-                        || !defaultProp.getStrongPassword().equals(loginDTO.getPassword())
-                        || !"none".equals(loginDTO.getPassword());
+
+        // 强密码为空或者为none表示“不启用”
+        boolean isStrongPwd = !(StrUtil.isBlank(defaultProp.getStrongPassword()) || "none".equals(defaultProp.getStrongPassword()));
+        if (isStrongPwd) {
+            boolean pwdValid = Objects.equals(defaultProp.getStrongPassword(), loginDTO.getPassword());
+            Assert.isTrue(pwdValid, () -> new BusinessException("密码不正确"));
+        }
+
         // 验证码缓存键
         String key = null;
-        if (strongPwdFlag) {
+        if (!isStrongPwd) {
             // 校验验证码
             key = String.format(RedisKeyConst.VERIFY_CODE_LOGIN, loginDTO.getCaptchaId());
             String code = redisService.get(key);
