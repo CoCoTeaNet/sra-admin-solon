@@ -1,85 +1,22 @@
-<h2>介绍</h2>
-<p>sra-admin-solon 是一个前后端分离的脚手架项目，国产化核心框架，实现了用户、字典、角色、权限等常见功能，
-能够快速搭建一个web项目。<br>后端技术栈：solon+sqltoy+satoken+hutool<br>前端技术栈：vue3+vue-router+typescript+elementui</p>
-<h2>应用场景</h2>
-<ul>
-<li>XXX网站 | 博客网站</li>
-<li>编程学习 | 毕业设计</li>
-<li>XXX管理系统</li>
-</ul>
-<h2>其它仓库地址</h2>
-<ul>
-<li>sra-admin-vue（前端项目，基于VUE开发）：<a href="https://gitee.com/momoljw/sra-admin-vue">https://gitee.com/momoljw/sra-admin-vue</a></li>
-</ul>
-<h2>图片演示</h2>
-<table>
-    <tr>
-        <td><img src="./doc/imgs/ys_21.jpg" alt="ys_1"/></td>
-        <td><img src="./doc/imgs/ys_22.png" alt="ys_2"/></td>
-    </tr>
-    <tr>
-        <td><img src="./doc/imgs/ys_23.jpg" alt="ys_3"/></td>
-        <td><img src="./doc/imgs/ys_24.jpg" alt="ys_4"/></td>
-    </tr>
-</table>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SraAdmin-Solon</title>
+</head>
+<body>
 
+<h1>SraAdmin-Solon</h1>
 
-<h2>软件架构</h2>
-<p><a href="https://i.postimg.cc/Bn7TLCXv/image.png"><img src="https://i.postimg.cc/Bn7TLCXv/image.png" alt="image.png"></a></p>
-<h2>启动说明</h2>
-<h3>步骤</h3>
-<ol>
-<li>运行数据库脚本：表结构、初始化数据</li>
-<li>启动本地Redis并运行后端服务</li>
-<li>安装前端依赖并运行前端项目</li>
-</ol>
-<h3>接口文档</h3>
-<p>使用命令或者idea的插件生成，具体使用参考地址：<a href="https://smart-doc-group.github.io/#/zh-cn/start/quickstart">https://smart-doc-group.github.io/#/zh-cn/start/quickstart</a></p>
-<h3>备注</h3>
-<pre><code class="language-text">1. 配置文件：src/main/resources/app.yml
-2. 数据库执行脚本：/doc/sra-admin-sql/*.sql
-3. 项目启动类：src/main/java/net/cocotea/admin/Launcher.java
-</code></pre>
-<h3>访问地址</h3>
-<p>测试后端接口：<a href="http://localhost:9000/test/index">http://localhost:9000/test/index</a></p>
-<h2>项目结构</h2>
-<pre><code>├─doc
-│  ├─bin                服务运行脚本
-│  ├─imgs               演示图片
-│  └─sra-admin-sql      数据库运行脚本 
-│      ├─table_ddl.sql  表结构
-│      └─table_data.sql 初始化数据
-└─sra-admin-service     
-    ├─sra-common        通用模块
-    └─sra-web           web模块
-</code></pre>
-<h2>核心技术栈</h2>
-<ul>
-<li><a href="https://gitee.com/opensolon/solon">Solon</a> ：Java “纯血国产”应用开发框架：更快、更小、更简单！！！</li>
-<li><a href="https://gitee.com/sagacity/sagacity-sqltoy">Sqltoy</a> ：java真正最强大的ORM框架，支持市场上流行数据库。</li>
-<li><a href="https://sa-token.cc/doc.html#/">Satoken</a> ：一个轻量级 Java 权限认证框架，让鉴权变得简单、优雅！</li>
-<li><a href="https://www.hutool.cn/">Hutool</a> ：小而全的Java工具类库，使Java拥有函数式语言般的优雅，让Java语言也可以“甜甜的”。</li>
-</ul>
-<h2>软件版本要求</h2>
-<ul>
-<li>JDK：17+</li>
-<li>Nodejs：14.0 ~ 19</li>
-<li>MySQL：8.0+</li>
-</ul>
-<h2>参与贡献</h2>
-<ol>
-<li>Fork 本仓库</li>
-<li>新建 Feat_xxx 分支</li>
-<li>提交代码</li>
-<li>新建 Pull Request</li>
-</ol>
-<ul>
-<li><a href="https://gitee.com/gitee-community/opensource-guide/blob/master/%E8%B4%A1%E7%8C%AE%E6%8C%87%E5%8D%97.md">贡献指南</a></li>
-<li>如有更好的想法，欢迎提<a href="https://gitee.com/momoljw/sss-rbac-admin/issues">issue</a></li>
-</ul>
-<h2>SRA交流群</h2>
-<p>QQ群：<a href="https://jq.qq.com/?_wv=1027&k=lxODRWpq"><img src="https://img.shields.io/badge/-543112505-brightgreen" alt="加入QQ群"></a></p>
-<h2>感谢支持</h2>
-<ul>
-<li><a href="https://jb.gg/OpenSourceSupport">JetBrain Idea</a><br><img src="./doc/imgs/jb_beam.svg" alt="jetbrains"></li>
-</ul>
+<p>
+    SraAdmin-Solon 是一个前后端分离的脚手架项目，国产化核心框架，实现了用户、字典、角色、权限等常见功能，
+    能够快速搭建一个web项目。
+    后端技术栈：solon+sqltoy+satoken+hutool
+    前端技术栈：vue3+vue-router+typescript+elementui
+</p>
+
+</body>
+</html>

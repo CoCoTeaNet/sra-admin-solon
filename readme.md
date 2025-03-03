@@ -12,7 +12,7 @@ SraAdmin-Solon 是一个前后端分离的脚手架项目，国产化核心框�
 
 
 ## 其它仓库地址
-- SraAdmin-Vue（前端项目，基于VUE开发）：https://gitee.com/momoljw/sra-admin-vue
+- SraAdmin-Vue（前端项目，基于VUE开发）：https://github.com/CoCoTeaNet/sra-admin-vue
 
 
 ## 图片演示
@@ -84,8 +84,7 @@ SraAdmin-Solon 是一个前后端分离的脚手架项目，国产化核心框�
 3. 提交代码
 4. 新建 Pull Request
 
-- [贡献指南](https://gitee.com/gitee-community/opensource-guide/blob/master/%E8%B4%A1%E7%8C%AE%E6%8C%87%E5%8D%97.md)
-- 如有更好的想法，欢迎提[issue](https://gitee.com/momoljw/sss-rbac-admin/issues)
+- 如有更好的想法，欢迎提[issue](https://github.com/CoCoTeaNet/sra-admin-solon/issues)
 
 
 ## SraAdmin交流群
