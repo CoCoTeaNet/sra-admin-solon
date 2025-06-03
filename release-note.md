@@ -2,6 +2,8 @@
 
 #### 1.1.5
 - 变更 fastjson升级到fastjson2
+- 变更 sqltoy升级到5.6.47
+- 变更 smart-doc升级到3.1.0
 
 
 #### 1.1.4
