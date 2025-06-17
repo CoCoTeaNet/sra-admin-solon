@@ -6,12 +6,12 @@
     <parent>
         <groupId>org.noear</groupId>
         <artifactId>solon-parent</artifactId>
-        <version>3.0.9</version>
+        <version>3.3.2</version>
     </parent>
 
     <groupId>net.cocotea</groupId>
     <artifactId>sra-solon-service</artifactId>
-    <version>1.1.4</version>
+    <version>1.1.5</version>
     <packaging>pom</packaging>
 
     <modelVersion>4.0.0</modelVersion>
@@ -28,9 +28,9 @@
         <!-- 插件版本 -->
         <lombok.version>1.18.28</lombok.version>
         <!-- 外部框架版本 -->
-        <sqltoy.version>5.6.22</sqltoy.version>
+        <sqltoy.version>5.6.47</sqltoy.version>
         <mysql-connector.version>8.0.30</mysql-connector.version>
-        <fastjson.version>1.2.83</fastjson.version>
+        <fastjson2.version>2.0.57</fastjson2.version>
         <hutool.version>5.8.35</hutool.version>
         <hutool-oshi.version>5.6.1</hutool-oshi.version>
         <bcprov.version>1.69</bcprov.version>
@@ -96,6 +96,11 @@
                 <artifactId>sa-token-redisx</artifactId>
                 <version>${sa-token.version}</version>
             </dependency>
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-fastjson2</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
             <!-- mysql连接器 -->
             <dependency>
                 <groupId>mysql</groupId>
@@ -109,11 +114,11 @@
                 <artifactId>HikariCP</artifactId>
                 <version>${hikaricp.version}</version>
             </dependency>
-            <!-- fastjson -->
+            <!-- fastjson2 -->
             <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>fastjson</artifactId>
-                <version>${fastjson.version}</version>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2</artifactId>
+                <version>${fastjson2.version}</version>
             </dependency>
             <!-- hutool工具 -->
             <dependency>

@@ -1,5 +1,12 @@
 ## 更新日志
 
+#### 1.1.5
+- 变更 solon升级到3.3.2
+- 变更 fastjson升级到fastjson2
+- 变更 sqltoy升级到5.6.47
+- 变更 smart-doc升级到3.1.0
+- 优化 sa-token使用fastjson2序列化
+
 
 #### 1.1.4
 - 变更 Solon升级到3.0.9
