@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.noear</groupId>
         <artifactId>solon-parent</artifactId>
-        <version>3.0.9</version>
+        <version>3.3.2</version>
     </parent>
 
     <groupId>net.cocotea</groupId>
@@ -94,6 +94,11 @@
             <dependency>
                 <groupId>cn.dev33</groupId>
                 <artifactId>sa-token-redisx</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-fastjson2</artifactId>
                 <version>${sa-token.version}</version>
             </dependency>
             <!-- mysql连接器 -->
