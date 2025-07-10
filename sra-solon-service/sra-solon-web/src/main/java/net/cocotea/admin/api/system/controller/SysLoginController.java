@@ -9,6 +9,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SmUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.SM2;
+import lombok.extern.slf4j.Slf4j;
 import net.cocotea.admin.api.system.model.dto.SysLoginDTO;
 import net.cocotea.admin.api.system.model.vo.SysCaptchaVO;
 import net.cocotea.admin.api.system.model.vo.SysLoginUserVO;
@@ -33,11 +34,10 @@ import java.util.Locale;
  *
  * @author CoCoTea
  */
+@Slf4j
 @Controller
 @Mapping("/system")
 public class SysLoginController {
-
-    private static final Logger log = LoggerFactory.getLogger(SysLoginController.class);
 
     @Inject
     private SysUserService userService;

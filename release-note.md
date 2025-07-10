@@ -1,5 +1,14 @@
 ## 更新日志
 
+
+#### 1.1.5
+- 变更 solon升级到3.4.0
+- 变更 sqltoy升级到5.6.50
+- 变更 logback-classic升级到1.5.18
+- 变更 mysql-connector升级到8.4.0
+- 变更 quickvo-maven-plugin升级到1.0.7
+
+
 #### 1.1.5
 - 变更 solon升级到3.3.2
 - 变更 fastjson升级到fastjson2
