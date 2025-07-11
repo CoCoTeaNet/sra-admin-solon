@@ -31,10 +31,9 @@
         <sqltoy.version>5.6.50</sqltoy.version>
         <mysql-connector.version>8.4.0</mysql-connector.version>
         <fastjson2.version>2.0.57</fastjson2.version>
-        <hutool.version>5.8.35</hutool.version>
-        <hutool-oshi.version>5.6.1</hutool-oshi.version>
-        <bcprov.version>1.69</bcprov.version>
-        <commons-pool2.version>2.11.1</commons-pool2.version>
+        <hutool.version>5.8.39</hutool.version>
+        <oshi.version>6.8.2</oshi.version>
+        <bcprov.version>1.81</bcprov.version>
         <redisx.version>1.4.7</redisx.version>
         <logback-classic.version>1.5.18</logback-classic.version>
     </properties>
@@ -129,7 +128,7 @@
             <dependency>
                 <groupId>com.github.oshi</groupId>
                 <artifactId>oshi-core</artifactId>
-                <version>${hutool-oshi.version}</version>
+                <version>${oshi.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.bouncycastle</groupId>
