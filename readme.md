@@ -89,8 +89,3 @@ SraAdmin-Solon 是一个前后端分离的脚手架项目，国产化核心框�
 
 ## SraAdmin交流群
 QQ群：[![加入QQ群](https://img.shields.io/badge/-543112505-brightgreen)](https://jq.qq.com/?_wv=1027&k=lxODRWpq)
-
-
-## 感谢支持
-- [JetBrain Idea](https://jb.gg/OpenSourceSupport)  
-![jetbrains](./doc/imgs/jb_beam.svg)

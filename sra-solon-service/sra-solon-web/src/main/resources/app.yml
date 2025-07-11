@@ -54,7 +54,7 @@ myapp:
     password: root
   # Redis
   rd1:
-    server: 172.16.77.57:6379
+    server: 127.0.0.1:6379
     db: 1
     password:
 
