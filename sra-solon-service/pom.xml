@@ -6,12 +6,12 @@
     <parent>
         <groupId>org.noear</groupId>
         <artifactId>solon-parent</artifactId>
-        <version>3.4.0</version>
+        <version>3.5.9</version>
     </parent>
 
     <groupId>net.cocotea</groupId>
     <artifactId>sra-solon-service</artifactId>
-    <version>1.1.6</version>
+    <version>1.1.7</version>
     <packaging>pom</packaging>
 
     <modelVersion>4.0.0</modelVersion>
@@ -28,10 +28,10 @@
         <!-- 插件版本 -->
         <lombok.version>1.18.28</lombok.version>
         <!-- 外部框架版本 -->
-        <sqltoy.version>5.6.50</sqltoy.version>
+        <sqltoy.version>5.6.56</sqltoy.version>
         <mysql-connector.version>8.4.0</mysql-connector.version>
-        <fastjson2.version>2.0.57</fastjson2.version>
-        <hutool.version>5.8.39</hutool.version>
+        <fastjson2.version>2.0.59</fastjson2.version>
+        <hutool.version>5.8.41</hutool.version>
         <oshi.version>6.8.2</oshi.version>
         <bcprov.version>1.81</bcprov.version>
         <redisx.version>1.4.7</redisx.version>
