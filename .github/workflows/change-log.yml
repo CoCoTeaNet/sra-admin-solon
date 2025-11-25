@@ -1,0 +1,26 @@
+name: changelog
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  changelog:
+    name: Generate changelog
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: cobraz/get-commit-changelog@v1
+        id: changelog
+        with:
+          base: ${{ steps.something.base }}
+      - name: Print changelog
+        run: echo "${{ steps.changelog.outputs.changelog }}"
