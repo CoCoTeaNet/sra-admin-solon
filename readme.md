@@ -1,3 +1,5 @@
+⚠️ 该项目已归档，请移步至扩展项目 [CyreneAdmin](https://github.com/CoCoTeaNet/CyreneAdmin)
+
 ## 介绍
 SraAdmin-Solon 是一个前后端分离的脚手架项目，国产化核心框架，实现了用户、字典、角色、权限等常见功能，
 能够快速搭建一个web项目。  
